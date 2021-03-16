@@ -1,0 +1,3588 @@
+openapi: 3.0.0
+info:
+  title: FitnessSyncer REST API
+  description: FitnessSyncer’s API provides access to information displayed within the FitnessSyncer Stream and FitnessSyncer Dashboard, including any data from data source such as Fitbit and data maintained by FitnessSyncer, such as the FitnessSyncer Notebook.
+  version: 1.0.0
+servers:
+  - url: https://api.fitnesssyncer.com/api
+    description: Core FitnessSyncer Service
+paths:
+  /users/preferences:
+    get:
+      summary: Read user preferences
+      description: Read the user’s preferences. This is for informational purposes only. None of the actual API requires your knowledge of these preferences.
+      operationId: getUserPreferences
+      tags: [UserPreferences]
+      security:
+        - OAuth2: [sources]
+      responses:
+         200:
+           description: Success
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/UserPreferences'
+         401:
+           description: Unauthorized.
+         500:
+           description: Internal Server Exception
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Error'
+    post:
+      summary: Update user preferences
+      description: Update the user’s preferences.
+      operationId: updateUserPreferences
+      tags: [UserPreferences]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: User Preferences
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferences'
+      responses:
+         200:
+           description: Success
+           content:
+             application/json:
+               schema:
+                 properties:
+                   'updated':
+                     type: string
+                     description: Status indicating it was updated
+         400:
+           description: Bad Request
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Error'
+         401:
+           description: Unauthorized.
+         500:
+           description: Internal Server Exception
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Error'
+
+  /providers/sources/:
+    get:
+      summary: List the data sources
+      description: To learn the data sources that exist or to find the id of your desired data type, you will need to issue a list.
+      operationId: listDataSources
+      tags: [Sources]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: query
+          name: taskType
+          schema:
+            $ref: '#/components/schemas/TaskType'
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        - in: query
+          name: providerType
+          schema:
+            type: string
+          description: ProviderType filter
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfSourceData'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Create a new Data Source
+      description: Creates a new source data. While you may cache this data, it is only recommended you do so for short periods.
+      operationId: createDataSource
+      tags: [Sources]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Source to Create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceData'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /providers/sources/{id}:
+    get:
+      summary: Get a specific Data Source
+      description: |
+          This acquires the SourceDatat for a specific dataSource.
+          If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data source.
+      operationId: getDataSource
+      tags: [Sources]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to acquire.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceDataItem'
+        401:
+          description: Unauthorized.
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Update a Data Source
+      description: To update a Data Source, one must issue a POST request with that configuration.
+      operationId: updateDataSource
+      tags: [Sources]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Complete Source to Update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceData'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to update.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete Data Source
+      description: When you are finished with a data source, simply delete it. This operation cannot be undone.
+      operationId: deleteDataSource
+      tags: [Sources]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to delete.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/sources/{id}/refresh:
+    post:
+      summary: Refresh Data Sources
+      description: |
+        FitnessSyncer will periodically refresh data sources. If your application wishes to ensure that you have the latest data available, you can request a refresh.
+        When this operation completes, the task is enqueued and will execute sometime in the near future. You may check on the status of the task via the Sync Status API.
+        Note: This is only available on certain accounts. Please contact us if you require it.
+      operationId: refreshDataSource
+      tags: [Sources]
+      requestBody:
+        description: Optional Historic Sync Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoricSync'
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to refresh.
+      responses:
+        202:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        409:
+          description: A pending request already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/sources/notebook/categories:
+    get:
+      summary: Acquires the types of items in the Notebook
+      description: |
+        Because the Notebook has multiple types, this API allows you to learn what is in the Notebook.
+      operationId: getNotebookCategories
+      tags: [Notebook]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTaskType'
+        401:
+          description: Unauthorized.
+        409:
+          description: A pending request already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/sources/{id}/items:
+    get:
+      summary: List the data in a source
+      operationId: listSyncItems
+      tags: [Sources, Notebook]
+      description: |
+        To learn the data sources that exist or to find the id of your desired data type, you will need to issue a list.
+        If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data listing.
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to list. If this is for FitnessSyncer Notebook, this is the string `notebook`
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: How many entries should we skip? Default is 0.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: How many entries would you like to return? Default and max is 100.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSourceData'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Create a new Item
+      description: |
+        This will allow you to insert new items into FitnessSyncer. You should upload data in reverse date order. It should be noted that inserting an item older than the most current item might not synchronize that item for destinations. This operation can only be done for items for which you have permission to do so.
+      operationId: createSyncItem
+      tags: [Sources, Notebook]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source to create the item in. If this is for FitnessSyncer Notebook, this is the string `notebook`
+      requestBody:
+        description: Sync Item to store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncItem'
+      responses:
+        200:
+          description: |
+            This will contain the itemId of the item which has been created.
+            Note that if the item has been filtered out, the id will be `-FILTERED-`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/sources/{id}/items/{itemId}:
+    get:
+      summary: Getting a Specific Item
+      description: |
+        You can access the data associated with the item. Items are generally static, so you may cache them in accordance to our terms of use.
+        If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s activity item.
+      operationId: getSyncItem
+      tags: [Sources, Notebook]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source which contains the item. If this is for FitnessSyncer Notebook, this is the string `notebook`
+        - in: path
+          name: itemId
+          schema:
+            type: string
+          required: true
+          description: id of the item you wish to get.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncItemItem'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Update an Item
+      description: |
+        This will allow you to update an item in FitnessSyncer. It should be noted that updates might not synchronize that update in destinations. This operation can only be done for items for which you have permission to do so.
+      operationId: updateSyncItem
+      tags: [Sources, Notebook]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source to create the item in.
+        - in: path
+          name: itemId
+          schema:
+            type: string
+          required: true
+          description: id of the item you wish to update. If this is for FitnessSyncer Notebook, this is the string `notebook`
+      requestBody:
+        description: Sync Item to store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncItem'
+      responses:
+        200:
+          description: |
+            This will contain the itemId of the item which has been updated.
+            Note that if the item has been filtered out, the id will be `-FILTERED-`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete an Item
+      description: |
+        This will delete the sync item. This operation can only be done for items for which you have permission to do so.
+      operationId: deleteSyncItem
+      tags: [Sources, Notebook]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source to create the item in. If this is for FitnessSyncer Notebook, this is the string `notebook`
+        - in: path
+          name: itemId
+          schema:
+            type: string
+          required: true
+          description: id of the item you wish to delete.
+      responses:
+        200:
+          description: |
+            This will contain the itemId of the item which has been deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/sources/notebook/itemsByType/{type}:
+    get:
+      summary: Listing Notebook Items by Type
+      operationId: getNotebookItemsByType
+      tags: [Notebook]
+      description: |
+        Lists the Notebook by item.
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: type
+          schema:
+            $ref: '#/components/schemas/TaskType'
+          required: true
+          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: How many entries should we skip? Default is 0.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: How many entries would you like to return? Default and max is 100.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSyncItems'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/destinations/:
+    get:
+      summary: List the destinations
+      description: To learn the destinations that exist or to find the id of your desired data type, you will need to issue a list.
+      operationId: listDestinations
+      tags: [Destinations]
+      parameters:
+        - in: query
+          name: taskType
+          schema:
+            $ref: '#/components/schemas/TaskType'
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        - in: query
+          name: providerType
+          schema:
+            type: string
+          description: ProviderType filter
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDestinationTask'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Create a new Destination Task
+      description: Creates a new destination task.
+      operationId: createDestination
+      tags: [Destinations]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Destination to Create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DestinationTask'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/destinations/{id}:
+    get:
+      summary: Get a specific Destination Task
+      description: |
+        Get a specific destination task
+      operationId: getDestination
+      tags: [Destinations]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to acquire.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DestinationTaskItem'
+        401:
+          description: Unauthorized.
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Update a Destination
+      description: To update a Destination, one must issue a POST request with that configuration.
+      operationId: updateDestination
+      tags: [Destinations]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Complete Destination to Update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DestinationTask'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to update.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete Destination
+      description: When you are finished with a destination, simply delete it. This operation cannot be undone.
+      operationId: deleteDestination
+      tags: [Destinations]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to delete.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/destinations/{id}/execute:
+    post:
+      summary: Executing Data Destinations
+      description: |
+        FitnessSyncer will periodically execute destinations tasks. If your application wishes to run these themselves, you can request an execute.
+        When this operation completes, the task is enqueued and will execute sometime in the near future. You may check on the status of the task via the Sync Status API.
+        Note: This is only available on certain accounts. Please contact us if you require it.
+      operationId: executeDestination
+      tags: [Destinations]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the destination you wish to execute.
+      responses:
+        202:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        409:
+          description: A pending request already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/sources/{id}/authentication:
+    post:
+      summary: Provider Authentication
+      description: |
+        There are a variety of ways to configure authentication for a provider. The provider list would have provided you with a value for authenticating.
+
+        Once you have selected a provider and created a source for it, you need to add authentication for it as follows.
+
+        You should build your application such that if there are new values, that your application appropriate degrades.
+      operationId: addSourceAuthentication
+      tags: [Sources]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Authentication to Store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentication'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the source you wish to add Authentication for.
+      responses:
+        200:
+          description: Success with nothing else to do.
+        202:
+          description: Success that requires a redirect.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location to continue the authentication.
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        409:
+          description: A pending request already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/destinations/{id}/authentication:
+    post:
+      summary: Provider Authentication
+      description: |
+        There are a variety of ways to configure authentication for a provider. The provider list would have provided you with a value for authenticating.
+
+        Once you have selected a provider and created a destination for it, you need to add authentication for it as follows.
+
+        You should build your application such that if there are new values, that your application appropriate degrades.
+      operationId: addDestinationAuthentication
+      tags: [Destinations]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Authentication to Store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentication'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the destination you wish to add Authentication for.
+      responses:
+        200:
+          description: Success with nothing else to do.
+        202:
+          description: Success that requires a redirect.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location to continue the authentication.
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        409:
+          description: A pending request already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/types/:
+    get:
+      summary: Listing Providers
+      description: |
+        Get the data providers that are presently available on FitnessSyncer. It should be noted that this method is highly cachable, especially if you are using a fixed set of providers.
+      operationId: getProviders
+      tags: [Providers]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderList'
+        401:
+          description: Unauthorized.
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /syncs/:
+    get:
+      summary: Get Synchronization Status
+      description: |
+        The Source Refresh or Destination Task Execute APIs execute asynchronously. This API provides you some insight into their current execution. Please use judiciously.
+      operationId: getSyncStatus
+      tags: [Sources, Destinations]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncStatusResults'
+        401:
+          description: Unauthorized.
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /providers/authentication/:
+    get:
+      summary: Existing Provider Authentication
+      description: |
+        If you are using the same source system for multiple devices, you need to use the same authentication for each source. This method will allow you to acquire the authorization summary of what exists already so that you can re-use that authentication.
+      operationId: listProviderAuthentication
+      tags: [Providers, Sources, Destinations]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderAuthentication'
+        401:
+          description: Unauthorized.
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /subscriptions/:
+    get:
+      summary: Learning if there is a subscription
+      description: |
+        If To figure out if there is an active subscription, use this method. You may periodically wish to do this in the event of errors notifying your service of a subscription.
+      operationId: hasSubscription
+      tags: [Subscriptions]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        401:
+          description: Unauthorized.
+        404:
+          description: No Subscription.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Subscription for Notifications
+      description: |
+        Subscribe to notifications.
+      operationId: addSubscription
+      tags: [Subscriptions]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /subscriptions/{notificationKey}:
+    delete:
+      summary: Removing a subscription
+      description: |
+        Remove a subscription
+        Note that if your server responds with a 403 error when it is notified, they will be automatically unsubscribed.
+      operationId: removeSubscription
+      tags: [Subscriptions]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: notificationKey
+          schema:
+            type: string
+          required: true
+          description: Notification key to delete.
+      responses:
+        200:
+          description: Success
+        401:
+          description: Unauthorized.
+        404:
+          description: No Subscription.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /notifications/:
+    post:
+      summary: Claiming Notifications
+      description: |
+        For pull notifications, you will need to claim notifications, procrocess the notifications, and then delete the claim. If you do not delete the claim, the notification will eventually come back to you.
+        Note that we will only provide you with a maximum of 100 notifications per response. If you have more than 100 notifications, you will need to requery the API for each notification.
+      operationId: getNotifications
+      tags: [Notifications]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        401:
+          description: Unauthorized.
+        404:
+          description: No Subscription.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /notifications/{claimId}:
+    delete:
+      summary: Deleting notifications
+      description: |
+        Once you have successfully process a notification, you must delete the notification. Failure you to do so will result in the same notifications being processed by you multiple times.
+      operationId: deleteNotifications
+      tags: [Notifications]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: claimId
+          schema:
+            type: string
+          required: true
+          description: Notification key to delete.
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+        404:
+          description: No Subscription.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /descriptions/{type}:
+    get:
+      summary: Gets Descriptions
+      description: |
+        This method acquires the metadata descriptions from FitnessSyncer. This is highly cachable.
+      operationId: getDescriptions
+      tags: [Descriptions]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: type
+          schema:
+            type: string
+            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers]
+          required: true
+          description: |
+            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers
+            Most of these responses are generic and are cachable between users and sessions. However, distinctActivities is the user's specific types of activities that their account has so this should not be shared between accounts.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescriptionResults'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/:
+    get:
+      summary: Lists Leaderboards
+      description: |
+        This will return a list of Leaderboards that this user owns, can join, or has accepted.
+      operationId: listBoards
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      responses:
+        200:
+          description: List of the Leadewrboards
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardList'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Creates a Leaderboard
+      description: |
+        This creates a new FitnessSyncer Leaderboard.
+        This operation will automatically add the current user to the created Leaderboard.
+      operationId: createBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: Leaderboard Configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Leaderboard'
+      responses:
+        200:
+          description: Id of the leaderboard created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        401:
+          description: Unauthorized.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate board name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/{id}:
+    get:
+      summary: Acquires a Leaderboard by ID.
+      description: |
+        Acquires a FitnessSyncer Leaderboard by ID.
+      operationId: getBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to acquire.
+      responses:
+        200:
+          description: Leaderboard acquired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardItem'
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Update a Leaderboard
+      description: |
+        This operation updates the Leaderboard.
+        This operation does not allow updating of the Data Field. You must instead create a new Leaderboard for this.
+      operationId: updateBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to acquire.
+      requestBody:
+        description: Leaderboard Configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Leaderboard'
+      responses:
+        200:
+          description: Id of the leaderboard updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, or invalid JSON.
+        401:
+          description: Unauthorized.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a Leaderboard
+      description: |
+        This operation deletes a Leaderboard.
+      operationId: deleteBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to delete.
+      responses:
+        200:
+          description: Id of the leaderboard deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, or invalid JSON.
+        401:
+          description: Unauthorized.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/{id}/accept:
+    put:
+      summary: Accept an invitation to a Leaderboard
+      description: |
+        This accepts an invitation to a Leaderboard.
+        Calling this API implies that the user has consented to this action. The user must have been shown all of the information associated with the Leaderboard and told that their information will be visibile to all users of the Leaderboard. Furthermore, for absolute data such as weight, the user should be informed *not* to share this information unless the user truly trusts the person or organization using this information.
+        If the invitation is already accepted, this will return a 409.
+      operationId: acceptBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to accept.
+      requestBody:
+        description: Leaderboard Configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Leaderboard'
+      responses:
+        200:
+          description: Id of the leaderboard accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, or invalid JSON.
+        401:
+          description: Unauthorized.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/{id}/user:
+    put:
+      summary: Add users to this Leaderboard
+      description: |
+        This adds one or more users to this Leaderboard.
+      operationId: addUserToBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to add users.
+        - in: query
+          name: sendInvitationEmails
+          schema:
+            type: boolean
+          required: false
+          description: |
+            If you do not wish for FitnessSyncer to send an invitation e-mail, set this parameter to false.
+            The default is true.
+      requestBody:
+        description: Leaderboard User(s) to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaderboardUser'
+      responses:
+        200:
+          description: Id of the leaderboard that the user was added to.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+        401:
+          description: Unauthorized.
+        404:
+          description: Leaderboard not found.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete the current user from the Leaderboard.
+      description: |
+        This deletes the current user from the Leaderboard.
+        To remove other users, the administrator can use the /user/admin API.
+      operationId: deleteUserFromBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to add users.
+      responses:
+        200:
+          description: Id of the leaderboard just left.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+        401:
+          description: Unauthorized.
+        404:
+          description: Leaderboard not found.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/{id}/user/preference:
+    get:
+      summary: Acquires the user's preferences associated with this Leaderboard.
+      description: |
+        This acquires the user's preferences associated with this Leaderboard
+      operationId: getLeaderboardUserPreferences
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to add users.
+      responses:
+        200:
+          description: Leaderboard User Preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardUserPreferences'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+        401:
+          description: Unauthorized.
+        404:
+          description: Leaderboard not found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Change a user's preferences.
+      description: |
+        This allows a user to change their preferences.
+      operationId: changeUserPreference
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard for te user's preferences.
+      requestBody:
+        description: Leaderboard User Preferences.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaderboardUserPreferences'
+      responses:
+        200:
+          description: Id of the leaderboard that the user was added to.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+        401:
+          description: Unauthorized.
+        404:
+          description: Leaderboard not found.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/{id}/user/admin:
+    post:
+      summary: Delete one or more users from a Leaderboard
+      description: |
+        This deletes one or more users from the Leaderboard.
+      operationId: deleteUsersFromBoard
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to add users.
+      requestBody:
+        description: Leaderboard User(s) to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaderboardUser'
+      responses:
+        200:
+          description: Id of the leaderboard processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Id'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+        401:
+          description: Unauthorized.
+        404:
+          description: Leaderboard not found.
+        409:
+          description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /leaderboards/{id}/data:
+    get:
+      summary: Acquires the data associated with a Leaderboard.
+      description: |
+        This acquires the data associated with a Leaderboard
+      operationId: getLeaderboardData
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the id of the Leaderboard to add users.
+      responses:
+        200:
+          description: Leaderboard Data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardData'
+        400:
+          description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+        401:
+          description: Unauthorized.
+        404:
+          description: Leaderboard not found.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: FitnessSyncer uses the standard OAuth2 Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://www.fitnesssyncer.com/api/oauth/authorize'
+          tokenUrl: 'https://api.fitnesssyncer.com/api/oauth/access_token'
+          refreshUrl: 'https://api.fitnesssyncer.com/api/oauth/access_token'
+          scopes:
+            sources: Access to the source data.
+  schemas:
+    PowerZones:
+      description: Power Zones
+      properties:
+        base:
+          type: integer
+          description: Base Power Zone
+        maxZone1:
+          type: integer
+          description: Maximum value for Zone 1
+        maxZone2:
+          type: integer
+          description: Maximum value for Zone 2
+        maxZone3:
+          type: integer
+          description: Maximum value for Zone 3
+        maxZone4:
+          type: integer
+          description: Maximum value for Zone 4
+        maxZone5:
+          type: integer
+          description: Maximum value for Zone 5
+        maxZone6:
+          type: integer
+          description: Maximum value for Zone 6
+
+    Error:
+      description: Error Description
+      properties:
+        error_description:
+          type: string
+          description: Description of the error for end-user consumption.
+
+    UserPreferences:
+      description: User Preferences
+      properties:
+        autosync:
+          type: boolean
+          description: If this is a Pro user, this will denote whether Auto-Sync is enabled or not.
+        bmr:
+          type: integer
+          description: Basal Metabolic Rate. If unknown, this will be 0.
+        birthdate:
+          type: integer
+          format: int64
+          description: Birth date as an epoch of the user. This will be 0 if unknown.
+        age:
+          type: integer
+          readOnly: true
+          description: Age of the user. This will be 0 if unknown.
+        canemail:
+          type: boolean
+          description: True if FitnessSyncer can periodically send e-mails to this user.
+        distanceOverSteps:
+          type: boolean
+          description: For destination syncs, does the user prefer distance or steps to be synchronized?
+        privateActivities:
+          type: boolean
+          description: Indicates whether the user prefers private activities for destination synchronizations?
+        heightInMeters:
+          type: number
+          format: double
+          description: How tall is the user in meters? If unknown, this will be 0.
+        distanceMetric:
+          type: boolean
+          description: Indicates whether the user prefers metric units for distance and height.
+        nutritionMetric:
+          type: boolean
+          description: Indicates whether the user prefers metric units for nutrition.
+        weightMetric:
+          type: boolean
+          description: Indicates whether the user prefers metric units for weight.
+        glucoseMetric:
+          type: boolean
+          description: Indicates whether the user prefers metric units for blood-based units.
+        temperatureCelsius:
+          type: boolean
+          description: Indicates whether the user prefers metric units for temperature.
+        waterML:
+          type: boolean
+          description: Indicates whether the user prefers metric units for water consumption.
+        internationaltime:
+          type: boolean
+          description: Indicates whether the user prefers 24-hour time and YYYY-MM-DD dates or not.
+        weekStartsOnMonday:
+          type: boolean
+          description: Indicates whether the user prefers the week to start on Monday instead of Sunday.
+        locale:
+          type: string
+          description: Locale of the user.
+        numericLocale:
+          type: string
+          description: User's number locale, currently en or fr.
+        bodyshape:
+          type: string
+          enum: [Unspecified, Rectangle, Triangle, Trapezoid, Oval, HourGlass, Round, InvertedTriangle]
+          description: "Body Shape of the user. Must be one of: Unspecified, Rectangle, Triangle, Trapezoid, Oval, HourGlass, Round, InvertedTriangle"
+        sex:
+          type: string
+          enum: [Unspecified, Female, Male]
+          description: "Gender of the user. Must be one of: Unspecified, Female, Male"
+        timezone:
+          type: string
+          description: User’s time zone.
+        timezoneDisplayName:
+          type: string
+          readOnly: true
+          description: Time Zone display Name.
+        displayname:
+          type: string
+          description: User’s Display Name.
+        heartRateLevel1:
+          type: integer
+          description: User’s minimum heart rate at level 1 or the system default.
+        heartRateLevel2:
+          type: integer
+          description: User’s minimum heart rate at level 2 or the system default.
+        heartRateLevel3:
+          type: integer
+          description: User’s minimum heart rate at level 3 or the system default.
+        heartRateLevel4:
+          type: integer
+          description: User’s minimum heart rate at level 4 or the system default.
+        heartRateLevel5:
+          type: integer
+          description: User’s minimum heart rate at level 5 or the system default.
+        heartRateAge:
+          type: integer
+          description: User’s age last used to calculate the heart rate.
+        heartRateMax:
+          type: integer
+          description: User’s maximum heart rate or the system default.
+        pro:
+          type: boolean
+          readOnly: true
+          description: True if the user is a FitnessSyncer Pro subscriber
+        beta:
+          type: boolean
+          readOnly: true
+          description: True if the user has any boolean flags.
+        powerZones:
+          type: object
+          description: List of Power Zone Definitions based on Sport.
+          additionalProperties:
+            $ref: '#/components/schemas/PowerZones'
+        sleepRatio:
+          type: number
+          format: double
+          description: Sleep Ratio for Sleep Debt Calculation. Defaults to 0.5 which represents 1:2 ratio (8 hours of sleep to 16 hours awake)
+        graphSleepByWakeTime:
+          type: boolean
+          description: How should the system graph sleep? If true, this will graph it based on the awake time. Otherwise, this will be graphed based on bedtime.
+
+    SyncItemItem:
+      description: Common data for each of the data types that FitnessSyncer processes.
+      properties:
+        item:
+          $ref: '#/components/schemas/SyncItem'
+
+    SyncItem:
+      description: Common data for each of the data types that FitnessSyncer processes.
+      required:
+        - type
+        - date
+      discriminator:
+        propertyName: type
+        mapping:
+          Activity: '#/components/schemas/Activity'
+          Allergy: '#/components/schemas/Allergy'
+          Weight: '#/components/schemas/BodyComposition'
+          BloodPressure: '#/components/schemas/BloodPressure'
+          Cholesterol: '#/components/schemas/Cholesterol'
+          Condition: '#/components/schemas/Condition'
+          Glucose: '#/components/schemas/Glucose'
+          Medication: '#/components/schemas/Medication'
+          Nutrition: '#/components/schemas/Nutrition'
+          Oxygen: '#/components/schemas/Oxygen'
+          Sleep: '#/components/schemas/Sleep'
+          Temperature: '#/components/schemas/Temperature'
+      properties:
+        providerType:
+          type: string
+          description: An enumeration of the Provider Type for uploading data to this API.
+        date:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC
+        itemId:
+          type: string
+          description: Id of the item
+        taskId:
+          type: string
+          description: Id of the Source Data
+        comment:
+          type: string
+          description: Comment associated with the data.
+        tags:
+          type: string
+          description: User tag
+          items:
+            type: string
+        type:
+          $ref: '#/components/schemas/TaskType'
+          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+
+    Activity:
+      description: Activity Record.
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - activity
+      properties:
+        activity:
+          type: string
+          description: General Summary of the Activity or Exercise Type, generally in one word.
+        fitnessSyncerActivity:
+          type: string
+          readOnly: true
+          description: Similar to the activity, however, the activity is the raw string from the service and fitnessSyncerActivity is the FitnessSyncer normalized activity
+        title:
+          type: string
+          description: A human readable title of the activity.
+        distanceKM:
+          type: number
+          format: double
+          description: Distance of the Activity in KM. Use 0 if not applicable.
+        duration:
+          type: number
+          format: double
+          description: Duration in Seconds. Use 0 if not applicable.
+        calories:
+          type: integer
+          description: Calories Burned
+        endDate:
+          type: integer
+          format: int64
+          readOnly: true
+          description: End Time in milliseconds since the Epoch in UTC (if not summary)
+        steps:
+          type: integer
+          description: Number of steps for this activity.
+        avgHeartrate:
+          type: integer
+          description: Average heart rate for the activity.
+        minHeartrate:
+          type: integer
+          description: Minimum heart rate for the activity.
+        maxHeartrate:
+          type: integer
+          description: Maximum heart rate for the activity.
+        restingHeartrate:
+          type: integer
+          description: Resting heart rate for the activity.
+        avgStressLevel:
+          type: integer
+          description: Average Stress Level
+        minStressLevel:
+          type: integer
+          description: Minimum Stress Level
+        maxStressLevel:
+          type: integer
+          description: Maximum Stress Level
+        lowStressDurationSeconds:
+          type: integer
+          description: Seconds Under Low Sttress
+        mediumStressDurationSeconds:
+          type: integer
+          description: Seconds Under Medium Stress
+        highStressDurationSeconds:
+          type: integer
+          description: Seconds Under High Stress
+        vo2Max:
+          type: integer
+          description: VO2Max Level
+        respiratoryRate:
+          type: number
+          format: double
+          description: Respiratory Rate
+        mindfulMinutes:
+          type: integer
+          description: Mindful Minutets
+        summary:
+          type: boolean
+          description: If this is a daily summary snapshot, this will be true. Generally when this is true, the date of the item will also be at midnight UTC of that date.
+        temperatureCelsius:
+          type: number
+          format: double
+          description: Average Temperature in Celsius
+        repetitions:
+          type: integer
+          description: Number of repetitions, especially for things like Push-Ups
+        weight:
+          type: number
+          format: double
+          description: Weights used for the exercise in KG
+        manual:
+          type: boolean
+          description: True if this was manually entered; false if not know or was not.
+        floorsClimbed:
+          type: integer
+          description: Approximate Number of Floors Climbed
+        gps:
+          description: Structure of the GPS and detailed information
+          $ref: '#/components/schemas/GPSData'
+
+    Allergy:
+      description: Allergy Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - allergy
+      properties:
+        allergy:
+          type: string
+          description: Allergy Name
+        isNegated:
+          type: boolean
+          description: True if the treatment negates the allergy
+        treatment:
+          type: string
+          description: Treatment of allergy
+        endDate:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC of when this medication was last used. 0 implies that it is ongoing.
+
+    GPSData:
+      description: Deep Activity Analytics
+      properties:
+        id:
+          type: string
+          description: Id of the GPS Event
+        title:
+          type: string
+          description: Title of the Stream
+        sport:
+          type: string
+          description: Sport
+        date:
+          type: integer
+          format: int64
+          description: Date of the event as a long of the number of milliseconds since the Epoch in UTC
+        lap:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lap'
+
+    Lap:
+      description: Lap
+      properties:
+        start:
+          type: integer
+          format: int64
+          description: Start time of this Lap in milliseconds since the Epoch in UTC
+        millis:
+          type: integer
+          description: Duration in milliseconds
+        dist:
+          type: integer
+          description: Distance in Meters
+        calories:
+          type: integer
+          description: Calories Expended for this Lap
+        speed:
+          type: number
+          format: double
+          description: Speed in Meters per Second
+        maxHeart:
+          type: number
+          format: double
+          description: Maximum heart rate in this Lap
+        avgHeart:
+          type: number
+          format: double
+          description: Average heart rate in this Lap
+        cadence:
+          type: number
+          format: double
+          description: Cadence for this Lap
+        sport:
+          type: string
+          description: Only specified if different than the GPSData sport or a multisport activity.
+        notes:
+          type: number
+          format: double
+          description: Notes for this Lap
+        hrr:
+          type: number
+          format: double
+          description: Heart Rate Recovery
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+
+    Point:
+      description: A measurement point
+      required:
+        - time
+      properties:
+        time:
+          type: integer
+          format: int64
+          description: Time of this event in milliseconds since the epoch in UTC
+        distance:
+          type: number
+          format: double
+          description: Distance in Meters
+        point:
+          $ref: '#/components/schemas/LatLng'
+          description: Latitude and Longitude for this point.
+        altitude:
+          type: number
+          format: double
+          description: Altitude in meters
+        heartRate:
+          type: number
+          format: double
+          description: Heart rate in beats per minute at this time
+        speed:
+          type: number
+          format: double
+          description: Speed in meters per second
+        cadence:
+          type: number
+          format: double
+          description: Cadence
+        calories:
+          type: number
+          format: double
+          description: Calories Burned
+        hrv:
+          type: array
+          items:
+            type: number
+            format: double
+        hrv_sdnn:
+          type: number
+          format: double
+          description: Heart Rate Variability in SDNN
+        power:
+          type: number
+          format: double
+          description: Power in Watts
+        estimatedPower:
+          type: number
+          format: double
+          description: Estimated Power in Watts
+        temp:
+          type: number
+          format: double
+          description: Temperature in Celsius
+        steps:
+          type: number
+          format: double
+          description: Steps moved up-to this point from the last point.
+        torque:
+          type: number
+          format: double
+          description: Torque
+        locationAccuracy:
+          type: number
+          format: double
+          description: Rating of the location accuracy
+        bearing:
+          type: number
+          format: double
+          description: Bearings in Radians
+        tilt:
+          type: number
+          format: double
+          description: Tilt in Radians
+        pedometerCadence:
+          type: number
+          format: double
+          description: Current Cadence
+        crankCadence:
+          type: number
+          format: double
+          description: Crank Cadence
+        crankRevolutionDelta:
+          type: integer
+          description: Crank Revolution Delta
+        wheelCadence:
+          type: number
+          format: double
+          description: Wheel Cadence
+        wheelRevolutionDelta:
+          type: integer
+          description: Wheel Revolution Delta
+        moving:
+          type: boolean
+          description: True if this is considered to be in motion.
+        stanceTime:
+          type: number
+          format: double
+          description: Stance Time
+        legSpringStiffness:
+          type: number
+          format: double
+          description: Leg Spring Stiffness
+        stress:
+          type: number
+          format: double
+          description: Stress
+        formPower:
+          type: number
+          format: double
+          description: Form Power
+        verticalOscilation:
+          type: number
+          format: double
+          description: Vertical Oscillation
+        vo2Max:
+          type: number
+          format: double
+          description: VO2 Max
+        respiratoryRate:
+          type: number
+          format: double
+          description: Respiratory Rate
+
+    LatLng:
+      description: A Geolocation
+      required:
+        - lat
+        - lng
+      properties:
+        lat:
+          type: number
+          format: double
+          description: Latitude
+        lng:
+          type: number
+          format: double
+          description: Longitude
+
+    BodyComposition:
+      description: Weight Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - weight
+      properties:
+        weight:
+          type: number
+          format: double
+          description: Weight in KG
+        height:
+          type: number
+          format: double
+          description: Height in Meters
+        fatFreeMass:
+          type: number
+          format: double
+          description: Fat Free Mass in KG
+        fatRatio:
+          type: number
+          format: double
+          description: Fat Ratio
+        boneMass:
+          type: number
+          format: double
+          description: Bone Mass in KG
+        bodyWaterKg:
+          type: number
+          format: double
+          description: Body Water in KG
+        bmi:
+          type: number
+          format: double
+          description: Body Mass Index. May be calculated if the User Preferences has the user's height.
+        muscleMass:
+          type: number
+          format: double
+          description: Muscle Mass in KG
+        fatMassWeight:
+          type: number
+          format: double
+          description: Fat Mass Weight in KG
+        caliperChest:
+          type: number
+          format: double
+          description: Chest Caliper in MM
+        caliperMidaxillary:
+          type: number
+          format: double
+          description: Midaxillary Caliper in MM
+        caliperBicep:
+          type: number
+          format: double
+          description: Bicep Caliper in MM
+        caliperAbdominal:
+          type: number
+          format: double
+          description: Abdominal Caliper in MM
+        caliperSuprailiac:
+          type: number
+          format: double
+          description: Suprailiac Caliper in MM
+        caliperThigh:
+          type: number
+          format: double
+          description: Thigh Caliper in MM
+        caliperCalf:
+          type: number
+          format: double
+          description: Calf Caliper in MM
+        caliperSubscapular:
+          type: number
+          format: double
+          description: Subscapular Caliper in MM
+        caliperTricep:
+          type: number
+          format: double
+          description: Tricep Caliper in MM
+        caliperLowerBack:
+          type: number
+          format: double
+          description: Lower Back Caliper in MM
+
+    BloodPressure:
+      description: Blood Pressure Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - diastolic
+        - systolic
+      properties:
+        diastolic:
+          type: number
+          format: double
+          description: Diastolic Blood Pressure
+        systolic:
+          type: number
+          format: double
+          description: Systolic Blood Pressure
+        pulse:
+          type: number
+          format: double
+          description: Pulse at the time of the reading
+        arrhythmia:
+          type: boolean
+          description: True if Arrhythmia was detected in this reading.
+
+    Cholesterol:
+      description: Cholesterol Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      properties:
+        ldl:
+          type: number
+          format: double
+          description: LDL Cholesterol in mmol per Liter
+        hdl:
+          type: number
+          format: double
+          description: HDL Cholesterol in mmol per Liter
+        totalCholesterol:
+          type: number
+          format: double
+          description: Total Cholesterol in mmol per Liter
+        triglyceride:
+          type: number
+          format: double
+          description: Triglyceride in mmol per Liter
+
+    Condition:
+      description: Condition Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - condition
+      properties:
+        condition:
+          type: string
+          description: Condition Name
+        endDate:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC of when this medication was last used. 0 implies that it is ongoing.
+
+    Glucose:
+      description: Glucose Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - value
+      properties:
+        value:
+          type: number
+          format: double
+          description: Glucose Read in mmol per Liter
+        a1c:
+          type: boolean
+          description: True if the value was derived from an A1C
+        measurementType:
+          type: string
+          description: Description of the Context, such as whole blood or plasma
+        measurementContext:
+          type: string
+          description: Description of the Context, such as Before Breakfast
+        entries:
+          type: array
+          description: In order to scale, we recommend grouping data per hour. These are the finer grained elements.
+          items:
+            $ref: '#/components/schemas/GlucosePoint'
+
+    GlucosePoint:
+      description: Glucose Point Entry
+      required:
+        - time
+        - value
+      properties:
+        time:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC
+        value:
+          type: number
+          format: double
+          description: Glucose Read in mmol per Liter
+
+    Medication:
+      description: Medication Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - medication
+      properties:
+        medication:
+          type: string
+          description: Medication Name
+        dose:
+          type: number
+          format: double
+          description: The dose amount of this medication
+        doseUnit:
+          type: string
+          enum: [ML, MG, MGML, Tablet]
+          description: "The dose unit amount for this type. Must be one of: ML, MG, MCG, MGML, Tablet."
+        strength:
+          type: number
+          format: double
+          description: The strength amount of this medication
+        strengthUnit:
+          type: string
+          enum: [ML, MG, MGML]
+          description: "The strength unit amount for this type. Must be one of: ML, MCG, MG, MGML"
+        endDate:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC of when this medication was last used. 0 implies that it is ongoing.
+
+    Nutrition:
+      description: Nutrition Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      properties:
+        food:
+          type: string
+          description: Description of the Food Eaten
+        meal:
+          type: string
+          description: Meal that this was eaten at, typically Breakfast, Lunch, Dinner, Snack, or Other
+        mealApproximation:
+          type: string
+          readOnly: true
+          description: Based on the time, this is FitnessSyncer's best approximation of the meal time
+        calories:
+          type: number
+          format: double
+          description: Number of calories in this meal. This field is required if Water is not present.
+        carbohydrates:
+          type: number
+          format: double
+          description: Carbohydrates in Grams
+        fat:
+          type: number
+          format: double
+          description: Fat in Grams
+        fiber:
+          type: number
+          format: double
+          description: Fiber in Grams
+        protein:
+          type: number
+          format: double
+          description: Protein in Grams
+        sugar:
+          type: number
+          format: double
+          description: Sugar in Grams
+        cholesterol:
+          type: number
+          format: double
+          description: Cholesterol in Grams
+        saturatedFat:
+          type: number
+          format: double
+          description: Saturated Fat in Grams
+        sodium:
+          type: number
+          format: double
+          description: Sodium in milligrams
+        iron:
+          type: number
+          format: double
+          description: Iron in milligrams
+        potassium:
+          type: number
+          format: double
+          description: Potassium in milligrams
+        vitaminA:
+          type: number
+          format: double
+          description: Vitamin A in IU
+        vitaminC:
+          type: number
+          format: double
+          description: Vitamin C in grams
+        vitaminD:
+          type: number
+          format: double
+          description: Vitamin D in IU
+        calcium:
+          type: number
+          format: double
+          description: Calcium in grams
+        glycemicLoad:
+          type: integer
+          description: Glycemic Load
+        water:
+          type: number
+          format: double
+          description: Number of Fluid Ounces of Water Consumed. This field is required if Calories is not present.
+
+    Oxygen:
+      description: Oxygen Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - spo2
+      properties:
+        spo2:
+          type: number
+          format: double
+          description: SpO2 Reading in Percent
+        pulse:
+          type: number
+          format: double
+          description: Pulse Reading in BPM
+        entries:
+          type: array
+          description: In order to scale, we recommend grouping data per hour. These are the finer grained elements.
+          items:
+            $ref: '#/components/schemas/OxygenPoint'
+
+    OxygenPoint:
+      description: Oxygen Point Entry
+      required:
+        - time
+        - spo2
+      properties:
+        time:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC
+        spo2:
+          type: number
+          format: double
+          description: SpO2 Reading in Percent
+        pulse:
+          type: number
+          format: double
+          description: Pulse Reading in BPM
+
+    Sleep:
+      description: Sleep Record
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+        - bedTime
+        - awakeTime
+      properties:
+        bedTime:
+          type: integer
+          format: int64
+          description: Bed Time in Milliseconds Since Epoch in UTC
+        awakeTime:
+          type: integer
+          format: int64
+          description: Awake Time in Milliseconds Since Epoch in UTC
+        sleepingMinutes:
+          type: integer
+          description: Number of minutes actually asleep
+        awakenings:
+          type: integer
+          description: Number of times awoken
+        efficiency:
+          type: integer
+          description: Efficiency of the Sleep as a Percentage
+        sleepEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/SleepEvent'
+        settlingMinutes:
+          type: integer
+          description: Number of Minutes it took to Settle In
+        lightSleepMinutes:
+          type: integer
+          description: Number of Minutes in Light Sleep
+        l2SleepMinutes:
+          type: integer
+          description: Number of Minutes in L2 Sleep
+        l3SleepMinutes:
+          type: integer
+          description: Number of Minutes in L3 Sleep
+        deepSleepMinutes:
+          type: integer
+          description: Number of Minutes in Deep Sleep
+        remSleepMinutes:
+          type: integer
+          description: Number of Minutes in REM Sleep
+        awakeMinutes:
+          type: integer
+          description: Number of Minutes awake.
+        avgHR:
+          type: number
+          format: double
+          description: Average Heart Rate during Sleep
+        avgRR:
+          type: number
+          format: double
+          description: Average Respiratory Rate during Sleep
+        hrvRmssdEvening:
+          type: number
+          format: double
+          description: HRV RMSSD when going to Sleep
+        hrvRmssdMorning:
+          type: number
+          format: double
+          description: HRV RMSSD when waking up
+
+    SleepEvent:
+      description: Sleep Event
+      required:
+       - type
+       - offset
+       - duration
+      properties:
+        type:
+          type: string
+          enum: [LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM]
+          description: "Sleep Stage. Must be one of: LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM."
+        offset:
+          type: integer
+          description: Minute within the sleep this started.
+        duration:
+          type: integer
+          description: Number of minutes that this event lasts for.
+
+    Temperature:
+      description: Temperature Data
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      required:
+       - temperature
+      properties:
+        temperature:
+          type: number
+          format: double
+          description: Temperature Reading in Celsius
+        entries:
+          type: array
+          description: In order to scale, we recommend grouping data per hour. These are the finer grained elements.
+          items:
+            $ref: '#/components/schemas/TemperaturePoint'
+
+    TemperaturePoint:
+      description: Temperature Point Entry
+      required:
+        - time
+        - value
+      properties:
+        time:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC
+        value:
+          type: number
+          format: double
+          description: Temperature Reading in Celsius
+
+    Id:
+      description: Response to a query which requires an id
+      required:
+       - id
+      properties:
+        id:
+          type: string
+          description: Identifier of the item created or changed.
+
+    HistoricSync:
+      description: Request for a Historic Sync
+      properties:
+        start:
+          type: integer
+          format: int64
+          description: Start time for the Historic Sync in milliseconds since the Epoch in UTC
+        end:
+          type: integer
+          format: int64
+          description: End time for the Historic Sync in milliseconds since the Epoch in UTC
+        email:
+          type: boolean
+          description: True to e-mail the user at the end of the historic sync.
+
+    ListSourceData:
+      description: List of Sync Items within a Source Data
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncItemListItem'
+
+    ListSyncItems:
+      description: List of Sync Items within a Source Data
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncItem'
+
+    SyncItemListItem:
+      description: An SyncItem in a List
+      properties:
+        itemId:
+          type: string
+          description: Id of the Item
+        date:
+          type: integer
+          format: int64
+          description: Time of the item as milliseconds since the Epoch in UTC
+        links:
+          $ref: '#/components/schemas/SyncItemLinks'
+
+    SyncItemLinks:
+      description: Links for files
+      properties:
+        fit:
+          type: string
+          description: URL for the FIT file (if applicable)
+        pwx:
+          type: string
+          description: URL for the PWX file (if applicable)
+        tcx:
+          type: string
+          description: URL for the TCX file (if applicable)
+        kml:
+          type: string
+          description: URL for the KML file (if applicable)
+        kmz:
+          type: string
+          description: URL for the KMZ file (if applicable)
+        csv:
+          type: string
+          description: URL for the CSV file (if applicable)
+        gpx:
+          type: string
+          description: URL for the GPX file (if applicable)
+
+    ListOfSourceData:
+      description: List of Source Data
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceData'
+
+    SourceDataItem:
+      description: A single Source Data Item
+      properties:
+        item:
+          $ref: '#/components/schemas/SourceData'
+
+    SourceData:
+      description: |
+        Source Data.
+        Note: Filters are presently not available in the API at this time.
+      required:
+       - type
+       - providerType
+      properties:
+        type:
+          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          type: String
+          $ref: '#/components/schemas/TaskType'
+        id:
+          type: string
+          description: A String identifier for the task. This is used throughout the API for uniquely identifying this item.
+        name:
+          type: string
+          description: A user description for the source.
+        context:
+          type: string
+          description: Optional and only available in Pro accounts, provides a grouping context for our charts.
+        providerType:
+          type: string
+          description: The Provider Type enumeration value.
+        enabled:
+          type: boolean
+          description: Indicates whether this source is enabled or not.
+        deprecated:
+          type: boolean
+          readOnly: true
+          description: True if this item has been deprecated.
+        ignoreDailyCalories:
+          type: boolean
+          description: True to ignore the daily calories summary
+        lastError:
+          type: string
+          readOnly: true
+          description: This is a description of the last error that this source encountered.
+        date:
+          type: integer
+          format: int64
+          readOnly: true
+          description: Date of the last synchronization or error.
+        identifier:
+          type: string
+          readOnly: true
+          description: If the authentication for this is a username or identifier, this would be that string to aid in editing.
+
+    ListDestinationTask:
+      description: List of Destination Task
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DestinationTask'
+
+    DestinationTaskItem:
+      description: Destination Task Item
+      properties:
+        item:
+          $ref: '#/components/schemas/DestinationTask'
+
+    DestinationTask:
+      description: |
+        Destination Task
+        Note: Filters are presently not available in the API at this time.
+      required:
+        - type
+      discriminator:
+        propertyName: type
+        mapping:
+          sync: '#/components/schemas/SyncDestination'
+          email: '#/components/schemas/EmailDestination'
+          refresh: '#/components/schemas/RefreshDestination'
+          shoe: '#/components/schemas/ShoeDestination'
+          social: '#/components/schemas/SocialDestination'
+          alert: '#/components/schemas/AlertDestination'
+      properties:
+        type:
+          type: string
+          description: This is the type of destination task. Not all of the types supported by FitnessSyncer are documented here.
+        id:
+          type: string
+          description: A String identifier for the task. This is used throughout the API for uniquely identifying this item.
+        name:
+          type: string
+          description: A user description for the destination.
+        hour:
+          type: integer
+          description: Hour for this task to be ran (if Pro). The time is specified in PST.
+        localHour:
+          type: integer
+          description: Hour converted to the user's timezone (from their profile).
+        lastError:
+          type: string
+          readOnly: true
+          description: This is a description of the last error that this source encountered.
+        date:
+          type: integer
+          format: int64
+          description: Date of the last synchronization or error.
+        enabled:
+          type: boolean
+          description: Indicates whether this destination is enabled or not.
+
+    SyncDestination:
+      description: This is a destination which synchronizes with other sources.
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+      required:
+        - providerType
+      properties:
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        providerType:
+          type: string
+          description: The Provider Type enumeration value. See Listing Providers for details.
+        skipDataFields:
+          type: array
+          description: List of fields to skip over (if applicable)
+          items:
+            type: string
+        onlyIfNotOnDest:
+          type: boolean
+          description: Mode that only places items on the destination IF there is nothing on the destination for the day. Not recommended.
+        identifier:
+          type: string
+          readOnly: true
+          description: If the authentication for this is a username or identifier, this would be that string to aid in editing.
+
+    EmailDestination:
+      description: This is a destination which e-mails a summary periodically.
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+      properties:
+        granularity:
+          type: string
+          enum: [DAY, WEEK, MONTH]
+          description: "What is the granularity you wish for this to run at? Must be one of: Day, Week, Month"
+        granularityFriendly:
+          type: string
+          readOnly: true
+          description: Friendly name of the granularity
+        removeDuplicates:
+          type: boolean
+          description: True to remove the duplicates
+        dataView:
+          type: string
+          enum: [STANDARD, QUARTER, HALF, YEAR]
+          description: "View for the data. This is not currently used. Must be one of: Day, Week, Month"
+        fileFormat:
+          type: string
+          enum: [TCX, GPX, KML, KMZ, FIT, PWX, CSV]
+          description: "File format for attachments if the user is a Pro. Must be one of: TCX, GPX, KML, KMZ, FIT, PWX, CSV"
+        message:
+          type: string
+          description: Message to include if the user is a Pro.
+        otherEmail:
+          type: string
+          description: Comma Delimited list of e-mail address if the user is a Pro.
+
+    SocialDestination:
+      description: This is a destination which posts to Social Networks periodically.
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+      required:
+        - network
+      properties:
+        granularity:
+          type: string
+          enum: [DAY, WEEK, MONTH]
+          description: "What is the granularity you wish for tthis to run at? Must be one of: Day, Week, Month"
+        granularityFriendly:
+          type: string
+          readOnly: true
+          description: Friendly name of the granularity
+        removeDuplicates:
+          type: boolean
+          description: True to remove the duplicates
+        dataView:
+          type: string
+          enum: [STANDARD,  QUARTER, HALF, YEAR]
+          description: "View for the data. This is not currently used. Must be one of: STANDARD,  QUARTER, HALF, YEAR"
+        network:
+          type: string
+          description: "The name of the Social Network to post to. Must be one of: Twitter"
+        Activity:
+          type: boolean
+          description: True if to include Activity data.
+        Weight:
+          type: boolean
+          description: True if to include Body Composition data.
+        BloodPressure:
+          type: boolean
+          description: True if to include Blood Pressure data.
+        Glucose:
+          type: boolean
+          description: True if to include Glucose data.
+        Nutrition:
+          type: boolean
+          description: True if to include Nutrition data.
+        Oxygen:
+          type: boolean
+          description: True if to include Oxygen data.
+        Temperature:
+          type: boolean
+          description: True if to include Temperature data.
+        Sleep:
+          type: boolean
+          description: True if to include Sleep data.
+
+    AlertDestination:
+      description: This is a destination which will alert the user of a condition
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+      required:
+        - alarmType
+        - alarmArgument
+        - taskType
+        - field
+        - comparison
+        - compareTo
+      properties:
+        alarmType:
+          type: string
+          enum: [hoursago, daysago, date]
+          description: |
+            The range for an alert, either n-hours ago, n-days ago, or since a specific date. Must be one of: hoursago, daysago, date
+        alarmArgument:
+          type: integer
+          format: int64
+          description: The argument for the alert type.
+        reducer:
+          type: string
+          description: The reducer to run on the data.
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        field:
+          type: string
+          description: The Data Field to consider for this data.
+        comparison:
+          type: string
+          description: Type of comparison to use.
+        compareTo:
+          type: number
+          format: double
+          description: Value to compare to.
+        message:
+          type: string
+          description: Message to include if the user is a Pro.
+        otherEmail:
+          type: string
+          description: Comma Delimited list of e-mail address if the user is a Pro.
+
+    ShoeDestination:
+      description: This is a special case of the Alert Task which is for reminding users to refresh shoes and service equipment.
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+      required:
+        - shoes
+        - miles
+        - renotify
+      properties:
+        shoes:
+          type: integer
+          format: int64
+          description: The date and time that the shoes or equipment was last purchased or serviced as the number of milliseconds since the epoch in UTC.
+        miles:
+          type: number
+          format: double
+          description: The number of miles or hours to fire the alert at.
+        renotify:
+          type: number
+          format: double
+          description: The number of miles or hours to re-fire the alert at.
+        sofar:
+          type: number
+          format: double
+          readOnly: true
+          description: How many miles or hours have been logged so far (as of the last refresh).
+        useHoursInstead:
+          type: boolean
+          description: Instead of using distance, use hours.
+        lastNotification:
+          type: integer
+          readOnly: true
+          description: This is the last time that the user was notified about this condition. This will be 0 if it has not yet fired.
+        LastNotificationMiles:
+          type: number
+          format: double
+          readOnly: true
+          description: This is the value of sofar when the user was last notified.
+
+    RefreshDestination:
+      description: A Refresh Destination is a FitnessSyncer Pro only feature which allows scheduled refreshes of all source data.
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+
+    ListTaskType:
+      description: List of TaskTypes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskType'
+          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+
+    # Does not show up in the documentation...
+    TaskType:
+      description: Enumeration of TaskTypes. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+      type: string
+
+    ProviderList:
+      description: List of Providers
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Provider'
+
+    Provider:
+      description: Schema for a provider.
+      properties:
+        providerType:
+          type: string
+          readOnly: true
+          description: This is the value of the providerType to be passed in. This should not be displayed.
+        name:
+          type: string
+          readOnly: true
+          description: This is the description of the provider for display purposes.
+        authentication:
+          type: string
+          enum: [UsernamePassword, Identifier, AppRequired, OAuth, UsernamePasswordKey, Unsupported]
+          readOnly: true
+          description: |
+            This is the type of authentication which this provider requires. See the Provider Authentication section for information.
+        beta:
+          type: boolean
+          readOnly: true
+          description: If this is true, this implies that this provider type is presently in public beta testing.
+        notifications:
+          type: boolean
+          readOnly: true
+          description: True if this service currently does notifications-based synchronization.
+        cloudStorageMapsProvider:
+          type: boolean
+          description: True if this is a Cloud Storage Map Provider.
+        cloudStorageCsvProvider:
+          type: boolean
+          description: True if this is a Cloudd Storage CSV Provider.
+        googleServices:
+          type: boolean
+          description: True if this is part of the Google Authentication Service Suite
+        reauthenticateAll:
+          type: boolean
+          description: True if this is a candidate for Reauthenticate All.
+        historicSync:
+          type: boolean
+          description: True if this type supports Historic Sync.
+        compatibleAuthentication:
+          type: array
+          description: List of providers
+          items:
+            type: string
+        faq:
+          type: string
+          description: URL to the FAQ
+        logo:
+          type: string
+          description: URL to the Logo
+        appurl:
+          type: string
+          description: If this represents an app, this represents the URL for that app.
+        ActivityRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read activity data.
+        ActivityWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write activity data.
+        AllergyRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read allergy data.
+        AllergyWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write allergy data.
+        WeightRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read body composition data.
+        WeightWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write body composition data.
+        BloodPressureRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read blood pressure data.
+        BloodPressureWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write blood pressure data.
+        CholesterolRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read cholesterol data.
+        CholesterolWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write cholesterol data.
+        ConditionRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read condition data.
+        ConditionWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write condition data.
+        GlucoseRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read glucose data.
+        GlucoseWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write glucose data.
+        MedicationRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read medication data.
+        MedicationWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write medication data.
+        NutritionRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read nutrition data.
+        NutritionWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write nutrition data.
+        OxygenRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read oxygen data.
+        OxygenWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write oxygen data.
+        SleepRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read sleep data.
+        SleepWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write sleep data.
+        TemperatureRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read temperature data.
+        TemperatureWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write temperature data.
+
+    Authentication:
+      description: Base Authentication
+      required:
+        - type
+      discriminator:
+        propertyName: type
+        mapping:
+          UsernamePassword: '#/components/schemas/AuthenticationUsernamePassword'
+          UsernamePasswordKey: '#/components/schemas/AuthenticationUsernamePasswordKey'
+          Identifier: '#/components/schemas/AuthenticationIdentifier'
+          OAuth: '#/components/schemas/AuthenticationOAuth'
+          OAuthReuse: '#/components/schemas/AuthenticationOAuthReuse'
+      properties:
+        type:
+          type: string
+          description: The Type of Authentication
+
+    AuthenticationUsernamePassword:
+      description: Username and Password authentication
+      allOf:
+        - $ref: '#/components/schemas/Authentication'
+      properties:
+        username:
+          type: string
+          description: The username required for the user’s authentication
+        password:
+          type: string
+          description: The password required for the user’s authentication
+
+    AuthenticationUsernamePasswordKey:
+      description: Username, Password, and Key authentication
+      allOf:
+        - $ref: '#/components/schemas/Authentication'
+      properties:
+        username:
+          type: string
+          description: The username required for the user’s authentication
+        password:
+          type: string
+          description: The password required for the user’s authentication
+        clientId:
+          type: string
+          description: The client id required for the user’s authentication
+        clientSecret:
+          type: string
+          description: The client secret required for the user’s authentication
+
+    AuthenticationIdentifier:
+      description: Identifier authentication
+      allOf:
+        - $ref: '#/components/schemas/Authentication'
+      properties:
+        identifier:
+          type: string
+          description: The identifier required for the user’s authentication
+
+    AuthenticationOAuth:
+      description: This will start the redirects required to authenticate an OAuth-like scheme. This will return a 202 to you with a Location header to pass onto your user. Your user will end at the URL provided below on success or failure (except where beyond our control or extreme failures).
+      allOf:
+        - $ref: '#/components/schemas/Authentication'
+      properties:
+        redirect:
+          type: string
+          description: The URL you wish for FitnessSyncer to redirect the user for either success or failure modes
+
+    AuthenticationOAuthReuse:
+      description: See Provider Authenticate for how to get the id field for this request.
+      allOf:
+        - $ref: '#/components/schemas/Authentication'
+      properties:
+        id:
+          type: string
+          description: id of the item which you wish to re-use the authentication of
+
+    ProviderAuthentication:
+      description: Authentication List
+      properties:
+        providers:
+          type: array
+          description: List of providers
+          items:
+            $ref: '#/components/schemas/ProviderAuthenticationItem'
+
+    ProviderAuthenticationItem:
+      description: Authentication Item
+      properties:
+        name:
+          type: string
+          description: This is the description of the provider for display purposes.
+        providerType:
+          type: string
+          description: This is the value of the providerType to be passed in. This should not be displayed.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderAuthenticationKey'
+
+    ProviderAuthenticationKey:
+      description: Id of the item to use for authentication.
+      properties:
+        name:
+          type: string
+          description: Name of the source or destination task represented here.
+        id:
+          type: string
+          description: Id of the source or destination to be used with the re-use.
+
+    SyncStatusResults:
+      description: Results of the Sync Status
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncStatus'
+
+    SyncStatus:
+      description: Status of the active synchronizations.
+      properties:
+        id:
+          type: string
+          description: The id of the source or destination.
+        type:
+          type: string
+          description: Indication of the type ranging from SOURCE or DESTINATION. Other types should be ignored.
+        status:
+          type: string
+          description: "A summary of the current status, such as Running, Queued, Status, Complete"
+        state:
+          type: string
+          description: "Which state is this task in; this is not available for all tasks. Generally will be: HISTORIC_SYNC, REFRESHING, COMPARING, SYNCING, UPLOADING"
+        info:
+          type: string
+          description: "If available, the localized message summarizing the state"
+        upTo:
+          type: integer
+          format: int64
+          description: "Date about how far this has been processed up-to"
+        update:
+          type: string
+          description: Any recent error messages from this source or destination.
+
+    Subscription:
+      description: Subscription context for the user.
+      properties:
+        notificationKey:
+          type: string
+          description: The notification key for the subscription. This notificationKey will be in each of the notifications executed to your service on behalf of this user.  Repeating queries here will result in new keys being created.
+
+    Notification:
+      description: Response to claiming notifications
+      properties:
+        claim:
+          type: string
+          description: The claim will be required for deleting the notification.
+        items:
+          description: List of the subscriptions which have data.
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+        errors:
+          description: List of the subscriptions which have encountered one or more errors.
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+
+    DescriptionResults:
+      description: Wrapper around the results array.
+      properties:
+        results:
+          type: array
+          description: The array of results.
+          items:
+            $ref: '#/components/schemas/Description'
+
+    Description:
+      description: Descriptions and keys for various things within this API.
+      properties:
+        key:
+          type: string
+          description: This is the key id which is to be referenced within this API.
+        description:
+          type: string
+          description: Description of the item.
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        isMeasuredType:
+          type: boolean
+          description: True if this is a measured type where metric or imperial would make a difference.
+        metric:
+          type: boolean
+          description: True if this value should be used on metric values. False if this is imperial. Null if this is not applicable.
+        onlyReportSettings:
+          type: boolean
+          description: True if this granularity is only allowed for Report Settings and not for Report Inquiries.
+        measurementType:
+          type: string
+          enum: [DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER]
+          description: "What type of display preference takes precedence when displaying this unit. One of: DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER"
+
+    LeaderboardList:
+      description: List of Leaderboards
+      properties:
+        own:
+          description: List of the Leaderboards this user owns.
+          type: array
+          items:
+            $ref: '#/components/schemas/Leaderboard'
+        pending:
+          description: List of the Leaderboards this user has not yet accepted.
+          type: array
+          items:
+            $ref: '#/components/schemas/Leaderboard'
+        accepted:
+          description: List of the Leaderboards this user has accepted.
+          type: array
+          items:
+            $ref: '#/components/schemas/Leaderboard'
+
+    LeaderboardUser:
+      description: Request to add user(s) to a FitnessSyncer Leaderboard
+      properties:
+        user:
+          type: string
+          description: Add a single user
+        users:
+          type: array
+          description: Add a set of users.
+          items:
+            type: string
+
+    LeaderboardItem:
+      description: Result of a single Leaderboard.
+      properties:
+        item:
+          $ref: '#/components/schemas/Leaderboard'
+
+    Leaderboard:
+      description: This is the definition of a FitnessSyncer Leaderboard
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          description: This is the unique id for this leaderboard.
+        name:
+          type: string
+          description: This is the name of the Leaderboard. This must be unique.
+        description:
+          type: string
+          description: Description of the Leaderboard
+        granularity:
+          type: string
+          description: |
+            Granularity of the Board. Default to Week.  Must be one of: Day, Week, Month
+        userLimit:
+          type: integer
+          format: int64
+          description: This is the user limit for this leaderboard.
+        email:
+          type: boolean
+          description: Should we send periodic e-mail notifications?
+        chartLineGranularity:
+          type: boolean
+          description: Should the Leaderboard include the Line Chart per Granularity?
+        chartTableGranularity:
+          type: boolean
+          description: Should the Leaderboard include the Table per Granularity?
+        chartClassicLeaderboard:
+          type: boolean
+          description: Should the leaderboard include the Classic Leaderboard View?
+        dataField:
+          type: array
+          description: Data Field for this Leaderboard. The first element is the primary comparison value whereas the others are used for tabular visualization.
+          items:
+            type: string
+        startDate:
+          type: integer
+          format: int64
+          description: Start Date of the Leaderboard in milliseconds since Epoch
+        endDate:
+          type: integer
+          format: int64
+          description: End Date of the Leaderboard in milliseconds since Epoch
+
+    LeaderboardUserPreferences:
+      description: This is the definition of a FitnessSyncer Leaderboard User Preferences
+      required:
+        - name
+      properties:
+        emailUpdate:
+          type: boolean
+          description: If this is a Pro user, this will denote whether Auto-Sync is enabled or not.
+
+    LeaderboardData:
+      description: |
+        Leaderboard Data Result.
+      properties:
+        data:
+          type: object
+          properties:
+            categories:
+              type: array
+              description: Categories of the chart, in increasing order
+              items:
+                type: string
+            entries:
+              type: array
+              description: Participants
+              items:
+                type: object
+                properties:
+                  participant:
+                    type: string
+                    description: Display name of the participant.
+                  values:
+                    type: array
+                    description: Values of the Participant
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                          description: Category name
+                        value:
+                          type: number
+                          format: double
+                          description: Category value
+
+
+security:
+    - OAuth2:
+       - sources
