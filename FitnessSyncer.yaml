@@ -3515,6 +3515,9 @@ components:
         email:
           type: boolean
           description: Should we send periodic e-mail notifications?
+        anyoneCanSignUp:
+          type: boolean
+          description: By default, the Leaderboard will only allow users who have been explicitly invited. With this option enabled, anyone with a FitnessSyncer account can sign up up-to the limit.
         chartLineGranularity:
           type: boolean
           description: Should the Leaderboard include the Line Chart per Granularity?
