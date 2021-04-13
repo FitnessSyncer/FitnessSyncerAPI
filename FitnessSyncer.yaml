@@ -3355,7 +3355,7 @@ components:
       properties:
         name:
           type: string
-          description: Name of the source or destination task represented here.
+          description: Name of the source or destination task represented here. If there are tasks with duplicate names, there may be an identifier at the end of the name to help with ordering.
         id:
           type: string
           description: Id of the source or destination to be used with the re-use.
