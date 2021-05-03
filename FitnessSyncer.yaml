@@ -3527,6 +3527,10 @@ components:
         chartClassicLeaderboard:
           type: boolean
           description: Should the leaderboard include the Classic Leaderboard View?
+        groupGoal:
+          type: number
+          format: double
+          description: FitnessSyncer Leaderboards can be configured to be both a challenge for individuals or for a group. If set to a non-negative value, this setting enables group challenges and this is the value for which the primary data field must exceed.
         dataField:
           type: array
           description: Data Field for this Leaderboard. The first element is the primary comparison value whereas the others are used for tabular visualization.
