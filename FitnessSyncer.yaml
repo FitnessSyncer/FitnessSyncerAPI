@@ -3527,6 +3527,9 @@ components:
         chartClassicLeaderboard:
           type: boolean
           description: Should the leaderboard include the Classic Leaderboard View?
+        relative:
+          type: boolean
+          description: True if the graphs should be relative progress; this disables Group Goals and Classic Leaderboards. This can only be set on creation and cannot be toggled.
         groupGoal:
           type: number
           format: double
