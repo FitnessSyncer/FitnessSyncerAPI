@@ -2600,6 +2600,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SleepEvent'
+        sleepPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/SleepPoint'
         settlingMinutes:
           type: integer
           description: Number of Minutes it took to Settle In
@@ -2655,6 +2659,28 @@ components:
         duration:
           type: integer
           description: Number of minutes that this event lasts for.
+
+    SleepPoint:
+      description: Sleep Point
+      required:
+       - time
+      properties:
+        time:
+          type: integer
+          format: int64
+          description: Time in milliseconds since the Epoch in UTC
+        heartRate:
+          type: number
+          format: double
+          description: Heart rate in beats per minute at this time
+        respiratoryRate:
+          type: number
+          format: double
+          description: Respiratory Rate
+        hrv_sdnn:
+          type: number
+          format: double
+          description: Heart Rate Variability in SDNN
 
     Temperature:
       description: Temperature Data
