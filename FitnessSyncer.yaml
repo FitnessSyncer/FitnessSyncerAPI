@@ -1927,6 +1927,9 @@ components:
         calories:
           type: integer
           description: Calories Burned
+        bmr:
+          type: integer
+          description: Basal Metabolic Rate
         endDate:
           type: integer
           format: int64
