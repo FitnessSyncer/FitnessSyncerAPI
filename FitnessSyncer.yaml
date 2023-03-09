@@ -1258,7 +1258,7 @@ paths:
           name: type
           schema:
             type: string
-            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers]
+            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers]
           required: true
           description: |
             Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers
@@ -1761,6 +1761,96 @@ paths:
           description: Unauthorized.
         404:
           description: Leaderboard not found.
+        429:
+          description: A usage rate has been exceeded.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /dashboards/:
+    post:
+      summary: Create a Dashboard Request
+      description: |
+        Building a Chart can take time especially for users with lots of data and complex queries. To ensure that your request does not time out, this API is asynchronous.
+        To get data for a dashboard, you must first create a dashboard request. Next, you must poll for the results using the Get Session API.
+        Note that dashboard results will automatically be removed after approximately 10 minutes.
+      operationId: createDashboardRequest
+      tags: [Dashboards]
+      security:
+        - OAuth2: [sources]
+      requestBody:
+        description: What type of data do you require for your Dashboard?
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DashboardRequest'
+      responses:
+        200:
+          description: In some rare occasions, the data may already be available and may be returned immediately.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        202:
+          description: In some rare occassions, the data may already be available and may be returned immediately.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreatedResponse'
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized.
+        429:
+          description: A usage rate has been exceeded.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /dashboards/{session}:
+    get:
+      summary: Checks on the status of a Dashboard Request
+      description: |
+        After submitting a Create Dashboard Request, it will likely have responded with a 202 with a SessionCreatedResponse.
+        If so, you must use the session id from that response to acquire the data using this API. This may require several calls before the data is available.
+        Note that dashboard results will automatically be removed after approximately 10 minutes.
+      operationId: getSessionData
+      tags: [Dashboards]
+      security:
+        - OAuth2: [sources]
+      parameters:
+        - in: path
+          name: session
+          schema:
+            type: string
+          required: true
+          description: |
+            This is the session id to fetch as returned by the Create Dashboard Request
+      responses:
+        200:
+          description: This is the data associated with your Dashboard Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        202:
+          description: If the data is not yet available, another 202 will be indicated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreatedResponse'
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized.
+        410:
+          description: The session is no longer valid.
         429:
           description: A usage rate has been exceeded.
         500:
@@ -3036,7 +3126,7 @@ components:
         granularity:
           type: string
           enum: [DAY, WEEK, MONTH]
-          description: "What is the granularity you wish for this to run at? Must be one of: Day, Week, Month"
+          description: "What is the granularity you wish for this to run at? Must be one of: DAY, WEEK, or MONTH"
         granularityFriendly:
           type: string
           readOnly: true
@@ -3047,7 +3137,7 @@ components:
         dataView:
           type: string
           enum: [STANDARD, QUARTER, HALF, YEAR]
-          description: "View for the data. This is not currently used. Must be one of: Day, Week, Month"
+          description: "View for the data. This is not currently used. Must be one of: STANDARD, QUARTER, HALF, YEAR"
         fileFormat:
           type: string
           enum: [TCX, GPX, KML, KMZ, FIT, PWX, CSV]
@@ -3069,7 +3159,7 @@ components:
         granularity:
           type: string
           enum: [DAY, WEEK, MONTH]
-          description: "What is the granularity you wish for tthis to run at? Must be one of: Day, Week, Month"
+          description: "What is the granularity you wish for this to run at? Must be one of: DAY, WEEK, or MONTH"
         granularityFriendly:
           type: string
           readOnly: true
@@ -3623,8 +3713,8 @@ components:
           description: Description of the Leaderboard
         granularity:
           type: string
-          description: |
-            Granularity of the Board. Default to Week.  Must be one of: Day, Week, Month
+          enum: [DAY, WEEK, MONTH]
+          description: "What is the granularity you wish for this to run at? Must be one of: DAY, WEEK, or MONTH"
         userLimit:
           type: integer
           format: int64
@@ -3709,6 +3799,104 @@ components:
                           format: double
                           description: Category value
 
+    DashboardRequest:
+      description: |
+        Dashboard Request
+      properties:
+        includeNotebook:
+          type: boolean
+          description: Should we include the values from FitnessSyncer Notebook? The default is true.
+        sourceIds:
+          type: array
+          description: This specifics the IDs of all of the sources to use for this query. If not specified, this will include all sources.
+          items:
+            type: string
+        activityTypes:
+          type: array
+          description: This specifies the sport types you wish to include. If not specified, this will include all activities. See the Descriptions Activity API.
+          items:
+            type: integer
+        customStart:
+          type: integer
+          format: int64
+          description: If the DataView is set to PERIOD, this is the time in milliseconds to use as the start time in UTC.
+        customEnd:
+          type: integer
+          format: int64
+          description: If the DataView is set to PERIOD, this is the time in milliseconds to use as the end time in UTC.
+        removeDuplicates:
+          type: boolean
+          description: Should the chart remove duplicates? The default is true.
+        reducer:
+          type: string
+          description: The reducer to run on the data per granularity. See the descriptions API. The default is RANGE_NO_ZEROS.
+        finalReducer:
+          type: string
+          description: The reducer to run on the data per period. See the descriptions API. The default is RANGE_NO_ZEROS.
+        treatNoDataAsZero:
+          type: boolean
+          description: If there is no data available for a granularity, should it be treated as a null?  The default is false.
+        dataView:
+          type: string
+          enum: [TEN_PERIODS, STANDARD, QUARTER, HALF, YEAR]
+          description: "View for the data. Must be one of: TEN_PERIODS, STANDARD, QUARTER, HALF, or YEAR. The default is STANDARD."
+        granularity:
+          type: string
+          enum: [PERIOD, DAY10, DAY, WEEK, MONTH]
+          description: "What is the granularity you wish for this to run at? Must be one of: DAY10 (10 periods), DAY, WEEK, MONTH, or PERIOD. If PERIOD, you must set customStart and customEnd. The default is DAY10."
+        labeler:
+          type: string
+          description: What should we use for the labeler of the data? This allows you to group the data differently; the default is PROVIDER. See the descriptions API.
+        dataFields:
+          type: array
+          description: Each of the DataFields for the fields to be returned. See the descriptions API. This is a required field.
+          items:
+            type: string
+
+    SessionCreatedResponse:
+      description: |
+        When requesting a Dashboard, if the Dashboard takes time to build, a 201 will be returned with this object. Use the get session API to get the data.
+      properties:
+        session:
+          type: string
+          description: "Session id to use with the Session API"
+
+    DashboardResponse:
+      description: |
+        Dashboard Data Result.
+      properties:
+        noData:
+          type: boolean
+          description: if this is true, there is no data associated with this request.
+        categories:
+          type: array
+          description: Categories of the chart, in increasing order
+          items:
+            type: string
+        series:
+          type: array
+          description: Chart Data
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                description: Label of the Row
+              values:
+                type: array
+                description: Values of the Series
+                items:
+                  type: object
+                  properties:
+                    label:
+                      type: string
+                      description: Label for this series value
+                    values:
+                      type: array
+                      description: Category value for this series correlating to the category index in the global object.
+                      items:
+                        type: number
+                        format: double
 
 security:
     - OAuth2:
