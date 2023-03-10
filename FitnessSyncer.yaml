@@ -3836,6 +3836,9 @@ components:
         treatNoDataAsZero:
           type: boolean
           description: If there is no data available for a granularity, should it be treated as a null?  The default is false.
+        treatZeroAsNoData:
+          type: boolean
+          description: If a value is 0, should it be treated as a null? The default is false.
         dataView:
           type: string
           enum: [TEN_PERIODS, STANDARD, QUARTER, HALF, YEAR]
@@ -3881,7 +3884,7 @@ components:
             properties:
               label:
                 type: string
-                description: Label of the Row
+                description: Label of the Row.
               values:
                 type: array
                 description: Values of the Series
@@ -3890,13 +3893,22 @@ components:
                   properties:
                     label:
                       type: string
-                      description: Label for this series value
+                      description: Label for this series value.
+                    type:
+                      type: string
+                      enum: [sum, min, max, avg, count]
+                      description: When you are using a Range reducer and there is more than one value provided, the label will be duplicated and will have a series for each of the types.
                     values:
                       type: array
-                      description: Category value for this series correlating to the category index in the global object.
+                      description: Category value for this series correlating to the category index in the global object. You will need to overlay the nulls array on this.
                       items:
                         type: number
                         format: double
+                    nulls:
+                      type: array
+                      description: For any category value for this series which is null, there will be a true in this array. This array may not be present.
+                      items:
+                        type: boolean
 
 security:
     - OAuth2:
