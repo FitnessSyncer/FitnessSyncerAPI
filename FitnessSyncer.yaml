@@ -2834,11 +2834,13 @@ components:
           type: string
           enum: [LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM]
           description: "Sleep Stage. Must be one of: LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM."
-        offset:
-          type: integer
+        offsetMinutes:
+          type: number
+          format: double
           description: Minute within the sleep this started.
-        duration:
-          type: integer
+        durationMinutes:
+          type: number
+          format: double
           description: Number of minutes that this event lasts for.
 
     SleepPoint:
