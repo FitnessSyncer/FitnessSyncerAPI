@@ -3064,7 +3064,6 @@ components:
           email: '#/components/schemas/EmailDestination'
           refresh: '#/components/schemas/RefreshDestination'
           shoe: '#/components/schemas/ShoeDestination'
-          social: '#/components/schemas/SocialDestination'
           alert: '#/components/schemas/AlertDestination'
       properties:
         type:
@@ -3150,56 +3149,6 @@ components:
         otherEmail:
           type: string
           description: Comma Delimited list of e-mail address if the user is a Pro.
-
-    SocialDestination:
-      description: This is a destination which posts to Social Networks periodically.
-      allOf:
-        - $ref: '#/components/schemas/DestinationTask'
-      required:
-        - network
-      properties:
-        granularity:
-          type: string
-          enum: [DAY, WEEK, MONTH]
-          description: "What is the granularity you wish for this to run at? Must be one of: DAY, WEEK, or MONTH"
-        granularityFriendly:
-          type: string
-          readOnly: true
-          description: Friendly name of the granularity
-        removeDuplicates:
-          type: boolean
-          description: True to remove the duplicates
-        dataView:
-          type: string
-          enum: [STANDARD,  QUARTER, HALF, YEAR]
-          description: "View for the data. This is not currently used. Must be one of: STANDARD,  QUARTER, HALF, YEAR"
-        network:
-          type: string
-          description: "The name of the Social Network to post to. Must be one of: Twitter"
-        Activity:
-          type: boolean
-          description: True if to include Activity data.
-        Weight:
-          type: boolean
-          description: True if to include Body Composition data.
-        BloodPressure:
-          type: boolean
-          description: True if to include Blood Pressure data.
-        Glucose:
-          type: boolean
-          description: True if to include Glucose data.
-        Nutrition:
-          type: boolean
-          description: True if to include Nutrition data.
-        Oxygen:
-          type: boolean
-          description: True if to include Oxygen data.
-        Temperature:
-          type: boolean
-          description: True if to include Temperature data.
-        Sleep:
-          type: boolean
-          description: True if to include Sleep data.
 
     AlertDestination:
       description: This is a destination which will alert the user of a condition
