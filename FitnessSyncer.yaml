@@ -2232,6 +2232,12 @@ components:
         millis:
           type: integer
           description: Duration in milliseconds
+        totalMovingTimeMillis:
+          type: integer
+          description: Moving Time in milliseconds (if specified)
+        totalMovingTimeMillisCalc:
+          type: integer
+          description: This will either be equal to totalMovingTimeMillis or be the version we have calculated. This is a read-only field.
         dist:
           type: integer
           description: Distance in Meters
