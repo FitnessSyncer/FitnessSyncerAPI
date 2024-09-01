@@ -2784,6 +2784,12 @@ components:
           type: integer
           description: Efficiency of the Sleep as a Percentage
         sleepEvents:
+          description: Actual Sleep Events
+          type: array
+          items:
+            $ref: '#/components/schemas/SleepEvent'
+        inferredSleepEvents:
+          description: If Actual Sleep Events are not available, FitnessSyncer will provide inferred Sleep Events. This is a read-only parameter.
           type: array
           items:
             $ref: '#/components/schemas/SleepEvent'
