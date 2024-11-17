@@ -1336,10 +1336,10 @@ paths:
           name: type
           schema:
             type: string
-            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers]
+            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones]
           required: true
           description: |
-            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers
+            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers, timezones
             Most of these responses are generic and are cachable between users and sessions. However, distinctActivities is the user's specific types of activities that their account has so this should not be shared between accounts.
       responses:
         200:
@@ -2053,7 +2053,7 @@ components:
           description: "Gender of the user. Must be one of: Unspecified, Female, Male"
         timezone:
           type: string
-          description: User’s time zone.
+          description: User’s time zone. Consider using the timezone descriptions API to get the supported timezones.
         timezoneDisplayName:
           type: string
           readOnly: true
