@@ -2102,6 +2102,17 @@ components:
         graphSleepByWakeTime:
           type: boolean
           description: How should the system graph sleep? If true, this will graph it based on the awake time. Otherwise, this will be graphed based on bedtime.
+        glucoseLow:
+          type: number
+          format: double
+          description: The lower range of the Glucose Range in mmol/L for graphing.
+        glucoseHigh:
+          type: number
+          format: double
+          description: The higher range of the Glucose Range in mmol/L for graphing.
+        glucosePercent:
+          type: number
+          description: From 0-100%, what is your goal for being in the Glucose Range from Low to High?
 
     SyncItemItem:
       description: Common data for each of the data types that FitnessSyncer processes.
