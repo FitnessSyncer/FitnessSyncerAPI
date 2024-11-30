@@ -2111,7 +2111,7 @@ components:
           format: double
           description: The higher range of the Glucose Range in mmol/L for graphing.
         glucosePercent:
-          type: number
+          type: integer
           description: From 0-100%, what is your goal for being in the Glucose Range from Low to High?
 
     SyncItemItem:
