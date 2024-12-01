@@ -3698,6 +3698,9 @@ components:
         taskType:
           $ref: '#/components/schemas/TaskType'
           description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        defaultReducer:
+          type: string
+          description: Name of the reducer that is defaulted for this data type.
         isMeasuredType:
           type: boolean
           description: True if this is a measured type where metric or imperial would make a difference.
@@ -3707,6 +3710,9 @@ components:
         onlyReportSettings:
           type: boolean
           description: True if this granularity is only allowed for Report Settings and not for Report Inquiries.
+        postProcessed:
+          type: boolean
+          description: True if this field requires some post processing, so may not be available within some contexts.
         measurementType:
           type: string
           enum: [DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER]
