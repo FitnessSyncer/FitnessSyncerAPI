@@ -1078,7 +1078,7 @@ paths:
     get:
       summary: Listing Providers
       description: |
-        Get the data providers that are presently available on FitnessSyncer. It should be noted that this method is highly cachable, especially if you are using a fixed set of providers.
+        Get the data providers that are presently available on FitnessSyncer. In general, this file is highly cacheable; new providers and notices about current providers are added periodically.
       operationId: getProviders
       tags: [Providers]
       security:
@@ -3409,6 +3409,12 @@ components:
         faq:
           type: string
           description: URL to the FAQ
+        notice:
+          type: string
+          description: If applicable, this will include any important notices for this provider. These notices will generally be around deprecation and common issues.
+        noticeurl:
+          type: string
+          description: For items with a notice, there may be an associated web page with additional information.
         logo:
           type: string
           description: URL to the Logo
