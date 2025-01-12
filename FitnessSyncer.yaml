@@ -2328,7 +2328,8 @@ components:
           type: integer
           description: This will either be equal to totalMovingTimeMillis or be the version we have calculated. This is a read-only field.
         dist:
-          type: integer
+          type: number
+          format: double
           description: Distance in Meters
         calories:
           type: integer
@@ -2870,7 +2871,8 @@ components:
           type: integer
           description: Number of times awoken
         efficiency:
-          type: integer
+          type: number
+          format: double
           description: Efficiency of the Sleep as a Percentage
         sleepEvents:
           description: Actual Sleep Events
