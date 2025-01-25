@@ -2945,7 +2945,8 @@ components:
           format: int64
           description: Awake Time in Milliseconds Since Epoch in UTC
         sleepingMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of minutes actually asleep
         awakenings:
           type: integer
@@ -2969,25 +2970,32 @@ components:
           items:
             $ref: '#/components/schemas/SleepPoint'
         settlingMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes it took to Settle In
         lightSleepMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes in Light Sleep
         l2SleepMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes in L2 Sleep
         l3SleepMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes in L3 Sleep
         deepSleepMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes in Deep Sleep
         remSleepMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes in REM Sleep
         awakeMinutes:
-          type: integer
+          type: number
+          format: double
           description: Number of Minutes awake.
         avgHR:
           type: number
