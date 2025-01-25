@@ -2206,8 +2206,8 @@ components:
           type: string
           description: Comment associated with the data.
         tags:
-          type: string
-          description: User tag
+          type: array
+          description: User submitted tags
           items:
             type: string
         type:
