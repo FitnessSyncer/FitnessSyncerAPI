@@ -2599,6 +2599,38 @@ components:
           type: number
           format: double
           description: Fat Mass Weight in KG
+        bicep:
+          type: number
+          format: double
+          description: Bicep in CM
+        calf:
+          type: number
+          format: double
+          description: Calf in CM
+        chest:
+          type: number
+          format: double
+          description: Chest in CM
+        forearm:
+          type: number
+          format: double
+          description: Forearm in CM
+        hips:
+          type: number
+          format: double
+          description: Hips in CM
+        neck:
+          type: number
+          format: double
+          description: Neck in CM
+        thigh:
+          type: number
+          format: double
+          description: Thigh in CM
+        waist:
+          type: number
+          format: double
+          description: Waist in CM
         caliperChest:
           type: number
           format: double
