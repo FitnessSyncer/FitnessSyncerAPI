@@ -2027,9 +2027,24 @@ components:
     Error:
       description: Error Description
       properties:
+        error:
+          type: string
+          description: Error code
         error_description:
           type: string
           description: Description of the error for end-user consumption.
+        argument:
+          type: string
+          description: If the error is regarding an argument, this will indicate the argument name.
+        item:
+          type: string
+          description: If the error is regarding an item, this will indicate the item value.
+        id:
+          type: string
+          description: If the error is regarding an id, this will indicate the id value.
+        request_id:
+          type: string
+          description: This is the unique request id.
 
     UserPreferences:
       description: User Preferences
