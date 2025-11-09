@@ -1314,11 +1314,13 @@ paths:
         - OAuth2: [sources]
       responses:
         200:
-          description: Success
+          description: Lists the current notifications available.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Notification'
+        204:
+          description: No current notifications available.
         401:
           description: Unauthorized.
         404:
