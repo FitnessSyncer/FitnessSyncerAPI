@@ -45,12 +45,12 @@ sequenceDiagram
   YourServer ->> FitnessSyncer: Set authentication via PUT to /api/providers/sources/{id}/authentication
   note right of YourServer: Ensure you set the Redirect URL on this request.
   FitnessSyncer ->> YourServer: Return redirect URL
-  YourServer --> EndUser: Send Redirect
-  EndUser --> Fitbit: Process Redirect
+  YourServer ->> EndUser: Send Redirect
+  EndUser ->> Fitbit: Process Redirect
   note right of Fitbit: Allow FitnessSyncer access to your Fitbit Account?
   Fitbit -> FitnessSyncer: User Authenticated -- follow requested redirect URL.
-  FitnessSyncer --> EndUser: Follow requested redirect URL
-  EndUser --> YourServer: Authentication complete
+  FitnessSyncer ->> EndUser: Follow requested redirect URL
+  EndUser ->> YourServer: Authentication complete
 ```
 
 ### Data Structure Overview
