@@ -19,17 +19,25 @@ sequenceDiagram
   participant User
   participant Your Application
   participant FitnessSyncer
+  %% https://www.fitnesssyncer.com/api/documentation.html#authorize
   Your Application->>User: Send Redirect to FitnessSyncer https://api.fitnesssyncer.com/api/oauth/authorize
   User->>FitnessSyncer: Follow Redirect, maybe login, and authorize Your Application to use the User's data.
   FitnessSyncer->>User: Send redirect URL with code and state query parameters
   User->>Your Application: Follow Redirect with code and state query parameters.
+  %% https://www.fitnesssyncer.com/api/documentation.html#accessing_token
   Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/access_token
+  FitnessSyncer->>Your Application: Return access_token, refresh_token, and expires_in values.
+  Your Application->>Your Application: Use token until it expires
+  %% https://www.fitnesssyncer.com/api/documentation.html#refreshing_token
+  Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/refresh_token
   FitnessSyncer->>Your Application: Return access_token, refresh_token, and expires_in values.
 ```
 
 ### Source and Destination Authentication Sequence Diagram
 
-See [Create Data Source](https://api.fitnesssyncer.com/api/documentation.html#data_source_create) and [Provider Authentication](https://api.fitnesssyncer.com/api/documentation.html#provider_authentication)
+See [Create Data Source](https://api.fitnesssyncer.com/api/documentation.html#data_source_create), [Create Destination](https://www.fitnesssyncer.com/api/documentation.html#destination_task_create), and [Provider Authentication](https://api.fitnesssyncer.com/api/documentation.html#provider_authentication)
+
+This shows the Source Authentication flow; the Destination Authentication flow is similar.
 
 ```mermaid
 sequenceDiagram
@@ -40,8 +48,11 @@ sequenceDiagram
 
   note right of EndUser: Assumes the user is already authenticated with FitnessSyncer
   EndUser ->> YourServer: Add a Data Source such as Fitbit
+  %% https://www.fitnesssyncer.com/api/documentation.html#data_source_create
   YourServer ->> FitnessSyncer: Create new Data Source via PUT to /api/providers/sources/
   FitnessSyncer ->> YourServer: Return create id
+  %% https://www.fitnesssyncer.com/api/documentation.html#provider_list
+  note right of YourServer: If you do not know the authentication scheme for the selected service, use https://api.fitnesssyncer.com/api/providers/types/ . This example assumes OAuth.
   YourServer ->> FitnessSyncer: Set authentication via PUT to /api/providers/sources/{id}/authentication
   note right of YourServer: Ensure you set the Redirect URL on this request.
   FitnessSyncer ->> YourServer: Return redirect URL
