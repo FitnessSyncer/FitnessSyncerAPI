@@ -35,7 +35,7 @@ sequenceDiagram
 
 ### Source and Destination Authentication Sequence Diagram
 
-See [Create Data Source](https://api.fitnesssyncer.com/api/documentation.html#data_source_create), [Create Destination](https://www.fitnesssyncer.com/api/documentation.html#destination_task_create), and [Provider Authentication](https://api.fitnesssyncer.com/api/documentation.html#provider_authentication)
+See [Create Data Source](https://www.fitnesssyncer.com/api/documentation.html#data_source_create), [Create Destination](https://www.fitnesssyncer.com/api/documentation.html#destination_task_create), and [Provider Authentication](https://www.fitnesssyncer.com/api/documentation.html#provider_authentication)
 
 This shows the Source Authentication flow; the Destination Authentication flow is similar.
 
@@ -62,6 +62,62 @@ sequenceDiagram
   Fitbit -> FitnessSyncer: User Authenticated -- follow requested redirect URL.
   FitnessSyncer ->> EndUser: Follow requested redirect URL
   EndUser ->> YourServer: Authentication complete
+```
+
+### Notification Sequence Diagram
+
+There are two models for Notifications. The first is a push notification as denoted here:
+
+```mermaid
+sequenceDiagram
+  participant FitnessSyncer as FitnessSyncer Data Processor
+  participant YourServers as Your Notification Service
+
+  note right of YourServers: You must register for push notifications via e-mail
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_subscribe
+  YourServers ->> FitnessSyncer: Subscribe User for Notifications
+  FitnessSyncer ->> YourServers: OK
+
+  FitnessSyncer ->> FitnessSyncer: Acquire/Process Data
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#notifications
+  FitnessSyncer ->> YourServers: POST of the changed items
+  YourServers ->> FitnessSyncer: OK
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#data_source_items_get
+  YourServers ->> FitnessSyncer: Get Updated Data
+  FitnessSyncer ->> YourServers: Results
+```
+
+The second is a pull notification as denoted here:
+
+```mermaid
+sequenceDiagram
+  participant FitnessSyncer as FitnessSyncer Data Processor
+  participant YourServers as Your Notification Service
+
+  note right of YourServers: You must register for pull notifications via e-mail
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_subscribe
+  YourServers ->> FitnessSyncer: Subscribe User for Notifications
+  FitnessSyncer ->> YourServers: OK
+
+  FitnessSyncer ->> FitnessSyncer: Acquire/Process Data
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_claims
+  YourServers ->> FitnessSyncer: Get Notifications via POST to https://api.fitnesssyncer.com/api/notifications/
+  FitnessSyncer ->> YourServers: Notification Claim
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#data_source_items_get
+  YourServers ->> FitnessSyncer: Get Updated Data
+  FitnessSyncer ->> YourServers: Results
+
+  YourServers ->> YourServers: Handle errors, which are typically reauthentication errors. 
+
+  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_delete
+  YourServers ->> FitnessSyncer: Delete Claim via DELETE to https://api.fitnesssyncer.com/api/notifications/claimId
+  FitnessSyncer ->> YourServers: OK
 ```
 
 ### Data Structure Overview
@@ -94,7 +150,9 @@ classDiagram
   ProviderAuthentication ..> ProviderAuthenticationItem
   ProviderAuthenticationItem ..> ProviderAuthenticationKey
   SyncStatusResults ..> SyncStatus
-  Notification ..> Subscription
+  Notification ..> Notifications
+  Notifications ..> NotificationItem
+  Notifications ..> NotificationErrorItem
   DescriptionResults ..> Description
   Description ..> TaskType
   LeaderboardList ..> Leaderboard
@@ -614,8 +672,23 @@ classDiagram
   }
   class Notification{
     +string: claim
-    +Subscription[]: items;
-    +Subscription[]: errors;
+    +Notifications: notifications;
+  }
+  class Notifications{
+    +NotificationItem[]: items;
+    +NotificationErrorItem[]: errors;
+  }
+  class NotificationItem{
+    +string: notificationKey
+    +string: sourceId
+    +string: itemId
+  }
+  class NotificationErrorItem{
+    +string: notificationKey
+    +string: error
+    +string: providerType
+    +string: sourceId
+    +string: destinationId
   }
   class DescriptionResults{
     +Description[]: results;

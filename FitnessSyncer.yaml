@@ -3810,16 +3810,54 @@ components:
         claim:
           type: string
           description: The claim will be required for deleting the notification.
+        notifications:
+          $ref: '#/components/schemas/Notifications'
+
+    Notifications:
+      description: Notification Item
+      properties:
         items:
-          description: List of the subscriptions which have data.
+          description: List of the subscriptions, source id, and item id.
           type: array
           items:
-            $ref: '#/components/schemas/Subscription'
+            $ref: '#/components/schemas/NotificationItem'
         errors:
           description: List of the subscriptions which have encountered one or more errors.
           type: array
           items:
-            $ref: '#/components/schemas/Subscription'
+            $ref: '#/components/schemas/NotificationErrorItem'
+
+    NotificationItem:
+      description: Notification Item
+      properties:
+        notificationKey:
+          description: Subscription Id to look up the user.
+          type: string
+        sourceId:
+          description: Source Id of the item which has been updated.
+          type: string
+        itemId:
+          description: Item Id of the item which has been updated.
+          type: string
+
+    NotificationErrorItem:
+      description: Error Notification Item
+      properties:
+        notificationKey:
+          description: Subscription Id to look up the user.
+          type: string
+        error:
+          description: Locale-based error message.
+          type: string
+        providerType:
+          description: An enumeration of the Provider Type for uploading data to this API.
+          type: string
+        sourceId:
+          description: Source Id of the item which has been updated (if applicable)
+          type: string
+        destinationId:
+          description: Source Id of the item which has been updated (if applicable)
+          type: string
 
     DescriptionResults:
       description: Wrapper around the results array.
