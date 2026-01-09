@@ -1863,7 +1863,8 @@ paths:
     get:
       summary: Acquires the data associated with a Leaderboard.
       description: |
-        This acquires the data associated with a Leaderboard
+        This acquires the data associated with a Leaderboard.
+        This data can be requested in an easy to consume JSON format by using the Accept Header application/json or as a CSV by using the Accept Header text/csv.
       operationId: getLeaderboardData
       tags: [Leaderboards]
       security:
@@ -1883,12 +1884,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LeaderboardData'
+            text/csv:
+              schema:
+                type: string
+                description: CSV representation of the Leaderboard Data.
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
         401:
           description: Unauthorized.
         404:
           description: Leaderboard not found.
+        406:
+          description: The requested format in the Accept header is not supported.
         429:
           description: A usage rate has been exceeded.
         500:
