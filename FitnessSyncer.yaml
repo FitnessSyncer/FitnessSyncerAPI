@@ -2426,8 +2426,7 @@ components:
           type: string
           description: Only specified if different than the GPSData sport or a multisport activity.
         notes:
-          type: number
-          format: double
+          type: string
           description: Notes for this Lap
         hrr:
           type: number
