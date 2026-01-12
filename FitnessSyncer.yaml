@@ -1386,7 +1386,7 @@ paths:
           name: type
           schema:
             type: string
-            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones]
+            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField]
           required: true
           description: |
             Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers, timezones
@@ -2125,7 +2125,7 @@ components:
           description: "Gender of the user. Must be one of: Unspecified, Female, Male"
         timezone:
           type: string
-          description: User’s time zone. Consider using the timezone descriptions API to get the supported timezones.
+          description: User’s time zone. Consider using the timezone Descriptions API to get the supported timezones.
         timezoneDisplayName:
           type: string
           readOnly: true
@@ -3903,6 +3903,11 @@ components:
         postProcessed:
           type: boolean
           description: True if this field requires some post processing, so may not be available within some contexts.
+        dataFields:
+          type: array
+          items:
+            type: string
+          description: For Scoring Fields, this is the set of DataFields that comprise this element.
         measurementType:
           type: string
           enum: [DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER]
@@ -3984,11 +3989,25 @@ components:
           description: Should the leaderboard include the Classic Leaderboard View?
         relative:
           type: boolean
-          description: True if the graphs should be relative progress; this disables Group Goals and Classic Leaderboards. This can only be set on creation and cannot be toggled.
+          description: True if the graphs should be relative progress; this disables Group Goals and Classic Leaderboards. This can only be set on creation and cannot be toggled. Not applicable to scoring boards.
         groupGoal:
           type: number
           format: double
-          description: FitnessSyncer Leaderboards can be configured to be both a challenge for individuals or for a group. If set to a non-negative value, this setting enables group challenges and this is the value for which the primary data field must exceed.
+          description: FitnessSyncer Leaderboards can be configured to be both a challenge for individuals or for a group. If set to a non-negative value, this setting enables group challenges and this is the value for which the primary data field must exceed. Not applicable to scoring boards.
+        scoringField:
+          type: string
+          description: This is the scoring field type. If this is null, this is a standard metric-based leaderboard. If this is set to a value, this is a custom Leaderboard. See the Descriptions API.
+        scoringWeights:
+          type: object
+          additionalProperties: true
+          description: If scoringField is specified, these are the scoring weights for each of the DataFields.
+          example:
+            HEARTRATE_Z0: 0.0
+            HEARTRATE_Z1: 0.5
+            HEARTRATE_Z2: 1.0
+            HEARTRATE_Z3: 10.0
+            HEARTRATE_Z4: 20.0
+            HEARTRATE_Z5: 50.0
         dataField:
           type: array
           description: Data Field for this Leaderboard. The first element is the primary comparison value whereas the others are used for tabular visualization.
@@ -4077,10 +4096,10 @@ components:
           description: Should the chart remove duplicates? The default is true.
         reducer:
           type: string
-          description: The reducer to run on the data per granularity. See the descriptions API. The default is RANGE_NO_ZEROS.
+          description: The reducer to run on the data per granularity. See the Descriptions API. The default is RANGE_NO_ZEROS.
         finalReducer:
           type: string
-          description: The reducer to run on the data per period. See the descriptions API. The default is RANGE_NO_ZEROS.
+          description: The reducer to run on the data per period. See the Descriptions API. The default is RANGE_NO_ZEROS.
         treatNoDataAsZero:
           type: boolean
           description: If there is no data available for a granularity, should it be treated as a null?  The default is false.
@@ -4097,10 +4116,10 @@ components:
           description: "What is the granularity you wish for this to run at? Must be one of: DAY10 (10 periods), DAY, WEEK, MONTH, or PERIOD. If PERIOD, you must set customStart and customEnd. The default is DAY10."
         labeler:
           type: string
-          description: What should we use for the labeler of the data? This allows you to group the data differently; the default is PROVIDER. See the descriptions API.
+          description: What should we use for the labeler of the data? This allows you to group the data differently; the default is PROVIDER. See the Descriptions API.
         dataFields:
           type: array
-          description: Each of the DataFields for the fields to be returned. See the descriptions API. This is a required field.
+          description: Each of the DataFields for the fields to be returned. See the Descriptions API. This is a required field.
           items:
             type: string
 
