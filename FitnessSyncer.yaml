@@ -14,31 +14,31 @@ paths:
       operationId: getUserPreferences
       tags: [UserPreferences]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [profile_read]
       responses:
-         200:
-           description: Success
-           content:
-             application/json:
-               schema:
-                 $ref: '#/components/schemas/UserPreferences'
-         401:
-           description: Unauthorized.
-         429:
-           description: A usage rate has been exceeded.
-         500:
-           description: Internal Server Exception
-           content:
-             application/json:
-               schema:
-                 $ref: '#/components/schemas/Error'
+          200:
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserPreferences'
+          401:
+            description: Unauthorized.
+          429:
+            description: A usage rate has been exceeded.
+          500:
+            description: Internal Server Exception
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
     post:
       summary: Update user preferences
       description: Update the user’s preferences.
       operationId: updateUserPreferences
       tags: [UserPreferences]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [profile_write]
       requestBody:
         description: User Preferences
         content:
@@ -79,7 +79,7 @@ paths:
       operationId: listDataSources
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_read]
       parameters:
         - in: query
           name: taskType
@@ -116,11 +116,11 @@ paths:
                 $ref: '#/components/schemas/Error'
     put:
       summary: Create a new Data Source
-      description: Creates a new source data. While you may cache this data, it is only recommended you do so for short periods.
+      description: Creates a new source data.
       operationId: createDataSource
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_write]
       requestBody:
         description: Source to Create
         content:
@@ -156,12 +156,12 @@ paths:
     get:
       summary: Get a specific Data Source
       description: |
-          This acquires the SourceDatat for a specific dataSource.
+          This acquires the SourceData for a specific dataSource.
           If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data source.
       operationId: getDataSource
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_read]
       parameters:
         - in: path
           name: id
@@ -194,7 +194,7 @@ paths:
       operationId: updateDataSource
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_write]
       requestBody:
         description: Complete Source to Update
         content:
@@ -220,7 +220,7 @@ paths:
           content:
             application/json:
               schema:
-               $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
         429:
@@ -237,7 +237,7 @@ paths:
       operationId: deleteDataSource
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_write]
       parameters:
         - in: path
           name: id
@@ -279,7 +279,7 @@ paths:
             schema:
               $ref: '#/components/schemas/HistoricSync'
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_read, source_data_read]
       parameters:
         - in: path
           name: id
@@ -327,7 +327,7 @@ paths:
       operationId: historicSyncDataSource
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_read, source_data_read]
       parameters:
         - in: path
           name: id
@@ -373,7 +373,7 @@ paths:
       operationId: getNotebookCategories
       tags: [Notebook]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       responses:
         200:
           description: Success
@@ -407,7 +407,7 @@ paths:
         To learn the data sources that exist or to find the id of your desired data type, you will need to issue a list.
         If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data listing.
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       parameters:
         - in: path
           name: id
@@ -452,10 +452,11 @@ paths:
       summary: Create a new Item
       description: |
         This will allow you to insert new items into FitnessSyncer. You should upload data in reverse date order. It should be noted that inserting an item older than the most current item might not synchronize that item for destinations. This operation can only be done for items for which you have permission to do so.
+        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
       operationId: createSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [notebook_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -503,6 +504,7 @@ paths:
         If you have the data already within a file, you can upload that file into the system.
         This API is just for uploading that file. To change any metadata, you will need to update that record accordingly.
         Note that a single upload may result in multiple items depending on the file format.
+        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
       parameters:
         - in: path
           name: id
@@ -522,7 +524,7 @@ paths:
           description: If you are intending this to replace an existing item, you can provide the id of the item.
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [notebook_write, updatable_providers]
       requestBody:
         description: Multipart Form to Upload a File.
         content:
@@ -582,7 +584,7 @@ paths:
       operationId: getSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       parameters:
         - in: path
           name: id
@@ -623,10 +625,11 @@ paths:
       summary: Update an Item
       description: |
         This will allow you to update an item in FitnessSyncer. It should be noted that updates might not synchronize that update in destinations. This operation can only be done for items for which you have permission to do so.
+        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
       operationId: updateSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [notebook_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -675,10 +678,11 @@ paths:
       summary: Delete an Item
       description: |
         This will delete the sync item. This operation can only be done for items for which you have permission to do so.
+        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
       operationId: deleteSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [notebook_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -725,7 +729,7 @@ paths:
       description: |
         Lists the Notebook by item.
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       parameters:
         - in: path
           name: type
@@ -785,7 +789,7 @@ paths:
             type: string
           description: ProviderType filter
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_read]
       responses:
         200:
           description: Success
@@ -815,7 +819,7 @@ paths:
       operationId: createDestination
       tags: [Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_write]
       requestBody:
         description: Destination to Create
         content:
@@ -854,7 +858,7 @@ paths:
       operationId: getDestination
       tags: [Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_read]
       parameters:
         - in: path
           name: id
@@ -887,7 +891,7 @@ paths:
       operationId: updateDestination
       tags: [Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_write]
       requestBody:
         description: Complete Destination to Update
         content:
@@ -930,7 +934,7 @@ paths:
       operationId: deleteDestination
       tags: [Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_write]
       parameters:
         - in: path
           name: id
@@ -966,7 +970,7 @@ paths:
       operationId: executeDestination
       tags: [Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_write]
       parameters:
         - in: path
           name: id
@@ -1016,7 +1020,7 @@ paths:
       operationId: addSourceAuthentication
       tags: [Sources]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_write]
       requestBody:
         description: Authentication to Store
         content:
@@ -1075,7 +1079,7 @@ paths:
       operationId: addDestinationAuthentication
       tags: [Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [destination_write]
       requestBody:
         description: Authentication to Store
         content:
@@ -1130,7 +1134,7 @@ paths:
       operationId: getProviders
       tags: [Providers]
       security:
-        - OAuth2: [sources]
+        - OAuth2: []
       responses:
         200:
           description: Success
@@ -1159,7 +1163,7 @@ paths:
       operationId: getSyncStatus
       tags: [Sources, Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_read]
       responses:
         200:
           description: Success
@@ -1185,10 +1189,11 @@ paths:
       summary: Existing Provider Authentication
       description: |
         If you are using the same source system for multiple devices, you need to use the same authentication for each source. This method will allow you to acquire the authorization summary of what exists already so that you can re-use that authentication.
+        While the permission scope indicates both source_write and destination_write are required, only one is truly required.
       operationId: listProviderAuthentication
       tags: [Providers, Sources, Destinations]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_write, destination_write]
       responses:
         200:
           description: Success
@@ -1217,7 +1222,7 @@ paths:
       operationId: hasSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       responses:
         200:
           description: Success
@@ -1244,7 +1249,7 @@ paths:
       operationId: addSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       responses:
         200:
           description: Success
@@ -1278,7 +1283,7 @@ paths:
       operationId: removeSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       parameters:
         - in: path
           name: notificationKey
@@ -1311,7 +1316,7 @@ paths:
       operationId: getNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       responses:
         200:
           description: Lists the current notifications available.
@@ -1342,7 +1347,7 @@ paths:
       operationId: deleteNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       parameters:
         - in: path
           name: claimId
@@ -1377,10 +1382,13 @@ paths:
       summary: Gets Descriptions
       description: |
         This method acquires the metadata descriptions from FitnessSyncer. This is highly cachable.
-      operationId: getDescriptions
+
+        Authorization:
+          - All types require a valid OAuth2 access token.
+          - The `distinctActivities` type additionally requires the `source_data_read`       operationId: getDescriptions
       tags: [Descriptions]
       security:
-        - OAuth2: [sources]
+        - OAuth2: []
       parameters:
         - in: path
           name: type
@@ -1417,10 +1425,10 @@ paths:
       operationId: listBoards
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       responses:
         200:
-          description: List of the Leadewrboards
+          description: List of the Leaderboards
           content:
             application/json:
               schema:
@@ -1443,7 +1451,7 @@ paths:
       operationId: createBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_admin]
       requestBody:
         description: Leaderboard Configuration
         content:
@@ -1478,7 +1486,7 @@ paths:
       operationId: getBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       parameters:
         - in: path
           name: id
@@ -1512,7 +1520,7 @@ paths:
       operationId: updateBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_admin]
       parameters:
         - in: path
           name: id
@@ -1555,7 +1563,7 @@ paths:
       operationId: deleteBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_admin]
       parameters:
         - in: path
           name: id
@@ -1596,7 +1604,7 @@ paths:
       operationId: acceptBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       parameters:
         - in: path
           name: id
@@ -1641,7 +1649,7 @@ paths:
       operationId: addUserToBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_admin]
       parameters:
         - in: path
           name: id
@@ -1695,7 +1703,7 @@ paths:
       operationId: deleteUserFromBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       parameters:
         - in: path
           name: id
@@ -1736,7 +1744,7 @@ paths:
       operationId: getLeaderboardUserPreferences
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       parameters:
         - in: path
           name: id
@@ -1773,7 +1781,7 @@ paths:
       operationId: changeUserPreference
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       parameters:
         - in: path
           name: id
@@ -1820,7 +1828,7 @@ paths:
       operationId: deleteUsersFromBoard
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_admin]
       parameters:
         - in: path
           name: id
@@ -1868,7 +1876,7 @@ paths:
       operationId: getLeaderboardData
       tags: [Leaderboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [leaderboard_participate]
       parameters:
         - in: path
           name: id
@@ -1915,7 +1923,7 @@ paths:
       operationId: createDashboardRequest
       tags: [Dashboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       requestBody:
         description: What type of data do you require for your Dashboard?
         content:
@@ -1958,7 +1966,7 @@ paths:
       operationId: getSessionData
       tags: [Dashboards]
       security:
-        - OAuth2: [sources]
+        - OAuth2: [source_data_read]
       parameters:
         - in: path
           name: session
@@ -2002,11 +2010,21 @@ components:
       description: FitnessSyncer uses the standard OAuth2 Flow.
       flows:
         authorizationCode:
-          authorizationUrl: 'https://www.fitnesssyncer.com/api/oauth/authorize'
-          tokenUrl: 'https://api.fitnesssyncer.com/api/oauth/access_token'
-          refreshUrl: 'https://api.fitnesssyncer.com/api/oauth/access_token'
+          authorizationUrl: https://www.fitnesssyncer.com/api/oauth/authorize
+          tokenUrl: https://api.fitnesssyncer.com/api/oauth/access_token
+          refreshUrl: https://api.fitnesssyncer.com/api/oauth/access_token
           scopes:
-            sources: Access to the source data.
+            profile_read: Read data from the User's Profile
+            profile_write: Write data to the User's Profile
+            source_read: View Sources in the User's Account (but not associated data)
+            source_write: Add, Modify, and Delete Sources in the User's Account
+            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals.
+            destination_read: View Destinations in the User's Account (but not associated data)
+            destination_write: Add, Modify, and Delete Destinations in the User's Account
+            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account
+            updatable_providers: For integrations that are the source of branded data, allows the integration to Add, Modify, and Delete Branded Items in the User's Account
+            leaderboard_participate: Participate in Leaderboards via opt-in, viewing the data, viewing and updating personal preferences in the User's Account.
+            leaderboard_admin: Add, Modify, Delete, and Administer Leaderboards in the User's Account
   schemas:
     PowerZones:
       description: Power Zones
@@ -4179,4 +4197,36 @@ components:
 
 security:
     - OAuth2:
-       - sources
+       - profile_read
+       - profile_write
+       - source_read
+       - source_write
+       - source_data_read
+       - destination_read
+       - destination_write
+       - notebook_write
+       - updatable_providers
+       - leaderboard_participate
+       - leaderboard_admin
+
+tags:
+    - name: Sources
+      description: Manages data sources
+    - name: Destinations
+      description: Manages data destinations
+    - name: Dashboards
+      description: Acquires data for Dashboards
+    - name: Descriptions
+      description: Acquires dynamic data types
+    - name: Notebook
+      description: Manages FitnessSyncer Notebook
+    - name: Notifications
+      description: Manages Notifications
+    - name: Subscriptions
+      description: Manages Subscriptions
+    - name: UserPreferences
+      description: Manages User Preferences
+    - name: Leaderboards
+      description: APIs for FitnessSyncer Leaderboards
+    - name: Providers
+      description: APIs for FitnessSyncer Providers
