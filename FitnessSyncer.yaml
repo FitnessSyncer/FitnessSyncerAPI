@@ -2007,7 +2007,13 @@ components:
   securitySchemes:
     OAuth2:
       type: oauth2
-      description: FitnessSyncer uses the standard OAuth2 Flow.
+      description: |
+        FitnessSyncer uses the standard OAuth2 Flow for authentication.
+        
+        PKCE (Proof Key for Code Exchange) is supported but not required.
+        Clients should use PKCE when possible for enhanced security. In our
+        Developer Console, you can enable the forced requirement for PKCE
+        for your client.
       flows:
         authorizationCode:
           authorizationUrl: https://www.fitnesssyncer.com/api/oauth/authorize
