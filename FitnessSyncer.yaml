@@ -4056,6 +4056,9 @@ components:
           type: integer
           format: int64
           description: End Date of the Leaderboard in milliseconds since Epoch
+        publicLeaderboard:
+          type: boolean
+          description: True if this Leaderboard is publicly visible. If true, you can access it at https://www.fitnesssyncer.com/leaderboards?board={id} without logging in.
 
     LeaderboardUserPreferences:
       description: This is the definition of a FitnessSyncer Leaderboard User Preferences
