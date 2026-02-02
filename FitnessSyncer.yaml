@@ -1311,7 +1311,7 @@ paths:
     post:
       summary: Claiming Notifications
       description: |
-        For pull notifications, you will need to claim notifications, procrocess the notifications, and then delete the claim. If you do not delete the claim, the notification will eventually come back to you.
+        For pull notifications, you will need to claim notifications, process the notifications, and then delete the claim. If you do not delete the claim, the notification will eventually come back to you.
         Note that we will only provide you with a maximum of 100 notifications per response. If you have more than 100 notifications, you will need to requery the API for each notification.
       operationId: getNotifications
       tags: [Notifications]
@@ -1789,7 +1789,7 @@ paths:
             type: string
           required: true
           description: |
-            This is the id of the Leaderboard for te user's preferences.
+            This is the id of the Leaderboard the preferences.
       requestBody:
         description: Leaderboard User Preferences.
         content:
@@ -1920,6 +1920,7 @@ paths:
         Building a Chart can take time especially for users with lots of data and complex queries. To ensure that your request does not time out, this API is asynchronous.
         To get data for a dashboard, you must first create a dashboard request. Next, you must poll for the results using the Get Session API.
         Note that dashboard results will automatically be removed after approximately 10 minutes.
+        This data can be requested in an easy to consume JSON format by using the Accept Header application/json or as a CSV by using the Accept Header text/csv. Note for requests to the /dashboards/{session}, you must also include this header.
       operationId: createDashboardRequest
       tags: [Dashboards]
       security:
@@ -1937,8 +1938,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DashboardResponse'
+            text/csv:
+              schema:
+                type: string
+                description: CSV representation of the Dashboard Data.
         202:
-          description: In some rare occassions, the data may already be available and may be returned immediately.
+          description: In some rare occasions, the data may already be available and may be returned immediately.
           content:
             application/json:
               schema:
@@ -1963,6 +1968,7 @@ paths:
         After submitting a Create Dashboard Request, it will likely have responded with a 202 with a SessionCreatedResponse.
         If so, you must use the session id from that response to acquire the data using this API. This may require several calls before the data is available.
         Note that dashboard results will automatically be removed after approximately 10 minutes.
+        This data can be requested in an easy to consume JSON format by using the Accept Header application/json or as a CSV by using the Accept Header text/csv.
       operationId: getSessionData
       tags: [Dashboards]
       security:
@@ -1982,8 +1988,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DashboardResponse'
+            text/csv:
+              schema:
+                type: string
+                description: CSV representation of the Dashboard Data.
         202:
-          description: If the data is not yet available, another 202 will be indicated.
+          description: If the data is not yet available, a 202 will be indicated.
           content:
             application/json:
               schema:
@@ -2324,7 +2334,7 @@ components:
           description: Maximum Stress Level
         lowStressDurationSeconds:
           type: integer
-          description: Seconds Under Low Sttress
+          description: Seconds Under Low Stress
         mediumStressDurationSeconds:
           type: integer
           description: Seconds Under Medium Stress
@@ -2340,7 +2350,7 @@ components:
           description: Respiratory Rate
         mindfulMinutes:
           type: integer
-          description: Mindful Minutets
+          description: Mindful Minutes
         summary:
           type: boolean
           description: If this is a daily summary snapshot, this will be true. Generally when this is true, the date of the item will also be at midnight UTC of that date.
@@ -2575,7 +2585,7 @@ components:
           type: number
           format: double
           description: Form Power
-        verticalOscilation:
+        verticalOscillation:
           type: number
           format: double
           description: Vertical Oscillation
@@ -3572,7 +3582,7 @@ components:
           description: True if this is a Cloud Storage Map Provider.
         cloudStorageCsvProvider:
           type: boolean
-          description: True if this is a Cloudd Storage CSV Provider.
+          description: True if this is a Cloud Storage CSV Provider.
         googleServices:
           type: boolean
           description: True if this is part of the Google Authentication Service Suite
