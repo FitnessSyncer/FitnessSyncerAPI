@@ -2013,6 +2013,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /researchers/users/:
+    get:
+      summary: Acquires a OAuth Credentials for API-based Researchers.
+      description: |
+        If you have updated a Research Study to use the API, you can use this API to retrieve the OAuth credentials for the users in that Research Study.
+      operationId: listResearchUsers
+      tags: [Researchers]
+      security:
+        - OAuth2: [researcher_read]
+      responses:
+        200:
+          description: List of Users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResearchUsersList'
+        401:
+          description: Unauthorized.
+        409:
+          description: Conflict, such as owner mismatch or study is anonymized.
+        429:
+          description: A usage rate has been exceeded.
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   securitySchemes:
     OAuth2:
@@ -2041,6 +2070,7 @@ components:
             updatable_providers: For integrations that are the source of branded data, allows the integration to Add, Modify, and Delete Branded Items in the User's Account
             leaderboard_participate: Participate in Leaderboards via opt-in, viewing the data, viewing and updating personal preferences in the User's Account.
             leaderboard_admin: Add, Modify, Delete, and Administer Leaderboards in the User's Account
+            researcher_read: Ability to read FitnessSyncer for Researchers data.
   schemas:
     PowerZones:
       description: Power Zones
@@ -4225,6 +4255,34 @@ components:
                       items:
                         type: boolean
 
+    ResearchUsersList:
+      description: |
+        Research User List
+      properties:
+        users:
+          type: array
+          description: Categories of the chart, in increasing order
+          items:
+            $ref: '#/components/schemas/ResearchApiUser'
+
+    ResearchApiUser:
+      description: |
+        Research API User
+      properties:
+        displayName:
+          type: string
+          description: Display Name of the User.
+        accessToken:
+          type: string
+          description: Access Token for the User.
+        refreshToken:
+          type: string
+          description: Refresh Token for the User.
+        expires:
+          type: integer
+          format: int64
+          description: Token expiration time in milliseconds since Epoch.
+
 security:
     - OAuth2:
        - profile_read
@@ -4238,6 +4296,7 @@ security:
        - updatable_providers
        - leaderboard_participate
        - leaderboard_admin
+       - researcher_read
 
 tags:
     - name: Sources
@@ -4260,3 +4319,5 @@ tags:
       description: APIs for FitnessSyncer Leaderboards
     - name: Providers
       description: APIs for FitnessSyncer Providers
+    - name: Researchers
+      description: APIs for FitnessSyncer for Researchers
