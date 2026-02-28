@@ -496,7 +496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /providers/sources/{id}/items/upload:
+  /providers/sources/{sourceid}/items/upload:
     post:
       summary: Upload a TCX, GPX, KML, KMZ, FIT, or PWX file
       operationId: syncItemFileUpload
@@ -507,7 +507,7 @@ paths:
         While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
       parameters:
         - in: path
-          name: id
+          name: sourceid
           schema:
             type: string
           required: true
@@ -1385,7 +1385,8 @@ paths:
 
         Authorization:
           - All types require a valid OAuth2 access token.
-          - The `distinctActivities` type additionally requires the `source_data_read`       operationId: getDescriptions
+          - The `distinctActivities` type additionally requires the `source_data_read` scope
+      operationId: getDescriptions
       tags: [Descriptions]
       security:
         - OAuth2: []
@@ -1789,7 +1790,7 @@ paths:
             type: string
           required: true
           description: |
-            This is the id of the Leaderboard the preferences.
+            This is the id of the Leaderboard for the preferences.
       requestBody:
         description: Leaderboard User Preferences.
         content:
@@ -2018,6 +2019,17 @@ paths:
       summary: Acquires a OAuth Credentials for API-based Researchers.
       description: |
         If you have updated a Research Study to use the API, you can use this API to retrieve the OAuth credentials for the users in that Research Study.
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: How many entries should we skip? Default is 0.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: How many entries would you like to return? Default and max is 100.
       operationId: listResearchUsers
       tags: [Researchers]
       security:
@@ -2877,7 +2889,7 @@ components:
           description: The dose amount of this medication
         doseUnit:
           type: string
-          enum: [ML, MG, MGML, Tablet]
+          enum: [ML, MG, MCG, MGML, Tablet]
           description: "The dose unit amount for this type. Must be one of: ML, MG, MCG, MGML, Tablet."
         strength:
           type: number
@@ -2885,8 +2897,8 @@ components:
           description: The strength amount of this medication
         strengthUnit:
           type: string
-          enum: [ML, MG, MGML]
-          description: "The strength unit amount for this type. Must be one of: ML, MCG, MG, MGML"
+          enum: [ML, MG, MCG, MGML]
+          description: "The strength unit amount for this type. Must be one of: ML, MG, MCG, MGML"
         endDate:
           type: integer
           format: int64
@@ -3112,8 +3124,8 @@ components:
       description: Sleep Event
       required:
        - type
-       - offset
-       - duration
+       - offsetMinutes
+       - durationMinutes
       properties:
         type:
           type: string
@@ -3220,7 +3232,8 @@ components:
           type: string
           description: This is a user-facing summary of the status.
         percentComplete:
-          type: double
+          type: number
+          format: double
           description: This represents the percentage complete.
         queueTime:
           type: integer
@@ -3321,7 +3334,6 @@ components:
       properties:
         type:
           description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
-          type: String
           $ref: '#/components/schemas/TaskType'
         id:
           type: string
@@ -3399,10 +3411,10 @@ components:
           description: A user description for the destination.
         hour:
           type: integer
-          description: Hour for this task to be ran (if Pro). The time is specified in PST.
+          description: Hour for this task to be ran (if Pro). The time is specified in PST8PDT. Use localHour for localtime.
         localHour:
           type: integer
-          description: Hour converted to the user's timezone (from their profile).
+          description: Hour converted to the user's timezone (from their profile). This can also be used to update the hour field.
         lastError:
           type: string
           readOnly: true
@@ -3423,8 +3435,8 @@ components:
         - providerType
       properties:
         taskType:
-          $ref: '#/components/schemas/TaskType'
           description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          $ref: '#/components/schemas/TaskType'
         providerType:
           type: string
           description: The Provider Type enumeration value. See Listing Providers for details.
@@ -3598,7 +3610,7 @@ components:
           enum: [UsernamePassword, Identifier, AppRequired, OAuth, UsernamePasswordKey, Unsupported]
           readOnly: true
           description: |
-            This is the type of authentication which this provider requires. See the Provider Authentication section for information.
+            This is the type of authentication which this provider requires. See the Provider Authentication section in the documentation for information.
         beta:
           type: boolean
           readOnly: true
@@ -4102,8 +4114,6 @@ components:
 
     LeaderboardUserPreferences:
       description: This is the definition of a FitnessSyncer Leaderboard User Preferences
-      required:
-        - name
       properties:
         emailUpdate:
           type: boolean
@@ -4147,6 +4157,8 @@ components:
     DashboardRequest:
       description: |
         Dashboard Request
+      required:
+        - dataFields
       properties:
         includeNotebook:
           type: boolean
@@ -4261,7 +4273,7 @@ components:
       properties:
         users:
           type: array
-          description: Categories of the chart, in increasing order
+          description: List of Users
           items:
             $ref: '#/components/schemas/ResearchApiUser'
 
