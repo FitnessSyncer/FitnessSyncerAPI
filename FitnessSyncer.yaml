@@ -7,6 +7,58 @@ servers:
   - url: https://api.fitnesssyncer.com/api
     description: Core FitnessSyncer Service
 paths:
+  /oauth/revoke_token:
+    post:
+      summary: Revoke an OAuth 2.0 token
+      description: |
+        Implements OAuth 2.0 Token Revocation (RFC 7009).
+        The client authenticates and sends the token to be revoked.
+      operationId: revokeToken
+      tags: [OAuth2]
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  description: The token to revoke.
+                token_type_hint:
+                  type: string
+                  description: Hint of the token type to optimize lookup.
+                  enum:
+                    - access_token
+                    - refresh_token
+      responses:
+        200:
+          description: Token successfully revoked, or the token was not found/already expired.
+        400:
+          description: Invalid request (e.g. missing token, invalid token_type_hint, etc).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Client authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The authorization server is temporarily unavailable.
+
   /users/preferences:
     get:
       summary: Read user preferences
@@ -52,7 +104,7 @@ paths:
              application/json:
                schema:
                  properties:
-                   'updated':
+                   updated:
                      type: string
                      description: Status indicating it was updated
          400:
@@ -2016,7 +2068,7 @@ paths:
 
   /researchers/users/:
     get:
-      summary: Acquires a OAuth Credentials for API-based Researchers.
+      summary: Acquires OAuth Credentials for API-based Researchers.
       description: |
         If you have updated a Research Study to use the API, you can use this API to retrieve the OAuth credentials for the users in that Research Study.
       parameters:
@@ -2056,6 +2108,9 @@ paths:
 
 components:
   securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
     OAuth2:
       type: oauth2
       description: |
