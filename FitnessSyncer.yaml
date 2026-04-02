@@ -468,6 +468,18 @@ paths:
           required: true
           description: id of the source you wish to list. If this is for FitnessSyncer Notebook, this is the string `notebook`
         - in: query
+          name: startDate
+          schema:
+            type: integer
+            format: int64
+          description: Which date should we start from? This would be in milliseconds since the epoch. Default is to not use the date.
+        - in: query
+          name: endDate
+          schema:
+            type: integer
+            format: int64
+          description: Which date should we end at? This would be in milliseconds since the epoch. Default is to not use the date.
+        - in: query
           name: offset
           schema:
             type: integer
@@ -789,6 +801,18 @@ paths:
             $ref: '#/components/schemas/TaskType'
           required: true
           description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        - in: query
+          name: startDate
+          schema:
+            type: integer
+            format: int64
+          description: Which date should we start from? This would be in milliseconds since the epoch. Default is to not use the date.
+        - in: query
+          name: endDate
+          schema:
+            type: integer
+            format: int64
+          description: Which date should we end at? This would be in milliseconds since the epoch. Default is to not use the date.
         - in: query
           name: offset
           schema:
