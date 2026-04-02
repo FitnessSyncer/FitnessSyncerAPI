@@ -2,7 +2,7 @@
 
 [FitnessSyncer](https://www.fitnesssyncer.com) provides an API to help our users access their health and fitness data from over [50 sources](https://www.fitnesssyncer.com/support/supported-apps-and-services). Our OAuth-based REST API allows you to seamlessly get to the data, no matter the source, and concentrate on building their application, not integrating with services.
 
-The contains our [OpenAPI specification](FitnessSyncer.yaml) which allows you to quickly generate code for your applications.
+This contains our [OpenAPI specification](FitnessSyncer.yaml) which allows you to quickly generate code for your applications.
 
 For complete documentation, please review [our documentation](https://www.fitnesssyncer.com/api/documentation.html) and create your personal credentials [here](https://www.fitnesssyncer.com/account/developer).
 
@@ -13,6 +13,14 @@ For non-personal usage or for any assistance, please [contact us](https://www.fi
 ### Authentication Sequence Diagram
 
 See [Authentication Sequence Diagram](https://www.fitnesssyncer.com/api/documentation.html#authenticating) for all of the parameters and details.
+
+For a scripted example, you can look at [fitnesssyncer_oauth_authorization_flow.py](fitnesssyncer_oauth_authorization_flow.py)
+for the authorization flow. Given a `--client-id`, `--client-secret`, and `--redirect-uri`,
+it will open a browser window for you to login and take the redirected URL to acquire the
+_access_token_ and _refresh_token_. When the _access_token_ expires, the
+[fitnesssyncer_oauth_refresh_flow.py](fitnesssyncer_oauth_refresh_flow.py) script will
+acquire a new _access_token_ and _refresh_token_ using the `--refresh-token` and
+`--client-id` and `--client-secret` parameters. These do not support PKCE.
 
 ```mermaid
 sequenceDiagram
@@ -29,7 +37,7 @@ sequenceDiagram
   FitnessSyncer->>Your Application: Return access_token, refresh_token, and expires_in values.
   Your Application->>Your Application: Use token until it expires
   %% https://www.fitnesssyncer.com/api/documentation.html#refreshing_token
-  Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/refresh_token
+  Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/access_token
   FitnessSyncer->>Your Application: Return access_token, refresh_token, and expires_in values.
 ```
 
