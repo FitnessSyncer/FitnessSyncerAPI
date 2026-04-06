@@ -8,6 +8,8 @@ For complete documentation, please review [our documentation](https://www.fitnes
 
 For non-personal usage or for any assistance, please [contact us](https://www.fitnesssyncer.com/ContactUs.html).
 
+We also feature an MCP Server which can also make certain integrations easier. For more information on it, please review our [documentation](https://www.fitnesssyncer.com/support/mcp-server).
+
 ## Diagrams
 
 ### Authentication Sequence Diagram
