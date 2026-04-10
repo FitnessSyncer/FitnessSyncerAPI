@@ -2267,6 +2267,9 @@ components:
         locale:
           type: string
           description: Locale of the user.
+        emailLocale:
+          type: string
+          description: Locale for e-mail, notifications, and other asynchronous communication to the user.
         numericLocale:
           type: string
           description: User's number locale, currently en or fr.
