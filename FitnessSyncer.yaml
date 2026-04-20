@@ -322,6 +322,7 @@ paths:
         FitnessSyncer will periodically refresh data sources. If your application wishes to ensure that you have the latest data available, you can request a refresh.
         When this operation completes, the task is enqueued and will execute sometime in the near future. You may check on the status of the task via the Sync Status API.
         Note: This is only available on certain accounts. Please contact us if you require it.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: refreshDataSource
       tags: [Sources]
       requestBody:
@@ -331,7 +332,7 @@ paths:
             schema:
               $ref: '#/components/schemas/HistoricSync'
       security:
-        - OAuth2: [source_read, source_data_read]
+        - OAuth2: [source_read]
       parameters:
         - in: path
           name: id
@@ -376,10 +377,11 @@ paths:
         FitnessSyncer Pro users have the ability to request historic syncs to get data in from the past for many providers, mostly those which initially we only start with a sample of the last 30 or 90 days.
         You can request a Historic Sync through a Refresh.
         This API will give you the current status of the historic sync status.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: historicSyncDataSource
       tags: [Sources]
       security:
-        - OAuth2: [source_read, source_data_read]
+        - OAuth2: [source_read]
       parameters:
         - in: path
           name: id
@@ -422,10 +424,11 @@ paths:
       summary: Acquires the types of items in the Notebook
       description: |
         Because the Notebook has multiple types, this API allows you to learn what is in the Notebook.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: getNotebookCategories
       tags: [Notebook]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -458,8 +461,9 @@ paths:
       description: |
         To learn the data sources that exist or to find the id of your desired data type, you will need to issue a list.
         If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data listing.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -516,11 +520,11 @@ paths:
       summary: Create a new Item
       description: |
         This will allow you to insert new items into FitnessSyncer. You should upload data in reverse date order. It should be noted that inserting an item older than the most current item might not synchronize that item for destinations. This operation can only be done for items for which you have permission to do so.
-        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
+        While the permission scope indicates all scopes are required, only the applicable one is required.
       operationId: createSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -568,7 +572,7 @@ paths:
         If you have the data already within a file, you can upload that file into the system.
         This API is just for uploading that file. To change any metadata, you will need to update that record accordingly.
         Note that a single upload may result in multiple items depending on the file format.
-        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
+        While the permission scope indicates all scopes are required, only the applicable one is required.
       parameters:
         - in: path
           name: sourceid
@@ -588,7 +592,7 @@ paths:
           description: If you are intending this to replace an existing item, you can provide the id of the item.
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       requestBody:
         description: Multipart Form to Upload a File.
         content:
@@ -645,10 +649,11 @@ paths:
       description: |
         You can access the data associated with the item. Items are generally static, so you may cache them in accordance to our terms of use.
         If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s activity item.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: getSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -689,11 +694,11 @@ paths:
       summary: Update an Item
       description: |
         This will allow you to update an item in FitnessSyncer. It should be noted that updates might not synchronize that update in destinations. This operation can only be done for items for which you have permission to do so.
-        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
+        While the permission scope indicates all scopes are required, only the applicable one is required.
       operationId: updateSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -742,11 +747,11 @@ paths:
       summary: Delete an Item
       description: |
         This will delete the sync item. This operation can only be done for items for which you have permission to do so.
-        While the permission scope indicates both notebook_write and updatable_providers are required, only the applicable one is required.
+        While the permission scope indicates all scopes are required, only the applicable one is required.
       operationId: deleteSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -792,8 +797,9 @@ paths:
       tags: [Notebook]
       description: |
         Lists the Notebook by item.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: type
@@ -1295,10 +1301,11 @@ paths:
       summary: Learning if there is a subscription
       description: |
         If To figure out if there is an active subscription, use this method. You may periodically wish to do this in the event of errors notifying your service of a subscription.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: hasSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -1322,10 +1329,11 @@ paths:
       summary: Subscription for Notifications
       description: |
         Subscribe to notifications.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: addSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -1356,10 +1364,11 @@ paths:
       description: |
         Remove a subscription
         Note that if your server responds with a 403 error when it is notified, they will be automatically unsubscribed.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: removeSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: notificationKey
@@ -1389,10 +1398,11 @@ paths:
       description: |
         For pull notifications, you will need to claim notifications, process the notifications, and then delete the claim. If you do not delete the claim, the notification will eventually come back to you.
         Note that we will only provide you with a maximum of 100 notifications per response. If you have more than 100 notifications, you will need to requery the API for each notification.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: getNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Lists the current notifications available.
@@ -1420,10 +1430,11 @@ paths:
       summary: Deleting notifications
       description: |
         Once you have successfully process a notification, you must delete the notification. Failure you to do so will result in the same notifications being processed by you multiple times.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: deleteNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: claimId
@@ -1461,7 +1472,7 @@ paths:
 
         Authorization:
           - All types require a valid OAuth2 access token.
-          - The `distinctActivities` type additionally requires the `source_data_read` scope
+          - The `distinctActivities` type additionally requires the `source_data_activity_read` scope
       operationId: getDescriptions
       tags: [Descriptions]
       security:
@@ -1998,10 +2009,11 @@ paths:
         To get data for a dashboard, you must first create a dashboard request. Next, you must poll for the results using the Get Session API.
         Note that dashboard results will automatically be removed after approximately 10 minutes.
         This data can be requested in an easy to consume JSON format by using the Accept Header application/json or as a CSV by using the Accept Header text/csv. Note for requests to the /dashboards/{session}, you must also include this header.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: createDashboardRequest
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       requestBody:
         description: What type of data do you require for your Dashboard?
         content:
@@ -2046,10 +2058,11 @@ paths:
         If so, you must use the session id from that response to acquire the data using this API. This may require several calls before the data is available.
         Note that dashboard results will automatically be removed after approximately 10 minutes.
         This data can be requested in an easy to consume JSON format by using the Accept Header application/json or as a CSV by using the Accept Header text/csv.
+        The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       operationId: getSessionData
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: session
@@ -2154,10 +2167,34 @@ components:
             profile_write: Write data to the User's Profile
             source_read: View Sources in the User's Account (but not associated data)
             source_write: Add, Modify, and Delete Sources in the User's Account
-            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_cholesterol_read source_data_condition_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
+            source_data_activity_read: Access the Activity data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_allergy_read: Access the Allergy data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_blood_pressure_read: Access the Blood Pressure data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_cholesterol_read: Access the Cholesterol data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_condition_read: Access the Condition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_glucose_read: Access the Glucose data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_medication_read: Access the Medication data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_nutrition_read: Access the Nutrition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_oxygen_read: Access the Oxygen data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_sleep_read: Access the Sleep data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_temperature_read: Access the Temperature data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_weight_read: Access the Body Composition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             destination_read: View Destinations in the User's Account (but not associated data)
             destination_write: Add, Modify, and Delete Destinations in the User's Account
-            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account
+            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account. This is an alias for notebook_activity_write notebook_allergy_write notebook_blood_pressure_write notebook_cholesterol_write notebook_condition_write notebook_glucose_write notebook_medication_write notebook_nutrition_write notebook_oxygen_write notebook_sleep_write notebook_temperature_write notebook_weight_write
+            notebook_activity_write: Add, Modify, and Delete FitnessSyncer Notebook Activity Items in the User's Account.
+            notebook_allergy_write: Add, Modify, and Delete FitnessSyncer Notebook Allergy Items in the User's Account.
+            notebook_blood_pressure_write: Add, Modify, and Delete FitnessSyncer Notebook Blood Pressure Items in the User's Account.
+            notebook_cholesterol_write: Add, Modify, and Delete FitnessSyncer Notebook Cholesterol Items in the User's Account.
+            notebook_condition_write: Add, Modify, and Delete FitnessSyncer Notebook Condition Items in the User's Account.
+            notebook_glucose_write: Add, Modify, and Delete FitnessSyncer Notebook Glucose Items in the User's Account.
+            notebook_medication_write: Add, Modify, and Delete FitnessSyncer Notebook Medication Items in the User's Account.
+            notebook_nutrition_write: Add, Modify, and Delete FitnessSyncer Notebook Nutrition Items in the User's Account.
+            notebook_oxygen_write: Add, Modify, and Delete FitnessSyncer Notebook Oxygen Items in the User's Account.
+            notebook_sleep_write: Add, Modify, and Delete FitnessSyncer Notebook Sleep Items in the User's Account.
+            notebook_temperature_write: Add, Modify, and Delete FitnessSyncer Notebook Temperature Items in the User's Account.
+            notebook_weight_write: Add, Modify, and Delete FitnessSyncer Notebook Body Composition Items in the User's Account.
             updatable_providers: For integrations that are the source of branded data, allows the integration to Add, Modify, and Delete Branded Items in the User's Account
             leaderboard_participate: Participate in Leaderboards via opt-in, viewing the data, viewing and updating personal preferences in the User's Account.
             leaderboard_admin: Add, Modify, Delete, and Administer Leaderboards in the User's Account
@@ -4384,9 +4421,33 @@ security:
        - source_read
        - source_write
        - source_data_read
+       - source_data_activity_read
+       - source_data_allergy_read
+       - source_data_blood_pressure_read
+       - source_data_cholesterol_read
+       - source_data_condition_read
+       - source_data_glucose_read
+       - source_data_medication_read
+       - source_data_nutrition_read
+       - source_data_oxygen_read
+       - source_data_sleep_read
+       - source_data_temperature_read
+       - source_data_weight_read
        - destination_read
        - destination_write
        - notebook_write
+       - notebook_activity_write
+       - notebook_allergy_write
+       - notebook_blood_pressure_write
+       - notebook_cholesterol_write
+       - notebook_condition_write
+       - notebook_glucose_write
+       - notebook_medication_write
+       - notebook_nutrition_write
+       - notebook_oxygen_write
+       - notebook_sleep_write
+       - notebook_temperature_write
+       - notebook_weight_write
        - updatable_providers
        - leaderboard_participate
        - leaderboard_admin
