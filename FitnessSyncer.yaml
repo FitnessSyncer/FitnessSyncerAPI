@@ -2532,6 +2532,41 @@ components:
         floorsClimbed:
           type: integer
           description: Approximate Number of Floors Climbed
+        pace:
+          type: number
+          format: double
+          readOnly: true
+          description: Pace in KM
+        speed_avg:
+          type: number
+          format: double
+          readOnly: true
+          description: Average Speed in Meters per Second
+        speed_max:
+          type: number
+          format: double
+          readOnly: true
+          description: Max Speed in Meters per Second
+        elevation_min:
+          type: number
+          format: double
+          readOnly: true
+          description: Max Elevation in Meters
+        elevation_max:
+          type: number
+          format: double
+          readOnly: true
+          description: Max Elevation in Meters
+        elevation_gain:
+          type: number
+          format: double
+          readOnly: true
+          description: Elevation Gain in Meters
+        elevation_decent:
+          type: number
+          format: double
+          readOnly: true
+          description: Elevation Decent in Meters
         gps:
           description: Structure of the GPS and detailed information
           $ref: '#/components/schemas/GPSData'
