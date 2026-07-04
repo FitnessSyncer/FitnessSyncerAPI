@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: FitnessSyncer REST API
-  description: FitnessSyncer’s API provides access to information displayed within the FitnessSyncer Stream and FitnessSyncer Dashboard, including any data from data source such as Fitbit and data maintained by FitnessSyncer, such as the FitnessSyncer Notebook.
+  description: FitnessSyncer’s API provides access to health and fitness data displayed within the FitnessSyncer Stream and FitnessSyncer Dashboard, including data from sources such as Fitbit and data maintained by FitnessSyncer, such as the FitnessSyncer Notebook.
   version: 1.0.0
 servers:
   - url: https://api.fitnesssyncer.com/api
@@ -1044,7 +1044,7 @@ paths:
 
   /providers/destinations/{id}/execute:
     post:
-      summary: Executing Data Destinations
+      summary: Executing Destination Tasks
       description: |
         FitnessSyncer will periodically execute destinations tasks. If your application wishes to run these themselves, you can request an execute.
         When this operation completes, the task is enqueued and will execute sometime in the near future. You may check on the status of the task via the Sync Status API.
@@ -1098,7 +1098,7 @@ paths:
 
         Once you have selected a provider and created a source for it, you need to add authentication for it as follows.
 
-        You should build your application such that if there are new values, that your application appropriate degrades.
+        You should build your application such that if there are new values, your application degrades gracefully.
       operationId: addSourceAuthentication
       tags: [Sources]
       security:
@@ -1157,7 +1157,7 @@ paths:
 
         Once you have selected a provider and created a destination for it, you need to add authentication for it as follows.
 
-        You should build your application such that if there are new values, that your application appropriate degrades.
+        You should build your application such that if there are new values, your application degrades gracefully.
       operationId: addDestinationAuthentication
       tags: [Destinations]
       security:
