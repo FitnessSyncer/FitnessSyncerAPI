@@ -3262,6 +3262,11 @@ components:
           type: number
           format: double
           description: Average Respiratory Rate during Sleep
+        spo2:
+          type: number
+          format: double
+          readOnly: true
+          description: Average SPO2 during Sleep
         hrvRmssdEvening:
           type: number
           format: double
