@@ -137,7 +137,7 @@ paths:
           name: taskType
           schema:
             $ref: '#/components/schemas/TaskType'
-          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
           schema:
@@ -806,7 +806,7 @@ paths:
           schema:
             $ref: '#/components/schemas/TaskType'
           required: true
-          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: startDate
           schema:
@@ -864,7 +864,7 @@ paths:
           name: taskType
           schema:
             $ref: '#/components/schemas/TaskType'
-          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
           schema:
@@ -2167,12 +2167,13 @@ components:
             profile_write: Write data to the User's Profile
             source_read: View Sources in the User's Account (but not associated data)
             source_write: Add, Modify, and Delete Sources in the User's Account
-            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_cholesterol_read source_data_condition_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
+            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_cholesterol_read source_data_condition_read source_data_cycle_tracking_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
             source_data_activity_read: Access the Activity data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_allergy_read: Access the Allergy data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_blood_pressure_read: Access the Blood Pressure data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_cholesterol_read: Access the Cholesterol data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_condition_read: Access the Condition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_cycle_tracking_read: Access the Cycle Tracking data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_glucose_read: Access the Glucose data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_medication_read: Access the Medication data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_nutrition_read: Access the Nutrition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
@@ -2182,12 +2183,13 @@ components:
             source_data_weight_read: Access the Body Composition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             destination_read: View Destinations in the User's Account (but not associated data)
             destination_write: Add, Modify, and Delete Destinations in the User's Account
-            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account. This is an alias for notebook_activity_write notebook_allergy_write notebook_blood_pressure_write notebook_cholesterol_write notebook_condition_write notebook_glucose_write notebook_medication_write notebook_nutrition_write notebook_oxygen_write notebook_sleep_write notebook_temperature_write notebook_weight_write
+            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account. This is an alias for notebook_activity_write notebook_allergy_write notebook_blood_pressure_write notebook_cholesterol_write notebook_condition_write notebook_cycle_tracking_write notebook_glucose_write notebook_medication_write notebook_nutrition_write notebook_oxygen_write notebook_sleep_write notebook_temperature_write notebook_weight_write
             notebook_activity_write: Add, Modify, and Delete FitnessSyncer Notebook Activity Items in the User's Account.
             notebook_allergy_write: Add, Modify, and Delete FitnessSyncer Notebook Allergy Items in the User's Account.
             notebook_blood_pressure_write: Add, Modify, and Delete FitnessSyncer Notebook Blood Pressure Items in the User's Account.
             notebook_cholesterol_write: Add, Modify, and Delete FitnessSyncer Notebook Cholesterol Items in the User's Account.
             notebook_condition_write: Add, Modify, and Delete FitnessSyncer Notebook Condition Items in the User's Account.
+            notebook_cycle_tracking_write: Add, Modify, and Delete FitnessSyncer Notebook Cycle Tracking Items in the User's Account.
             notebook_glucose_write: Add, Modify, and Delete FitnessSyncer Notebook Glucose Items in the User's Account.
             notebook_medication_write: Add, Modify, and Delete FitnessSyncer Notebook Medication Items in the User's Account.
             notebook_nutrition_write: Add, Modify, and Delete FitnessSyncer Notebook Nutrition Items in the User's Account.
@@ -2380,6 +2382,16 @@ components:
         glucosePercent:
           type: integer
           description: From 0-100%, what is your goal for being in the Glucose Range from Low to High?
+        hiddenReports:
+          type: array
+          items:
+            type: string
+          description: List of system report ids hidden from the quick-switch tab bar.
+        hiddenNotebookTypes:
+          type: array
+          items:
+            type: string
+          description: List of TaskTypes hidden from the FitnessSyncer Notebook editor's tab bar. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature.
 
     SyncItemItem:
       description: Common data for each of the data types that FitnessSyncer processes.
@@ -2401,6 +2413,7 @@ components:
           BloodPressure: '#/components/schemas/BloodPressure'
           Cholesterol: '#/components/schemas/Cholesterol'
           Condition: '#/components/schemas/Condition'
+          CycleTracking: '#/components/schemas/CycleTracking'
           Glucose: '#/components/schemas/Glucose'
           Medication: '#/components/schemas/Medication'
           Nutrition: '#/components/schemas/Nutrition'
@@ -2431,7 +2444,7 @@ components:
             type: string
         type:
           $ref: '#/components/schemas/TaskType'
-          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
 
     Activity:
       description: Activity Record.
@@ -2986,6 +2999,28 @@ components:
           format: int64
           description: Time in milliseconds since the Epoch in UTC of when this medication was last used. 0 implies that it is ongoing.
 
+    CycleTracking:
+      description: Cycle Tracking Record. At least one of flowLevel, basalBodyTempCelsius, cervicalMucus, or ovulationTest must be present.
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      properties:
+        flowLevel:
+          type: string
+          enum: [NONE, SPOTTING, LIGHT, MEDIUM, HEAVY]
+          description: "Menstrual flow level, if logged that day. Must be one of: NONE, SPOTTING, LIGHT, MEDIUM, HEAVY"
+        basalBodyTempCelsius:
+          type: number
+          format: double
+          description: "Basal body temperature in Celsius, if logged that day. Absent if not logged."
+        cervicalMucus:
+          type: string
+          enum: [DRY, STICKY, CREAMY, WATERY, EGG_WHITE]
+          description: "Cervical mucus quality, if logged that day. Must be one of: DRY, STICKY, CREAMY, WATERY, EGG_WHITE"
+        ovulationTest:
+          type: string
+          enum: [NEGATIVE, HIGH, PEAK]
+          description: "Ovulation predictor kit test result, if logged that day. Must be one of: NEGATIVE, HIGH, PEAK"
+
     Glucose:
       description: Glucose Record
       allOf:
@@ -3492,7 +3527,7 @@ components:
        - providerType
       properties:
         type:
-          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
           $ref: '#/components/schemas/TaskType'
         id:
           type: string
@@ -3594,7 +3629,7 @@ components:
         - providerType
       properties:
         taskType:
-          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
           $ref: '#/components/schemas/TaskType'
         providerType:
           type: string
@@ -3669,7 +3704,7 @@ components:
           description: The reducer to run on the data.
         taskType:
           $ref: '#/components/schemas/TaskType'
-          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         field:
           type: string
           description: The Data Field to consider for this data.
@@ -3738,11 +3773,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TaskType'
-          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
 
     # Does not show up in the documentation...
     TaskType:
-      description: Enumeration of TaskTypes. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+      description: Enumeration of TaskTypes. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
       type: string
 
     ProviderList:
@@ -3861,6 +3896,14 @@ components:
           type: boolean
           readOnly: true
           description: True if this provider can write condition data.
+        CycleTrackingRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read cycle tracking data.
+        CycleTrackingWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write cycle tracking data.
         GlucoseRead:
           type: boolean
           readOnly: true
@@ -4133,7 +4176,7 @@ components:
           description: Description of the item.
         taskType:
           $ref: '#/components/schemas/TaskType'
-          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         defaultReducer:
           type: string
           description: Name of the reducer that is defaulted for this data type.

@@ -203,6 +203,7 @@ classDiagram
     +bool: internationaltime
     +bool: weekStartsOnMonday
     +string: locale
+    +string: emailLocale
     +string: numericLocale
     +string: bodyshape
     +string: sex
@@ -224,6 +225,8 @@ classDiagram
     +number: glucoseLow
     +number: glucoseHigh
     +number: glucosePercent
+    +string[]: hiddenReports
+    +string[]: hiddenNotebookTypes
   }
   class SyncItemItem{
     +SyncItem: item;
@@ -378,6 +381,12 @@ classDiagram
   class Condition{
     +string: condition
     +number: endDate
+  }
+  class CycleTracking{
+    +string: flowLevel
+    +number: basalBodyTempCelsius
+    +string: cervicalMucus
+    +string: ovulationTest
   }
   class Glucose{
     +number: value
@@ -782,6 +791,7 @@ classDiagram
     SyncItem <|--  BloodPressure
     SyncItem <|--  Cholesterol
     SyncItem <|--  Condition
+    SyncItem <|--  CycleTracking
     SyncItem <|--  Glucose
     SyncItem <|--  Medication
     SyncItem <|--  Oxygen
