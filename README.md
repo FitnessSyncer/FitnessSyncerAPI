@@ -154,6 +154,9 @@ classDiagram
   ListDestinationTask ..> DestinationTask
   DestinationTaskItem ..> DestinationTask
   SyncDestination ..> TaskType
+  SyncDestination ..> ProviderConfig
+  SourceData ..> ProviderConfig
+  ProviderConfig ..> MapsProviderConfig
   AlertDestination ..> TaskType
   ListTaskType ..> TaskType
   ProviderList ..> Provider
@@ -535,6 +538,7 @@ classDiagram
     +string: lastError
     +number: date
     +string: identifier
+    +ProviderConfig: providerConfig
   }
   class ListDestinationTask{
     +DestinationTask[]: items;
@@ -558,6 +562,15 @@ classDiagram
     +bool: onlyIfNotOnDest
     +string: identifier
     +TaskType: taskType;
+    +ProviderConfig: providerConfig
+  }
+  class ProviderConfig{
+    +MapsProviderConfig: maps
+  }
+  class MapsProviderConfig{
+    +string: fileFormat
+    +string: filenameFormat
+    +string: path
   }
   class EmailDestination{
     +string: granularity

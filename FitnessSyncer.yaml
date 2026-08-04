@@ -3518,6 +3518,26 @@ components:
         item:
           $ref: '#/components/schemas/SourceData'
 
+    MapsProviderConfig:
+      description: Configuration specific to Cloud Storage Map providers (Amazon S3, DropBox, Google Drive, OneDrive) -- the "(Maps)" suffixed providers, which read/write files rather than calling a structured API.
+      properties:
+        fileFormat:
+          type: string
+          enum: [TCX, GPX, KML, KMZ, FIT, PWX, CSV, FitnessSyncerAPI]
+          description: "The file format used for this provider. TCX, GPX, KML, KMZ, PWX, and CSV are only supported for Activity. FIT additionally supports Weight and BloodPressure. FitnessSyncerAPI (FitnessSyncer's own JSON item format) is supported for every type. Must be one of: TCX, GPX, KML, KMZ, FIT, PWX, CSV, FitnessSyncerAPI"
+        filenameFormat:
+          type: string
+          description: "Template for the generated filename."
+        path:
+          type: string
+          description: Remote directory path within the provider to store/read files.
+
+    ProviderConfig:
+      description: Provider-specific configuration, grouped by provider family. Only the section matching the source/destination's own providerType is meaningful.
+      properties:
+        maps:
+          $ref: '#/components/schemas/MapsProviderConfig'
+
     SourceData:
       description: |
         Source Data.
@@ -3564,6 +3584,8 @@ components:
           type: string
           readOnly: true
           description: If the authentication for this is a username or identifier, this would be that string to aid in editing.
+        providerConfig:
+          $ref: '#/components/schemas/ProviderConfig'
 
     ListDestinationTask:
       description: List of Destination Task
@@ -3646,6 +3668,8 @@ components:
           type: string
           readOnly: true
           description: If the authentication for this is a username or identifier, this would be that string to aid in editing.
+        providerConfig:
+          $ref: '#/components/schemas/ProviderConfig'
 
     EmailDestination:
       description: This is a destination which e-mails a summary periodically.
