@@ -136,7 +136,7 @@ paths:
         - in: query
           name: taskType
           schema:
-            $ref: '#/components/schemas/TaskType'
+            type: string
           description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
@@ -804,7 +804,7 @@ paths:
         - in: path
           name: type
           schema:
-            $ref: '#/components/schemas/TaskType'
+            type: string
           required: true
           description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
@@ -863,7 +863,7 @@ paths:
         - in: query
           name: taskType
           schema:
-            $ref: '#/components/schemas/TaskType'
+            type: string
           description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
@@ -1482,10 +1482,9 @@ paths:
           name: type
           schema:
             type: string
-            enum: [activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField]
           required: true
           description: |
-            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, reducers, timezones
+            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField
             Most of these responses are generic and are cachable between users and sessions. However, distinctActivities is the user's specific types of activities that their account has so this should not be shared between accounts.
       responses:
         200:
@@ -2314,11 +2313,9 @@ components:
           description: User's number locale, currently en or fr.
         bodyshape:
           type: string
-          enum: [Unspecified, Rectangle, Triangle, Trapezoid, Oval, HourGlass, Round, InvertedTriangle]
           description: "Body Shape of the user. Must be one of: Unspecified, Rectangle, Triangle, Trapezoid, Oval, HourGlass, Round, InvertedTriangle"
         sex:
           type: string
-          enum: [Unspecified, Female, Male]
           description: "Gender of the user. Must be one of: Unspecified, Female, Male"
         timezone:
           type: string
@@ -2443,7 +2440,7 @@ components:
           items:
             type: string
         type:
-          $ref: '#/components/schemas/TaskType'
+          type: string
           description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
 
     Activity:
@@ -3018,7 +3015,6 @@ components:
       properties:
         flowLevel:
           type: string
-          enum: [NONE, SPOTTING, LIGHT, MEDIUM, HEAVY]
           description: "Menstrual flow level, if logged that day. Must be one of: NONE, SPOTTING, LIGHT, MEDIUM, HEAVY"
         basalBodyTempCelsius:
           type: number
@@ -3026,11 +3022,9 @@ components:
           description: "Basal body temperature in Celsius, if logged that day. Absent if not logged."
         cervicalMucus:
           type: string
-          enum: [DRY, STICKY, CREAMY, WATERY, EGG_WHITE]
           description: "Cervical mucus quality, if logged that day. Must be one of: DRY, STICKY, CREAMY, WATERY, EGG_WHITE"
         ovulationTest:
           type: string
-          enum: [NEGATIVE, HIGH, PEAK]
           description: "Ovulation predictor kit test result, if logged that day. Must be one of: NEGATIVE, HIGH, PEAK"
 
     Glucose:
@@ -3090,7 +3084,6 @@ components:
           description: The dose amount of this medication
         doseUnit:
           type: string
-          enum: [ML, MG, MCG, MGML, Tablet]
           description: "The dose unit amount for this type. Must be one of: ML, MG, MCG, MGML, Tablet."
         strength:
           type: number
@@ -3098,7 +3091,6 @@ components:
           description: The strength amount of this medication
         strengthUnit:
           type: string
-          enum: [ML, MG, MCG, MGML]
           description: "The strength unit amount for this type. Must be one of: ML, MG, MCG, MGML"
         endDate:
           type: integer
@@ -3335,7 +3327,6 @@ components:
       properties:
         type:
           type: string
-          enum: [LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM]
           description: "Sleep Stage. Must be one of: LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM."
         offsetMinutes:
           type: number
@@ -3535,7 +3526,6 @@ components:
       properties:
         fileFormat:
           type: string
-          enum: [TCX, GPX, KML, KMZ, FIT, PWX, CSV, FitnessSyncerAPI]
           description: "The file format used for this provider. TCX, GPX, KML, KMZ, PWX, and CSV are only supported for Activity. FIT additionally supports Weight and BloodPressure. FitnessSyncerAPI (FitnessSyncer's own JSON item format) is supported for every type. Must be one of: TCX, GPX, KML, KMZ, FIT, PWX, CSV, FitnessSyncerAPI"
         filenameFormat:
           type: string
@@ -3560,7 +3550,7 @@ components:
       properties:
         type:
           description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
-          $ref: '#/components/schemas/TaskType'
+          type: string
         id:
           type: string
           description: A String identifier for the task. This is used throughout the API for uniquely identifying this item.
@@ -3664,7 +3654,7 @@ components:
       properties:
         taskType:
           description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
-          $ref: '#/components/schemas/TaskType'
+          type: string
         providerType:
           type: string
           description: The Provider Type enumeration value. See Listing Providers for details.
@@ -3690,7 +3680,6 @@ components:
       properties:
         granularity:
           type: string
-          enum: [DAY, WEEK, MONTH]
           description: "What is the granularity you wish for this to run at? Must be one of: DAY, WEEK, or MONTH"
         granularityFriendly:
           type: string
@@ -3701,11 +3690,9 @@ components:
           description: True to remove the duplicates
         dataView:
           type: string
-          enum: [STANDARD, QUARTER, HALF, YEAR]
           description: "View for the data. This is not currently used. Must be one of: STANDARD, QUARTER, HALF, YEAR"
         fileFormat:
           type: string
-          enum: [TCX, GPX, KML, KMZ, FIT, PWX, CSV]
           description: "File format for attachments if the user is a Pro. Must be one of: TCX, GPX, KML, KMZ, FIT, PWX, CSV"
         message:
           type: string
@@ -3728,7 +3715,6 @@ components:
       properties:
         alarmType:
           type: string
-          enum: [hoursago, daysago, date]
           description: |
             The range for an alert, either n-hours ago, n-days ago, or since a specific date. Must be one of: hoursago, daysago, date
         alarmArgument:
@@ -3739,7 +3725,7 @@ components:
           type: string
           description: The reducer to run on the data.
         taskType:
-          $ref: '#/components/schemas/TaskType'
+          type: string
           description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         field:
           type: string
@@ -3808,13 +3794,8 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/TaskType'
+            type: string
           description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
-
-    # Does not show up in the documentation...
-    TaskType:
-      description: Enumeration of TaskTypes. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
-      type: string
 
     ProviderList:
       description: List of Providers
@@ -3837,10 +3818,9 @@ components:
           description: This is the description of the provider for display purposes.
         authentication:
           type: string
-          enum: [UsernamePassword, Identifier, AppRequired, OAuth, UsernamePasswordKey, Unsupported]
           readOnly: true
           description: |
-            This is the type of authentication which this provider requires. See the Provider Authentication section in the documentation for information.
+            This is the type of authentication which this provider requires. Must be one of: UsernamePassword, Identifier, AppRequired, OAuth, UsernamePasswordKey, Unsupported. See the Provider Authentication section in the documentation for information.
         beta:
           type: boolean
           readOnly: true
@@ -4211,7 +4191,7 @@ components:
           type: string
           description: Description of the item.
         taskType:
-          $ref: '#/components/schemas/TaskType'
+          type: string
           description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         defaultReducer:
           type: string
@@ -4235,7 +4215,6 @@ components:
           description: For Scoring Fields, this is the set of DataFields that comprise this element.
         measurementType:
           type: string
-          enum: [DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER]
           description: "What type of display preference takes precedence when displaying this unit. One of: DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER"
 
     LeaderboardList:
@@ -4291,7 +4270,6 @@ components:
           description: Description of the Leaderboard
         granularity:
           type: string
-          enum: [DAY, WEEK, MONTH]
           description: "What is the granularity you wish for this to run at? Must be one of: DAY, WEEK, or MONTH"
         userLimit:
           type: integer
@@ -4436,11 +4414,9 @@ components:
           description: If a value is 0, should it be treated as a null? The default is false.
         dataView:
           type: string
-          enum: [TEN_PERIODS, STANDARD, QUARTER, HALF, YEAR]
           description: "View for the data. Must be one of: TEN_PERIODS, STANDARD, QUARTER, HALF, or YEAR. The default is STANDARD."
         granularity:
           type: string
-          enum: [PERIOD, DAY10, DAY, WEEK, MONTH]
           description: "What is the granularity you wish for this to run at? Must be one of: DAY10 (10 periods), DAY, WEEK, MONTH, or PERIOD. If PERIOD, you must set customStart and customEnd. The default is DAY10."
         labeler:
           type: string
@@ -4491,8 +4467,7 @@ components:
                       description: Label for this series value.
                     type:
                       type: string
-                      enum: [sum, min, max, avg, count]
-                      description: When you are using a Range reducer and there is more than one value provided, the label will be duplicated and will have a series for each of the types.
+                      description: "When you are using a Range reducer and there is more than one value provided, the label will be duplicated and will have a series for each of the types. Must be one of: sum, min, max, avg, count"
                     values:
                       type: array
                       description: Category value for this series correlating to the category index in the global object. You will need to overlay the nulls array on this.
