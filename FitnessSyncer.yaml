@@ -2853,6 +2853,18 @@ components:
           type: number
           format: double
           description: Body Water in KG
+        extracellularWater:
+          type: number
+          format: double
+          description: Extracellular Water in KG
+        intracellularWater:
+          type: number
+          format: double
+          description: Intracellular Water in KG
+        visceralFat:
+          type: number
+          format: double
+          description: Visceral Fat in the BIA scale.
         bmi:
           type: number
           format: double
