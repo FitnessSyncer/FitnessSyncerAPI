@@ -347,6 +347,9 @@ classDiagram
     +number: fatRatio
     +number: boneMass
     +number: bodyWaterKg
+    +number: extracellularWater
+    +number: intracellularWater
+    +number: visceralFat
     +number: bmi
     +number: muscleMass
     +number: fatMassWeight
@@ -390,6 +393,17 @@ classDiagram
     +number: basalBodyTempCelsius
     +string: cervicalMucus
     +string: ovulationTest
+  }
+  class ECG{
+    +number: durationMs
+    +number: sampleRateHz
+    +number[]: samples
+    +string: leadConfig
+    +string: classification
+    +string: classificationRaw
+    +string: inconclusiveReason
+    +number: avgHeartRateBpm
+    +string[]: symptoms
   }
   class Glucose{
     +number: value
@@ -640,6 +654,10 @@ classDiagram
     +bool: CholesterolWrite
     +bool: ConditionRead
     +bool: ConditionWrite
+    +bool: CycleTrackingRead
+    +bool: CycleTrackingWrite
+    +bool: ECGRead
+    +bool: ECGWrite
     +bool: GlucoseRead
     +bool: GlucoseWrite
     +bool: MedicationRead
@@ -795,6 +813,15 @@ classDiagram
     +string[]: categories
     +object[]: series
   }
+  class ResearchUsersList{
+    +ResearchApiUser[]: users;
+  }
+  class ResearchApiUser{
+    +string: displayName
+    +string: accessToken
+    +string: refreshToken
+    +number: expires
+  }
   
 %%  non-generated
     <<abstract>> SyncItem
@@ -805,6 +832,7 @@ classDiagram
     SyncItem <|--  Cholesterol
     SyncItem <|--  Condition
     SyncItem <|--  CycleTracking
+    SyncItem <|--  ECG
     SyncItem <|--  Glucose
     SyncItem <|--  Medication
     SyncItem <|--  Oxygen

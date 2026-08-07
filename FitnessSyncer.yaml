@@ -137,7 +137,7 @@ paths:
           name: taskType
           schema:
             type: string
-          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
           schema:
@@ -428,7 +428,7 @@ paths:
       operationId: getNotebookCategories
       tags: [Notebook]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -463,7 +463,7 @@ paths:
         If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data listing.
         The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -653,7 +653,7 @@ paths:
       operationId: getSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -799,14 +799,14 @@ paths:
         Lists the Notebook by item.
         The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: type
           schema:
             type: string
           required: true
-          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: startDate
           schema:
@@ -864,7 +864,7 @@ paths:
           name: taskType
           schema:
             type: string
-          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
           schema:
@@ -1305,7 +1305,7 @@ paths:
       operationId: hasSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -1333,7 +1333,7 @@ paths:
       operationId: addSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -1368,7 +1368,7 @@ paths:
       operationId: removeSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: notificationKey
@@ -1402,7 +1402,7 @@ paths:
       operationId: getNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Lists the current notifications available.
@@ -1434,7 +1434,7 @@ paths:
       operationId: deleteNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: claimId
@@ -2012,7 +2012,7 @@ paths:
       operationId: createDashboardRequest
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       requestBody:
         description: What type of data do you require for your Dashboard?
         content:
@@ -2061,7 +2061,7 @@ paths:
       operationId: getSessionData
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: session
@@ -2166,13 +2166,14 @@ components:
             profile_write: Write data to the User's Profile
             source_read: View Sources in the User's Account (but not associated data)
             source_write: Add, Modify, and Delete Sources in the User's Account
-            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_cholesterol_read source_data_condition_read source_data_cycle_tracking_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
+            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_cholesterol_read source_data_condition_read source_data_cycle_tracking_read source_data_ecg_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
             source_data_activity_read: Access the Activity data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_allergy_read: Access the Allergy data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_blood_pressure_read: Access the Blood Pressure data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_cholesterol_read: Access the Cholesterol data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_condition_read: Access the Condition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_cycle_tracking_read: Access the Cycle Tracking data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_ecg_read: Access the ECG data associated with the User’s Sources, including associated Goals. ECG has no FitnessSyncer Notebook support -- there is nothing to hand-enter.
             source_data_glucose_read: Access the Glucose data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_medication_read: Access the Medication data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_nutrition_read: Access the Nutrition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
@@ -2388,7 +2389,7 @@ components:
           type: array
           items:
             type: string
-          description: List of TaskTypes hidden from the FitnessSyncer Notebook editor's tab bar. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature.
+          description: List of TaskTypes hidden from the FitnessSyncer Notebook editor's tab bar. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature.
 
     SyncItemItem:
       description: Common data for each of the data types that FitnessSyncer processes.
@@ -2411,6 +2412,7 @@ components:
           Cholesterol: '#/components/schemas/Cholesterol'
           Condition: '#/components/schemas/Condition'
           CycleTracking: '#/components/schemas/CycleTracking'
+          ECG: '#/components/schemas/ECG'
           Glucose: '#/components/schemas/Glucose'
           Medication: '#/components/schemas/Medication'
           Nutrition: '#/components/schemas/Nutrition'
@@ -2441,7 +2443,7 @@ components:
             type: string
         type:
           type: string
-          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
 
     Activity:
       description: Activity Record.
@@ -3027,6 +3029,51 @@ components:
           type: string
           description: "Ovulation predictor kit test result, if logged that day. Must be one of: NEGATIVE, HIGH, PEAK"
 
+    ECG:
+      description: >
+        ECG (electrocardiogram) recording. Classification is reported by the recording device and is not
+        for diagnostic use. samples is an ordered array of raw waveform values in microvolts, sampled at
+        sampleRateHz starting at date -- there is no per-sample timestamp, since sample N occurred N /
+        sampleRateHz seconds after date.
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      properties:
+        durationMs:
+          type: integer
+          format: int32
+          description: Duration of the recording in milliseconds. Typically 30000.
+        sampleRateHz:
+          type: integer
+          format: int32
+          description: Sample rate of the waveform in hertz.
+        samples:
+          type: array
+          description: Ordered raw waveform samples in microvolts.
+          items:
+            type: integer
+            format: int32
+        leadConfig:
+          type: string
+          description: "Electrode lead configuration used for this recording. Must be one of: UNKNOWN, LEAD_I, SIX_LEAD, PRECORDIAL"
+        classification:
+          type: string
+          description: "Rhythm classification as reported by the recording device. Not a diagnosis. Must be one of: UNRECOGNIZED, SINUS_RHYTHM, ATRIAL_FIBRILLATION, HIGH_HEART_RATE, LOW_HEART_RATE, INCONCLUSIVE"
+        classificationRaw:
+          type: string
+          description: The original, untranslated classification string as returned by the source device/vendor, kept alongside the mapped classification value.
+        inconclusiveReason:
+          type: string
+          description: "Reason the device reported an inconclusive classification, if applicable. Must be one of: UNKNOWN, POOR_RECORDING, HIGH_HEART_RATE, LOW_HEART_RATE, UNCLASSIFIABLE"
+        avgHeartRateBpm:
+          type: integer
+          format: int32
+          description: Average heart rate during the recording, in beats per minute, as reported by the device.
+        symptoms:
+          type: array
+          description: "Symptoms noted at the time of recording, if supplied by the source. Each entry must be one of: UNKNOWN, CHEST_TIGHTNESS_OR_PAIN, DIZZINESS, FAINTING, RAPID_POUNDING_OR_FLUTTERING_HEARTBEAT, SHORTNESS_OF_BREATH, SKIPPED_HEARTBEAT"
+          items:
+            type: string
+
     Glucose:
       description: Glucose Record
       allOf:
@@ -3084,14 +3131,14 @@ components:
           description: The dose amount of this medication
         doseUnit:
           type: string
-          description: "The dose unit amount for this type. Must be one of: ML, MG, MCG, MGML, Tablet."
+          description: "The dose unit amount for this type. Must be one of: ML, MG, MCG, MGML, TABLET"
         strength:
           type: number
           format: double
           description: The strength amount of this medication
         strengthUnit:
           type: string
-          description: "The strength unit amount for this type. Must be one of: ML, MG, MCG, MGML"
+          description: "The strength unit amount for this type. Must be one of: ML, MG, MCG, MGML, TABLET"
         endDate:
           type: integer
           format: int64
@@ -3549,7 +3596,7 @@ components:
        - providerType
       properties:
         type:
-          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
           type: string
         id:
           type: string
@@ -3653,7 +3700,7 @@ components:
         - providerType
       properties:
         taskType:
-          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
           type: string
         providerType:
           type: string
@@ -3726,7 +3773,7 @@ components:
           description: The reducer to run on the data.
         taskType:
           type: string
-          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         field:
           type: string
           description: The Data Field to consider for this data.
@@ -3795,7 +3842,7 @@ components:
           type: array
           items:
             type: string
-          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
 
     ProviderList:
       description: List of Providers
@@ -3920,6 +3967,14 @@ components:
           type: boolean
           readOnly: true
           description: True if this provider can write cycle tracking data.
+        ECGRead:
+          type: boolean
+          readOnly: true
+          description: True if this provider can read ECG data.
+        ECGWrite:
+          type: boolean
+          readOnly: true
+          description: True if this provider can write ECG data.
         GlucoseRead:
           type: boolean
           readOnly: true
@@ -4192,7 +4247,7 @@ components:
           description: Description of the item.
         taskType:
           type: string
-          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         defaultReducer:
           type: string
           description: Name of the reducer that is defaulted for this data type.
