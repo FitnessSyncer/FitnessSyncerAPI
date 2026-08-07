@@ -7,6 +7,115 @@ servers:
   - url: https://api.fitnesssyncer.com/api
     description: Core FitnessSyncer Service
 paths:
+  /oauth/access_token:
+    post:
+      summary: Acquire or refresh an OAuth 2.0 token
+      description: |
+        Exchanges an authorization code for an access token, or renews an existing token using a
+        refresh token, per OAuth 2.0 (RFC 6749).
+
+        The `grant_type` selects which flow is used:
+          - `authorization_code` &mdash; exchange the temporary `code` from the authorize step. Supply
+            `code_verifier` as well if the application uses PKCE.
+          - `refresh_token` &mdash; renew an expired access token using the `refresh_token` previously issued.
+          - `password` &mdash; only available to applications explicitly permitted to use it.
+
+        The client may authenticate either with HTTP Basic authentication or by sending `client_id`
+        and `client_secret` in the body.
+      operationId: getAccessToken
+      tags: [OAuth2]
+      security:
+        - basicAuth: []
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - grant_type
+              properties:
+                grant_type:
+                  type: string
+                  description: The OAuth 2.0 flow to use.
+                  enum:
+                    - authorization_code
+                    - refresh_token
+                    - password
+                code:
+                  type: string
+                  description: The temporary code received from the authorize step. Required for the authorization_code grant.
+                refresh_token:
+                  type: string
+                  description: The refresh token previously issued. Required for the refresh_token grant.
+                client_id:
+                  type: string
+                  description: Your Client Id, if not authenticating with HTTP Basic authentication.
+                client_secret:
+                  type: string
+                  description: Your Client Secret, if not authenticating with HTTP Basic authentication.
+                redirect_uri:
+                  type: string
+                  description: Your Redirect URL. Required for the authorization_code grant.
+                code_verifier:
+                  type: string
+                  description: For PKCE, the raw random verification string whose BASE64 encoded SHA256 hash was originally supplied.
+                scope:
+                  type: string
+                  description: The space separated scopes being requested.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Token to access the data.
+                  token_type:
+                    type: string
+                    description: Always Bearer.
+                  expires_in:
+                    type: integer
+                    format: int64
+                    description: Time in seconds since the epoch when the token expires.
+                  refresh_token:
+                    type: string
+                    description: A token to get a new access_token when the token expires.
+        400:
+          description: Invalid request (e.g. an unknown application, an invalid or expired code, an invalid scope, or a failed PKCE verification).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Client authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /oauth/revoke_token:
     post:
       summary: Revoke an OAuth 2.0 token
@@ -2985,6 +3094,81 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 
+  /leaderboards/{id}/board/classic:
+    get:
+      summary: Acquires the classic (tabular) view of a Leaderboard.
+      description: |
+        This acquires the participants of a Leaderboard along with their scored values, already sorted
+        into ranking order. This is a flattened, table-shaped alternative to the
+        [Leaderboard Data](#/Leaderboards/getLeaderboardData) result, intended for simple displays that
+        just need a ranked list of participants and their values.
+      operationId: getLeaderboardClassicData
+      tags: [Leaderboards]
+      security:
+        - OAuth2: [leaderboard_participate]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the Leaderboard whose data you wish to acquire.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    description: The participants, in ranked order.
+                    items:
+                      type: object
+                      properties:
+                        participant:
+                          type: string
+                          description: Display name of the participant.
+                      additionalProperties:
+                        type: number
+                        description: The participant's value for each scored series on this Leaderboard, keyed by the series label.
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /dashboards/:
     post:
       summary: Create a Dashboard Request
