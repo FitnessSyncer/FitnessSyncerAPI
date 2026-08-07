@@ -395,7 +395,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoricSync'
+                $ref: '#/components/schemas/HistoricSyncStatus'
         400:
           description: Bad Request
           content:
@@ -493,6 +493,13 @@ paths:
           schema:
             type: integer
           description: How many entries would you like to return? Default and max is 100.
+        - in: query
+          name: summary
+          schema:
+            type: boolean
+          description: |
+            When true each entry carries only its itemId, date and links rather than the whole item.
+            Default false.
       responses:
         200:
           description: Success
@@ -829,6 +836,13 @@ paths:
           schema:
             type: integer
           description: How many entries would you like to return? Default and max is 100.
+        - in: query
+          name: summary
+          schema:
+            type: boolean
+          description: |
+            When true each entry carries only its itemId, date and links rather than the whole item.
+            Default false.
       responses:
         200:
           description: Success
@@ -1061,7 +1075,7 @@ paths:
           required: true
           description: id of the destination you wish to execute.
       responses:
-        202:
+        200:
           description: Success
           content:
             application/json:
@@ -1091,7 +1105,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
   /providers/sources/{id}/authentication:
-    post:
+    put:
       summary: Provider Authentication
       description: |
         There are a variety of ways to configure authentication for a provider. The provider list would have provided you with a value for authenticating.
@@ -1150,7 +1164,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
   /providers/destinations/{id}/authentication:
-    post:
+    put:
       summary: Provider Authentication
       description: |
         There are a variety of ways to configure authentication for a provider. The provider list would have provided you with a value for authenticating.
@@ -4149,6 +4163,9 @@ components:
     SyncStatus:
       description: Status of the active synchronizations.
       properties:
+        success:
+          type: boolean
+          description: Present and true when the last run completed without an error; omitted otherwise.
         id:
           type: string
           description: The id of the source or destination.
