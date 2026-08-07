@@ -428,7 +428,7 @@ paths:
       operationId: getNotebookCategories
       tags: [Notebook]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -463,7 +463,7 @@ paths:
         If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data listing.
         The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -653,7 +653,7 @@ paths:
       operationId: getSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -799,7 +799,7 @@ paths:
         Lists the Notebook by item.
         The data will be filtered based on the scopes provided; not all of the scopes listed are required.
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: type
@@ -1305,7 +1305,7 @@ paths:
       operationId: hasSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -1333,7 +1333,7 @@ paths:
       operationId: addSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -1368,7 +1368,7 @@ paths:
       operationId: removeSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: notificationKey
@@ -1402,7 +1402,7 @@ paths:
       operationId: getNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Lists the current notifications available.
@@ -1434,7 +1434,7 @@ paths:
       operationId: deleteNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: claimId
@@ -2012,7 +2012,7 @@ paths:
       operationId: createDashboardRequest
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       requestBody:
         description: What type of data do you require for your Dashboard?
         content:
@@ -2061,7 +2061,7 @@ paths:
       operationId: getSessionData
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: session
