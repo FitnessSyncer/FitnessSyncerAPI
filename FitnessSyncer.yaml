@@ -58,6 +58,10 @@ paths:
                 $ref: '#/components/schemas/Error'
         503:
           description: The authorization server is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /users/preferences:
     get:
@@ -76,10 +80,24 @@ paths:
                   $ref: '#/components/schemas/UserPreferences'
           401:
             description: Unauthorized.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
           429:
             description: A usage rate has been exceeded.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
           500:
             description: Internal Server Exception
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          503:
+            description: The service is temporarily unavailable. Retry after a delay.
             content:
               application/json:
                 schema:
@@ -115,10 +133,24 @@ paths:
                  $ref: '#/components/schemas/Error'
          401:
            description: Unauthorized.
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Error'
          429:
            description: A usage rate has been exceeded.
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Error'
          500:
            description: Internal Server Exception
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Error'
+         503:
+           description: The service is temporarily unavailable. Retry after a delay.
            content:
              application/json:
                schema:
@@ -158,10 +190,24 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -194,10 +240,24 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -230,12 +290,30 @@ paths:
                 $ref: '#/components/schemas/SourceDataItem'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -275,10 +353,30 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -304,12 +402,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -355,6 +479,16 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A pending request already exists.
           content:
@@ -363,8 +497,18 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -404,6 +548,16 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A pending request already exists.
           content:
@@ -412,8 +566,18 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -438,6 +602,10 @@ paths:
                 $ref: '#/components/schemas/ListTaskType'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A pending request already exists.
           content:
@@ -446,8 +614,18 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -515,10 +693,30 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -562,10 +760,36 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -641,10 +865,36 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -689,10 +939,30 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -742,10 +1012,36 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -788,14 +1084,41 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
   /providers/sources/notebook/itemsByType/{type}:
     get:
@@ -858,10 +1181,24 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -901,10 +1238,24 @@ paths:
                 $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -937,10 +1288,24 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -971,12 +1336,30 @@ paths:
                 $ref: '#/components/schemas/DestinationTaskItem'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1016,10 +1399,30 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1045,12 +1448,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1089,6 +1518,16 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A pending request already exists.
           content:
@@ -1097,8 +1536,18 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1148,6 +1597,16 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A pending request already exists.
           content:
@@ -1156,8 +1615,18 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1207,6 +1676,16 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A pending request already exists.
           content:
@@ -1215,8 +1694,18 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1240,12 +1729,30 @@ paths:
                 $ref: '#/components/schemas/ProviderList'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1278,10 +1785,24 @@ paths:
                 $ref: '#/components/schemas/Error'
         404:
           description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1306,12 +1827,30 @@ paths:
                 $ref: '#/components/schemas/ProviderAuthentication'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1336,12 +1875,30 @@ paths:
                 $ref: '#/components/schemas/Subscription'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: No Subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1370,10 +1927,24 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1402,12 +1973,30 @@ paths:
           description: Success
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: No Subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1435,12 +2024,30 @@ paths:
           description: No current notifications available.
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: No Subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1474,12 +2081,30 @@ paths:
                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: No Subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1516,10 +2141,24 @@ paths:
                 $ref: '#/components/schemas/DescriptionResults'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1541,12 +2180,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LeaderboardList'
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1573,14 +2232,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Id'
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate board name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1610,12 +2293,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LeaderboardItem'
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1652,14 +2361,42 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1689,14 +2426,48 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1736,14 +2507,42 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1789,16 +2588,48 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Leaderboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1829,16 +2660,42 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Leaderboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1870,14 +2727,36 @@ paths:
                 $ref: '#/components/schemas/LeaderboardUserPreferences'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Leaderboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1913,16 +2792,42 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Leaderboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -1960,16 +2865,48 @@ paths:
                 $ref: '#/components/schemas/Id'
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Leaderboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: A conflict, such as the user is not a FitnessSyncer Pro subscriber or a duplicate name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -2006,20 +2943,47 @@ paths:
                 description: CSV representation of the Leaderboard Data.
         400:
           description: Bad request, ranging from no existing item to update, invalid field to update, too many users, or invalid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Leaderboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         406:
           description: The requested format in the Accept header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
   /dashboards/:
     post:
@@ -2059,12 +3023,36 @@ paths:
                 $ref: '#/components/schemas/SessionCreatedResponse'
         400:
           description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        406:
+          description: Not Acceptable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -2110,14 +3098,42 @@ paths:
                 $ref: '#/components/schemas/SessionCreatedResponse'
         400:
           description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        406:
+          description: Not Acceptable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         410:
           description: The session is no longer valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
@@ -2150,14 +3166,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResearchUsersList'
+        400:
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         409:
           description: Conflict, such as owner mismatch or study is anonymized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         429:
           description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
           content:
             application/json:
               schema:
