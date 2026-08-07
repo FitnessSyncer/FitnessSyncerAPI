@@ -1242,10 +1242,13 @@ paths:
       summary: Get Synchronization Status
       description: |
         The Source Refresh or Destination Task Execute APIs execute asynchronously. This API provides you some insight into their current execution. Please use judiciously.
+
+        With source_read scope you receive Source entries and with destination_read scope you receive Destination
+        entries, and with both scopes you receive both. If you do not have either, a 401 will be returned.
       operationId: getSyncStatus
       tags: [Sources, Destinations]
       security:
-        - OAuth2: [source_read]
+        - OAuth2: [source_read, destination_read]
       responses:
         200:
           description: Success
@@ -1255,6 +1258,10 @@ paths:
                 $ref: '#/components/schemas/SyncStatusResults'
         401:
           description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found.
         429:
