@@ -838,7 +838,7 @@ paths:
       operationId: createSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -932,7 +932,7 @@ paths:
           description: If you are intending this to replace an existing item, you can provide the id of the item.
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       requestBody:
         description: Multipart Form to Upload a File.
         content:
@@ -1084,7 +1084,7 @@ paths:
       operationId: updateSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -1163,7 +1163,7 @@ paths:
       operationId: deleteSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -5829,6 +5829,8 @@ security:
        - source_data_blood_pressure_read
        - source_data_cholesterol_read
        - source_data_condition_read
+       - source_data_cycle_tracking_read
+       - source_data_ecg_read
        - source_data_glucose_read
        - source_data_medication_read
        - source_data_nutrition_read
@@ -5844,6 +5846,7 @@ security:
        - notebook_blood_pressure_write
        - notebook_cholesterol_write
        - notebook_condition_write
+       - notebook_cycle_tracking_write
        - notebook_glucose_write
        - notebook_medication_write
        - notebook_nutrition_write
