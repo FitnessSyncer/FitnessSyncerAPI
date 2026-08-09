@@ -3684,6 +3684,12 @@ components:
         taskId:
           type: string
           description: Id of the Source Data
+        apiVersion:
+          type: string
+          description: >-
+            The API version this item was rendered in, as a date (for example 2026-08-09). Present so
+            that a stored .fsapi file can be told apart from one written under an earlier version; an
+            item with no apiVersion predates the field and is the original 2014-09-12 API.
         comment:
           type: string
           description: Comment associated with the data.
@@ -4537,7 +4543,7 @@ components:
         sleepingMinutes:
           type: number
           format: double
-          description: Number of minutes actually asleep
+          description: Total number of minutes actually asleep. The per-stage fields (lightSleepMinutes, remSleepMinutes, deepSleepMinutes, sleepUnspecifiedMinutes, restlessMinutes) partition this total, so summing them alongside this value double-counts.
         awakenings:
           type: integer
           description: Number of times awoken
@@ -4562,31 +4568,31 @@ components:
         settlingMinutes:
           type: number
           format: double
-          description: Number of Minutes it took to Settle In
+          description: Sleep latency; the number of minutes between getting into bed and falling asleep.
         lightSleepMinutes:
           type: number
           format: double
-          description: Number of Minutes in Light Sleep
-        l2SleepMinutes:
-          type: number
-          format: double
-          description: Number of Minutes in L2 Sleep
-        l3SleepMinutes:
-          type: number
-          format: double
-          description: Number of Minutes in L3 Sleep
+          description: Number of Minutes in Light Sleep.
         deepSleepMinutes:
           type: number
           format: double
-          description: Number of Minutes in Deep Sleep
+          description: Number of Minutes in Deep Sleep.
         remSleepMinutes:
           type: number
           format: double
-          description: Number of Minutes in REM Sleep
+          description: Number of Minutes in REM Sleep.
+        sleepUnspecifiedMinutes:
+          type: number
+          format: double
+          description: Number of Minutes asleep where the source did not report which stage.
+        restlessMinutes:
+          type: number
+          format: double
+          description: Number of Minutes restless, meaning moving or disturbed, but not scored as awake.
         awakeMinutes:
           type: number
           format: double
-          description: Number of Minutes awake.
+          description: Number of Minutes awake during the sleep period.
         avgHR:
           type: number
           format: double
@@ -4625,7 +4631,7 @@ components:
       properties:
         type:
           type: string
-          description: "Sleep Stage. Must be one of: LIGHT_SLEEP, ASLEEP, AWAKE, REALLY_AWAKE, REM."
+          description: "Sleep stage, ordered from most awake to most asleep: REALLY_AWAKE (out of bed), AWAKE (awake, in bed), RESTLESS (moving or disturbed, not scored awake), LIGHT_SLEEP, REM, DEEP_SLEEP, ASLEEP (asleep, stage unknown). RESTLESS and DEEP_SLEEP were introduced in API version 2026-08-09."
         offsetMinutes:
           type: number
           format: double
