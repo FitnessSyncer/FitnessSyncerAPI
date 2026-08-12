@@ -428,6 +428,8 @@ classDiagram
     +string: food
     +string: meal
     +string: mealApproximation
+    +boolean: hasNutrition
+    +boolean: hasWater
     +number: calories
     +number: carbohydrates
     +number: fat

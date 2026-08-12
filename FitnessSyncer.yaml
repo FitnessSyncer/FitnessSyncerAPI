@@ -4402,7 +4402,7 @@ components:
           description: Time in milliseconds since the Epoch in UTC of when this medication was last used. 0 implies that it is ongoing.
 
     Nutrition:
-      description: Nutrition Record
+      description: Nutrition Record. This item may record food, water, or both; when reading, use hasNutrition and hasWater to help decifer.
       allOf:
         - $ref: '#/components/schemas/SyncItem'
       properties:
@@ -4416,6 +4416,14 @@ components:
           type: string
           readOnly: true
           description: Based on the time, this is FitnessSyncer's best approximation of the meal time
+        hasNutrition:
+          type: boolean
+          readOnly: true
+          description: Indicates whether this item records nutrient quantities.
+        hasWater:
+          type: boolean
+          readOnly: true
+          description: Indicates whether this item records water.
         calories:
           type: number
           format: double
