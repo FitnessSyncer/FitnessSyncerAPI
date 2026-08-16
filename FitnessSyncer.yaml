@@ -3788,6 +3788,23 @@ components:
           type: number
           format: double
           description: Average Temperature in Celsius
+        avgCoreTemperatureCelsius:
+          type: number
+          format: double
+          readOnly: true
+          description: >-
+            Average core body temperature in Celsius across the activity, derived from the Laps.
+            Distinct from `temperatureCelsius`, which is ambient temperature.
+        minCoreTemperatureCelsius:
+          type: number
+          format: double
+          readOnly: true
+          description: Minimum core body temperature in Celsius across the activity, derived from the Laps.
+        maxCoreTemperatureCelsius:
+          type: number
+          format: double
+          readOnly: true
+          description: Maximum core body temperature in Celsius across the activity, derived from the Laps.
         repetitions:
           type: integer
           description: Number of repetitions, especially for things like Push-Ups
@@ -3931,6 +3948,24 @@ components:
           type: number
           format: double
           description: Heart Rate Recovery
+        avgCoreTemperature:
+          type: number
+          format: double
+          description: >-
+            Average core body temperature in Celsius for this Lap. Taken from the source file when it
+            supplies one, and computed from the Lap's points when it does not.
+        minCoreTemperature:
+          type: number
+          format: double
+          description: Minimum core body temperature in Celsius for this Lap.
+        maxCoreTemperature:
+          type: number
+          format: double
+          description: Maximum core body temperature in Celsius for this Lap.
+        avgSmo2:
+          type: number
+          format: double
+          description: Average muscle oxygen saturation percentage for this Lap.
         points:
           type: array
           items:
@@ -3989,10 +4024,35 @@ components:
           type: number
           format: double
           description: Estimated Power in Watts
-        temp:
+        temperature:
           type: number
           format: double
-          description: Temperature in Celsius
+          description: >-
+            Ambient or device temperature in Celsius. Replaces `temp`, which is still emitted alongside
+            it for now. On input `temperature` takes precedence when both are supplied.
+        coreTemperature:
+          type: number
+          format: double
+          description: >-
+            Core body temperature in Celsius, as measured by a heat-flux sensor. Distinct from
+            `temperature`, which is ambient or device temperature.
+        skinTemperature:
+          type: number
+          format: double
+          description: Skin surface temperature in Celsius at this point.
+        coreDataQuality:
+          type: integer
+          description: >-
+            Sensor-reported confidence in the core temperature reading, 0 (worst) to 4 (best). Present
+            only when the source device supplies it.
+        smo2:
+          type: number
+          format: double
+          description: Muscle oxygen saturation as a percentage (0-100).
+        thb:
+          type: number
+          format: double
+          description: Total haemoglobin concentration in g/dL.
         steps:
           type: number
           format: double

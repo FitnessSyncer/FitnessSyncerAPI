@@ -268,6 +268,9 @@ classDiagram
     +number: mindfulMinutes
     +bool: summary
     +number: temperatureCelsius
+    +number: avgCoreTemperatureCelsius
+    +number: minCoreTemperatureCelsius
+    +number: maxCoreTemperatureCelsius
     +number: repetitions
     +number: weight
     +bool: manual
@@ -301,6 +304,10 @@ classDiagram
     +string: sport
     +number: notes
     +number: hrr
+    +number: avgCoreTemperature
+    +number: minCoreTemperature
+    +number: maxCoreTemperature
+    +number: avgSmo2
     +Point[]: points;
   }
   class Point{
@@ -315,7 +322,12 @@ classDiagram
     +number: hrv_sdnn
     +number: power
     +number: estimatedPower
-    +number: temp
+    +number: temperature
+    +number: coreTemperature
+    +number: skinTemperature
+    +number: coreDataQuality
+    +number: smo2
+    +number: thb
     +number: steps
     +number: torque
     +number: locationAccuracy
