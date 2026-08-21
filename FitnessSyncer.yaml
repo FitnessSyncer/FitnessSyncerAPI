@@ -4535,7 +4535,7 @@ components:
         vitaminC:
           type: number
           format: double
-          description: Vitamin C in grams
+          description: Vitamin C in IU
         vitaminD:
           type: number
           format: double
