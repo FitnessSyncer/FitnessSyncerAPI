@@ -749,6 +749,13 @@ paths:
         To learn the data sources that exist or to find the id of your desired data type, you will need to issue a list.
         If enabled and permission is granted by the participant, Researchers and Corporate Wellness can acquire a specific participant’s data listing.
         The data will be filtered based on the scopes provided; not all of the scopes listed are required.
+
+        **Downloading the recorded file.** Pass `summary=true` and each entry carries a `links` object of
+        absolute URLs for downloading the item as a file: FIT, PWX, TCX, KML, KMZ, CSV or GPX. See
+        `SyncItemLinks` for which keys appear for which items.
+
+        Fetch a link with the same `Authorization: Bearer` token you used for the listing. The scope it
+        requires is `source_data_activity_read` for Activity items or the appropriate scope for the TaskTop.
       security:
         - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
@@ -785,8 +792,9 @@ paths:
           schema:
             type: boolean
           description: |
-            When true each entry carries only its itemId, date and links rather than the whole item.
-            Default false.
+            When true each entry carries only its itemId, date and `links` rather than the whole item.
+            `links` holds the download URLs for the item's FIT/PWX/TCX/KML/KMZ/CSV/GPX renderings; the
+            full item carries the same object. Default false.
       responses:
         200:
           description: Success
@@ -1237,6 +1245,10 @@ paths:
       description: |
         Lists the Notebook by item.
         The data will be filtered based on the scopes provided; not all of the scopes listed are required.
+
+        As with `GET /providers/sources/{id}/items`, passing `summary=true` returns each entry as its
+        `itemId`, `date` and a `links` object of absolute FIT/PWX/TCX/KML/KMZ/CSV/GPX download URLs rather
+        than the whole item. See `SyncItemLinks`.
       security:
         - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
@@ -1273,8 +1285,9 @@ paths:
           schema:
             type: boolean
           description: |
-            When true each entry carries only its itemId, date and links rather than the whole item.
-            Default false.
+            When true each entry carries only its itemId, date and `links` rather than the whole item.
+            `links` holds the download URLs for the item's FIT/PWX/TCX/KML/KMZ/CSV/GPX renderings; the
+            full item carries the same object. Default false.
       responses:
         200:
           description: Success
@@ -3701,6 +3714,8 @@ components:
         type:
           type: string
           description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+        links:
+          $ref: '#/components/schemas/SyncItemLinks'
 
     Activity:
       description: Activity Record.
@@ -4855,7 +4870,13 @@ components:
           $ref: '#/components/schemas/SyncItemLinks'
 
     SyncItemLinks:
-      description: Links for files
+      description: |
+        Absolute URLs for downloading an item as a file, returned on a listing entry when `summary=true`.
+
+        Which keys are present depends on what the item can be represented as and absent when not applicable.
+
+        Fetch a URL with the same `Authorization: Bearer` token as the listing; it requires the
+        `source_data_activity_read` scope regardless of the item's own type.
       properties:
         fit:
           type: string

@@ -149,6 +149,7 @@ classDiagram
   ListSourceData ..> SyncItemListItem
   ListSyncItems ..> SyncItem
   SyncItemListItem ..> SyncItemLinks
+  SyncItem ..> SyncItemLinks
   ListOfSourceData ..> SourceData
   SourceDataItem ..> SourceData
   ListDestinationTask ..> DestinationTask
@@ -239,9 +240,11 @@ classDiagram
     +number: date
     +string: itemId
     +string: taskId
+    +string: apiVersion
     +string: comment
     +string[]: tags
     +TaskType: type;
+    +SyncItemLinks: links;
   }
   class Activity{
     +string: activity
