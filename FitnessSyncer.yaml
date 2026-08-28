@@ -3809,7 +3809,7 @@ components:
           readOnly: true
           description: >-
             Average core body temperature in Celsius across the activity, derived from the Laps.
-            Distinct from `temperatureCelsius`, which is ambient temperature.
+            Distinct from temperatureCelsius, which is ambient temperature.
         minCoreTemperatureCelsius:
           type: number
           format: double
@@ -3852,7 +3852,7 @@ components:
           type: number
           format: double
           readOnly: true
-          description: Max Elevation in Meters
+          description: Min Elevation in Meters
         elevation_max:
           type: number
           format: double
@@ -3867,7 +3867,7 @@ components:
           type: number
           format: double
           readOnly: true
-          description: Elevation Decent in Meters
+          description: Elevation Descent in Meters
         gps:
           description: Structure of the GPS and detailed information
           $ref: '#/components/schemas/GPSData'
@@ -4043,14 +4043,14 @@ components:
           type: number
           format: double
           description: >-
-            Ambient or device temperature in Celsius. Replaces `temp`, which is still emitted alongside
-            it for now. On input `temperature` takes precedence when both are supplied.
+            Ambient or device temperature in Celsius. Replaces temp, which is still emitted alongside
+            it for now. On input temperature takes precedence when both are supplied.
         coreTemperature:
           type: number
           format: double
           description: >-
             Core body temperature in Celsius, as measured by a heat-flux sensor. Distinct from
-            `temperature`, which is ambient or device temperature.
+            temperature, which is ambient or device temperature.
         skinTemperature:
           type: number
           format: double
@@ -5022,7 +5022,7 @@ components:
           description: A user description for the destination.
         hour:
           type: integer
-          description: Hour for this task to be ran (if Pro). The time is specified in PST8PDT. Use localHour for localtime.
+          description: Hour for this task to be run (if Pro). The time is specified in PST8PDT. Use localHour for localtime.
         localHour:
           type: integer
           description: Hour converted to the user's timezone (from their profile). This can also be used to update the hour field.
@@ -5737,7 +5737,7 @@ components:
       properties:
         emailUpdate:
           type: boolean
-          description: If this is a Pro user, this will denote whether Auto-Sync is enabled or not.
+          description: Whether this user receives the periodic e-mail summary for this Leaderboard.
 
     LeaderboardData:
       description: |
@@ -5785,7 +5785,7 @@ components:
           description: Should we include the values from FitnessSyncer Notebook? The default is true.
         sourceIds:
           type: array
-          description: This specifics the IDs of all of the sources to use for this query. If not specified, this will include all sources.
+          description: This specifies the IDs of all of the sources to use for this query. If not specified, this will include all sources.
           items:
             type: string
         activityTypes:
@@ -5812,7 +5812,7 @@ components:
           description: The reducer to run on the data per period. See the Descriptions API. The default is RANGE_NO_ZEROS.
         treatNoDataAsZero:
           type: boolean
-          description: If there is no data available for a granularity, should it be treated as a null?  The default is false.
+          description: If there is no data available for a granularity, should it be treated as zero? The default is false.
         treatZeroAsNoData:
           type: boolean
           description: If a value is 0, should it be treated as a null? The default is false.
