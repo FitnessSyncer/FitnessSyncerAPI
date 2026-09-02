@@ -3827,6 +3827,11 @@ components:
           type: number
           format: double
           description: Weights used for the exercise in KG
+        rpe:
+          type: number
+          format: double
+          description: >-
+            Rating of Perceived Exertion for the exercise, on the Borg CR10 scale.
         manual:
           type: boolean
           description: True if this was manually entered; false if not know or was not.
@@ -5418,13 +5423,18 @@ components:
           description: The client secret required for the user’s authentication
 
     AuthenticationIdentifier:
-      description: Identifier authentication
+      description: >-
+        Identifier authentication. The user supplies a single string identifying them to the provider:
+        a device serial number, or an API key they generate in the provider's own settings. An identifier
+        may only be registered to one FitnessSyncer account at a time.
       allOf:
         - $ref: '#/components/schemas/Authentication'
       properties:
         identifier:
           type: string
-          description: The identifier required for the user’s authentication
+          description: >-
+            The single string identifying this user to the provider — a device serial number, or an
+            API key the user generates in the provider's own settings.
 
     AuthenticationOAuth:
       description: This will start the redirects required to authenticate an OAuth-like scheme. This will return a 202 to you with a Location header to pass onto your user. Your user will end at the URL provided below on success or failure (except where beyond our control or extreme failures).

@@ -276,6 +276,7 @@ classDiagram
     +number: maxCoreTemperatureCelsius
     +number: repetitions
     +number: weight
+    +number: rpe
     +bool: manual
     +number: floorsClimbed
     +GPSData: gps;
