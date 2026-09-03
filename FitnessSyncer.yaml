@@ -81,7 +81,7 @@ paths:
                   expires_in:
                     type: integer
                     format: int64
-                    description: Time in seconds since the epoch when the token expires.
+                    description: The lifetime of the access token, in seconds from when this response was generated.
                   refresh_token:
                     type: string
                     description: A token to get a new access_token when the token expires.
