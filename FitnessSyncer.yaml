@@ -2252,7 +2252,7 @@ paths:
             type: string
           required: true
           description: |
-            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField
+            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, fieldGroups, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField
             Most of these responses are generic and are cachable between users and sessions. However, distinctActivities is the user's specific types of activities that their account has so this should not be shared between accounts.
       responses:
         200:
@@ -5630,6 +5630,12 @@ components:
         measurementType:
           type: string
           description: "What type of display preference takes precedence when displaying this unit. One of: DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER"
+        group:
+          type: string
+          description: "For a data field, what family of thing it is about, which is orthogonal to its taskType: the task type says which kind of record the field came from, and this says what the field is. Intended for grouping a field picker into browsable sections. Must be one of: IDENTITY, DISTANCE_AND_DURATION, ENERGY, HEART, HEART_RATE_ZONES, POWER, POWER_ZONES, STRESS, STRENGTH, BODY_WEIGHT, BODY_COMPOSITION, TAPE_MEASUREMENTS, CALIPER_MEASUREMENTS, SLEEP_TIMES, SLEEP_TOTALS, SLEEP_STAGES, SLEEP_VITALS, NUTRIENTS, HYDRATION, LOCATION, ENVIRONMENT, CLINICAL. New groups may be added, so treat an unrecognized value as ungrouped rather than as an error."
+        groupDescription:
+          type: string
+          description: The group's name in the language of the request, for rendering a section heading without hard-coding one per group.
 
     LeaderboardList:
       description: List of Leaderboards

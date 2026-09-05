@@ -770,6 +770,8 @@ classDiagram
     +bool: onlyReportSettings
     +bool: postProcessed
     +string: measurementType
+    +string: group
+    +string: groupDescription
     +TaskType: taskType;
   }
   class LeaderboardList{
