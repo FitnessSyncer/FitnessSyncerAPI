@@ -2252,8 +2252,22 @@ paths:
             type: string
           required: true
           description: |
-            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, dataFields, fieldGroups, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField
+            Type of the data which you wish to have details for. Must be one of: activities, distinctActivities, comparisons, csvColumns, dataFields, fieldGroups, fileFormats, goalDefaultDataFields, granularities, goalGranularities, labelers, reducers, timezones, scoringField
             Most of these responses are generic and are cachable between users and sessions. However, distinctActivities is the user's specific types of activities that their account has so this should not be shared between accounts.
+        - in: query
+          name: taskType
+          schema:
+            type: string
+          required: false
+          description: |
+            Narrows the csvColumns and fileFormats types to one kind of record. See the TaskType enumeration for the values this may have. Defaults to Activity, and is ignored by every other type.
+        - in: query
+          name: direction
+          schema:
+            type: string
+          required: false
+          description: |
+            Whether the csvColumns and fileFormats types should describe reading from a source or writing to a destination. Must be one of: SOURCE, DESTINATION. Defaults to SOURCE, and is ignored by every other type.
       responses:
         200:
           description: Success
@@ -4932,11 +4946,71 @@ components:
           type: string
           description: Remote directory path within the provider to store/read files.
 
+    CsvColumnMapping:
+      description: One mapped CSV column. A row may carry an index, a defaultValue, or both -- an index says which column of the file feeds this field, and a defaultValue supplies a constant when the file has no column for it.
+      properties:
+        column:
+          type: string
+          description: The FitnessSyncer field this row maps. Fetch the values valid for a given task type and direction from GET /descriptions/csvColumns; there are several hundred and the set is extended over time, so treat an unrecognized value as one this client does not know rather than as an error.
+        index:
+          type: integer
+          description: Which column of the file feeds this field, counting the first column as 1 -- the same numbering the web editor and every spreadsheet tool shows. Omit, or send 0, for a row that only supplies a defaultValue.
+        defaultValue:
+          type: string
+          description: Constant to use for this field when the file carries no column for it.
+
+    CsvProviderConfig:
+      description: |
+        Configuration for a source or destination whose file format is CSV, including the column mapping.
+
+        This applies both to a plain CSV provider and to a Cloud Storage Map provider whose maps.fileFormat is CSV or CSV_PRESET_LAP_SUMMARY -- fetch GET /descriptions/fileFormats to learn which formats require it.
+      properties:
+        separator:
+          type: string
+          description: Field separator. Defaults to a comma.
+        quote:
+          type: string
+          description: Quote character wrapping a field that contains the separator.
+        comment:
+          type: string
+          description: Rows beginning with this string are skipped.
+        startingRow:
+          type: integer
+          description: Number of leading rows to skip before the data begins, for a file with a header or preamble.
+        locale:
+          type: string
+          description: IETF BCP 47 language tag deciding how numbers and dates in the file are parsed, for example fr-FR for a file writing one thousand and a half as 1 234,5.
+        overrideTimezone:
+          type: string
+          description: Treat timestamps in the file as wall-clock time in this zone rather than in the account's own. An IANA zone id, for example Europe/Paris.
+        sumStepsPerDay:
+          type: boolean
+          description: Total the step rows within each day rather than treating each row as its own record.
+        groupByDate:
+          type: boolean
+          description: Combine rows sharing a date into a single record.
+        groupByMeal:
+          type: boolean
+          description: For nutrition, combine rows sharing a meal into a single record.
+        sendSummaryData:
+          type: boolean
+          description: For a destination, write the summary totals rather than the per-sample detail.
+        appendToFile:
+          type: boolean
+          description: For a destination, append to the existing file rather than replacing it.
+        columns:
+          type: array
+          description: The column mapping. Absent on a write leaves the stored mapping untouched; present, it replaces the stored mapping in full, so a client removing a row must send the whole remaining set.
+          items:
+            $ref: '#/components/schemas/CsvColumnMapping'
+
     ProviderConfig:
       description: Provider-specific configuration, grouped by provider family. Only the section matching the source/destination's own providerType is meaningful.
       properties:
         maps:
           $ref: '#/components/schemas/MapsProviderConfig'
+        csv:
+          $ref: '#/components/schemas/CsvProviderConfig'
 
     SourceData:
       description: |
@@ -5636,6 +5710,9 @@ components:
         groupDescription:
           type: string
           description: The group's name in the language of the request, for rendering a section heading without hard-coding one per group.
+        requiresColumnMapping:
+          type: boolean
+          description: For a fileFormats entry, true when choosing this format also requires a CSV column mapping to be supplied in providerConfig.csv.
 
     LeaderboardList:
       description: List of Leaderboards

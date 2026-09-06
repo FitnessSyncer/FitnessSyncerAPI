@@ -158,6 +158,8 @@ classDiagram
   SyncDestination ..> ProviderConfig
   SourceData ..> ProviderConfig
   ProviderConfig ..> MapsProviderConfig
+  ProviderConfig ..> CsvProviderConfig
+  CsvProviderConfig ..> CsvColumnMapping
   AlertDestination ..> TaskType
   ListTaskType ..> TaskType
   ProviderList ..> Provider
@@ -598,11 +600,31 @@ classDiagram
   }
   class ProviderConfig{
     +MapsProviderConfig: maps
+    +CsvProviderConfig: csv
   }
   class MapsProviderConfig{
     +string: fileFormat
     +string: filenameFormat
     +string: path
+  }
+  class CsvProviderConfig{
+    +string: separator
+    +string: quote
+    +string: comment
+    +number: startingRow
+    +string: locale
+    +string: overrideTimezone
+    +bool: sumStepsPerDay
+    +bool: groupByDate
+    +bool: groupByMeal
+    +bool: sendSummaryData
+    +bool: appendToFile
+    +CsvColumnMapping[]: columns
+  }
+  class CsvColumnMapping{
+    +string: column
+    +number: index
+    +string: defaultValue
   }
   class EmailDestination{
     +string: granularity
@@ -772,6 +794,7 @@ classDiagram
     +string: measurementType
     +string: group
     +string: groupDescription
+    +bool: requiresColumnMapping
     +TaskType: taskType;
   }
   class LeaderboardList{
