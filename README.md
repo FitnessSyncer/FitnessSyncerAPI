@@ -36,11 +36,11 @@ sequenceDiagram
   User->>Your Application: Follow Redirect with code and state query parameters.
   %% https://www.fitnesssyncer.com/api/documentation.html#accessing_token
   Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/access_token
-  FitnessSyncer->>Your Application: Return access_token, refresh_token, and expires_in values.
+  FitnessSyncer->>Your Application: Return access_token, refresh_token, expires_in, scope, and user_id values.
   Your Application->>Your Application: Use token until it expires
   %% https://www.fitnesssyncer.com/api/documentation.html#refreshing_token
   Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/access_token
-  FitnessSyncer->>Your Application: Return access_token, refresh_token, and expires_in values.
+  FitnessSyncer->>Your Application: Return access_token, refresh_token, expires_in, scope, and user_id values.
 ```
 
 ### Source and Destination Authentication Sequence Diagram

@@ -85,6 +85,12 @@ paths:
                   refresh_token:
                     type: string
                     description: A token to get a new access_token when the token expires.
+                  scope:
+                    type: string
+                    description: The space separated scopes this token was granted.
+                  user_id:
+                    type: string
+                    description: An opaque, stable identifier for the account this token was issued for. This is only useful for tagging your own diagnostics or a support request so an issue can be traced back to one account.
         400:
           description: Invalid request (e.g. an unknown application, an invalid or expired code, an invalid scope, or a failed PKCE verification).
           content:
