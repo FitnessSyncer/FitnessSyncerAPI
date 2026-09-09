@@ -566,6 +566,7 @@ classDiagram
     +string: name
     +string: context
     +string: providerType
+    +string: connectionId
     +bool: enabled
     +bool: deprecated
     +bool: ignoreDailyCalories
@@ -584,6 +585,7 @@ classDiagram
     +string: type
     +string: id
     +string: name
+    +string: connectionId
     +number: hour
     +number: localHour
     +string: lastError

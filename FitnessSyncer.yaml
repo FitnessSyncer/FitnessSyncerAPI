@@ -5041,6 +5041,12 @@ components:
         providerType:
           type: string
           description: The Provider Type enumeration value.
+        connectionId:
+          type: string
+          readOnly: true
+          description: |
+            Identifies the credentials this source uses. Sources and Destinations sharing a value were authorized
+            with the same credentials. This value is opaque: use it only for comparison within one response.
         enabled:
           type: boolean
           description: Indicates whether this source is enabled or not.
@@ -5105,6 +5111,12 @@ components:
         name:
           type: string
           description: A user description for the destination.
+        connectionId:
+          type: string
+          readOnly: true
+          description: |
+            Identifies the credentials this source uses. Sources and Destinations sharing a value were authorized
+            with the same credentials. This value is opaque: use it only for comparison within one response.
         hour:
           type: integer
           description: Hour for this task to be run (if Pro). The time is specified in PST8PDT. Use localHour for localtime.
