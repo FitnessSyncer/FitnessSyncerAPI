@@ -231,6 +231,7 @@ classDiagram
     +number: glucoseLow
     +number: glucoseHigh
     +number: glucosePercent
+    +bool: bandsBasedOnGlucoseRange
     +string[]: hiddenReports
     +string[]: hiddenNotebookTypes
   }

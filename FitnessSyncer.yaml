@@ -3664,6 +3664,9 @@ components:
         glucosePercent:
           type: integer
           description: From 0-100%, what is your goal for being in the Glucose Range from Low to High?
+        bandsBasedOnGlucoseRange:
+          type: boolean
+          description: When true, reference bands and KPI shading are derived from your own Glucose Range rather than the standard clinical thresholds. Useful if you are managing diagnosed diabetes to a target agreed with your clinician. The Estimated A1C always uses the standard thresholds.
         hiddenReports:
           type: array
           items:
