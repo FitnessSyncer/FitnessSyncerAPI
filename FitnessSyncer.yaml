@@ -5717,6 +5717,9 @@ components:
         postProcessed:
           type: boolean
           description: True if this field requires some post processing, so may not be available within some contexts.
+        isCumulative:
+          type: boolean
+          description: For a data field, true when the field accumulates over time, so that adding two periods together is meaningful and a target has to name a period to mean anything, as with steps or distance or calories. False for a standing measurement such as a weight, a heart rate or a bed time, where a target stands on its own and a period is meaningless. A goal on a field that is not cumulative always has a granularity of NONE, so a goal editor should not offer the period picker for one. Read-only, and absent for description types other than dataFields.
         dataFields:
           type: array
           items:

@@ -794,6 +794,7 @@ classDiagram
     +bool: metric
     +bool: onlyReportSettings
     +bool: postProcessed
+    +bool: isCumulative
     +string: measurementType
     +string: group
     +string: groupDescription
