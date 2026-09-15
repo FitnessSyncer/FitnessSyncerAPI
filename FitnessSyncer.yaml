@@ -3356,6 +3356,310 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /annotations/:
+    get:
+      summary: Listing your chart annotations
+      description: |
+        The annotations the User has written on their charts, oldest first.
+        An annotation is anchored by a DataField and an instant rather than by a sync item, so every chart plotting that measurement over that instant shows it.
+        Fields are canonicalized before matching, so asking for DISTANCE_IN_MILES also returns annotations written against DISTANCE_IN_KM.
+      operationId: listAnnotations
+      tags: [Annotations]
+      security:
+        - OAuth2: [annotation_read]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          required: false
+          description: Number of annotations to skip.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+          required: false
+          description: Maximum number of annotations to return. Values above 100 are reduced to 100.
+        - in: query
+          name: startDate
+          schema:
+            type: integer
+            format: int64
+            default: 0
+          required: false
+          description: Earliest annotation to return, in milliseconds since the epoch. 0 means no lower bound.
+        - in: query
+          name: endDate
+          schema:
+            type: integer
+            format: int64
+            default: 0
+          required: false
+          description: Latest annotation to return, in milliseconds since the epoch. 0 means no upper bound.
+        - in: query
+          name: dataField
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          description: Restrict to annotations on these measurements. Repeat the parameter for more than one. Omit it for every measurement.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationList'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Writing a chart annotation
+      description: |
+        Write a new annotation against a measurement at an instant.
+        The measurement is canonicalized, so an annotation created against DISTANCE_IN_MILES is stored and returned as DISTANCE_IN_KM and appears on charts drawn in either unit.
+        A calculated measurement takes no annotation. GLUCOSE_ESTIMATED_A1C, GLUCOSE_PERCENT_IN_RANGE, SLEEP_DEBT and the cycle predictions are worked out from other readings rather than recorded, so there is no reading to annotate and the request is rejected.
+      operationId: addAnnotation
+      tags: [Annotations]
+      security:
+        - OAuth2: [annotation_write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /annotations/{id}:
+    get:
+      summary: Get one chart annotation
+      operationId: getAnnotation
+      tags: [Annotations]
+      security:
+        - OAuth2: [annotation_read]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Id of the annotation.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: No annotation with that id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Update a chart annotation
+      description: |
+        Change the text or the date of an annotation. Send only the properties being changed; anything omitted is left as it is.
+        The measurement is fixed when the annotation is written and cannot be changed here. Moving an annotation to a different measurement is a different annotation, and allowing it would relocate the annotation onto charts the caller never named.
+      operationId: updateAnnotation
+      tags: [Annotations]
+      security:
+        - OAuth2: [annotation_write]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Id of the annotation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: No annotation with that id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a chart annotation
+      operationId: removeAnnotation
+      tags: [Annotations]
+      security:
+        - OAuth2: [annotation_write]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Id of the annotation to delete.
+      responses:
+        200:
+          description: Success
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: No annotation with that id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /researchers/users/:
     get:
       summary: Acquires OAuth Credentials for API-based Researchers.
@@ -3465,6 +3769,7 @@ components:
             source_data_sleep_read: Access the Sleep data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_temperature_read: Access the Temperature data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_weight_read: Access the Body Composition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            annotation_read: View the annotations the User has written on their charts.
             destination_read: View Destinations in the User's Account (but not associated data)
             destination_write: Add, Modify, and Delete Destinations in the User's Account
             notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account. This is an alias for notebook_activity_write notebook_allergy_write notebook_blood_pressure_write notebook_cholesterol_write notebook_condition_write notebook_cycle_tracking_write notebook_glucose_write notebook_medication_write notebook_nutrition_write notebook_oxygen_write notebook_sleep_write notebook_temperature_write notebook_weight_write
@@ -3481,6 +3786,7 @@ components:
             notebook_sleep_write: Add, Modify, and Delete FitnessSyncer Notebook Sleep Items in the User's Account.
             notebook_temperature_write: Add, Modify, and Delete FitnessSyncer Notebook Temperature Items in the User's Account.
             notebook_weight_write: Add, Modify, and Delete FitnessSyncer Notebook Body Composition Items in the User's Account.
+            annotation_write: Add, Modify, and Delete the annotations the User has written on their charts.
             updatable_providers: For integrations that are the source of branded data, allows the integration to Add, Modify, and Delete Branded Items in the User's Account
             leaderboard_participate: Participate in Leaderboards via opt-in, viewing the data, viewing and updating personal preferences in the User's Account.
             leaderboard_admin: Add, Modify, Delete, and Administer Leaderboards in the User's Account
@@ -5619,6 +5925,47 @@ components:
           type: string
           description: Any recent error messages from this source or destination.
 
+    Annotation:
+      description: An annotation the User has written against a measurement at a point in time.
+      properties:
+        id:
+          type: string
+          readOnly: true
+          description: Unique id of the annotation, assigned when it is written.
+        dataField:
+          type: string
+          description: The measurement the annotation is about. Canonicalized on write, so an annotation created against one unit of a measurement reads back as that measurement's canonical field and appears on charts drawn in either unit. See the Descriptions API with a type of dataFields for the accepted values.
+        taskType:
+          type: string
+          readOnly: true
+          description: The type of data the measurement belongs to, derived from dataField. Must be one of the TaskType values.
+        date:
+          type: integer
+          format: int64
+          description: The instant the annotation is about, in milliseconds since the epoch. On an annotation written from a chart this is the start of the bucket that was clicked, not the moment of writing.
+        annotation:
+          type: string
+          description: The text of the annotation. Trimmed, and truncated at 1000 characters.
+        created:
+          type: integer
+          format: int64
+          readOnly: true
+          description: When the annotation was first written, in milliseconds since the epoch.
+        modified:
+          type: integer
+          format: int64
+          readOnly: true
+          description: When the annotation was last changed, in milliseconds since the epoch.
+
+    AnnotationList:
+      description: List of annotations written on charts.
+      properties:
+        items:
+          description: The annotations, oldest first.
+          type: array
+          items:
+            $ref: '#/components/schemas/Annotation'
+
     Subscription:
       description: Subscription context for the user.
       properties:
@@ -6094,3 +6441,5 @@ tags:
       description: APIs for FitnessSyncer Providers
     - name: Researchers
       description: APIs for FitnessSyncer for Researchers
+    - name: Annotations
+      description: Manages the annotations a User has written on their charts

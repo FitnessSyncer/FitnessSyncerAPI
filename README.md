@@ -173,6 +173,8 @@ classDiagram
   Description ..> TaskType
   LeaderboardList ..> Leaderboard
   LeaderboardItem ..> Leaderboard
+  AnnotationList ..> Annotation
+  Annotation ..> TaskType
 
   class PowerZones{
     +number: base
@@ -762,6 +764,18 @@ classDiagram
   }
   class Subscription{
     +string: notificationKey
+  }
+  class Annotation{
+    +string: id
+    +string: dataField
+    +string: taskType
+    +number: date
+    +string: annotation
+    +number: created
+    +number: modified
+  }
+  class AnnotationList{
+    +Annotation[]: items;
   }
   class Notification{
     +string: claim
