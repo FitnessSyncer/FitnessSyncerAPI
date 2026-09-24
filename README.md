@@ -754,9 +754,11 @@ classDiagram
     +SyncStatus[]: results;
   }
   class SyncStatus{
+    +boolean: success
     +string: id
     +string: type
-    +string: status
+    +string: queueStatus
+    +string: status (deprecated, use queueStatus)
     +string: state
     +string: info
     +number: upTo

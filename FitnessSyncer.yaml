@@ -5908,12 +5908,12 @@ components:
         type:
           type: string
           description: Indication of the type ranging from SOURCE or DESTINATION. Other types should be ignored.
-        status:
+        queueStatus:
           type: string
-          description: "A summary of the current status, such as Running, Queued, Status, Complete"
+          description: "Where this task stands. Must be one of: QUEUED (waiting for a worker), RUNNING (it is in-progress), COMPLETED (the last run finished and reported no error), FAILED (the last run finished and reported an error), NOT_IN_PROGRESS (nothing queued, nothing running, and it has never run), ON_DEVICE (this source synchronizes on the phone and never on the server), DISABLED (the task is switched off), UNKNOWN (a value this client does not recognize). More values may be added, so treat anything unrecognized as UNKNOWN."
         state:
           type: string
-          description: "Which state is this task in; this is not available for all tasks. Generally will be: HISTORIC_SYNC, REFRESHING, COMPARING, SYNCING, UPLOADING"
+          description: "Which state is this task in; this is not available for all tasks. Must be one of: HISTORIC_SYNC, REFRESHING, COMPARING, SYNCING, UPLOADING, UNKNOWN. More values may be added, so treat anything unrecognized as UNKNOWN."
         info:
           type: string
           description: "If available, the localized message summarizing the state"
