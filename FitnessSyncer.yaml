@@ -5369,7 +5369,11 @@ components:
         lastError:
           type: string
           readOnly: true
-          description: This is a description of the last error that this source encountered.
+          description: This is a localized description of the last error that this source encountered.
+        errorCode:
+          type: string
+          readOnly: true
+          description: Error code for the last error, present only when there is one.
         date:
           type: integer
           format: int64
@@ -5435,7 +5439,11 @@ components:
         lastError:
           type: string
           readOnly: true
-          description: This is a description of the last error that this source encountered.
+          description: This is a localized description of the last error that this source encountered.
+        errorCode:
+          type: string
+          readOnly: true
+          description: Error code for the last error, present only when there is one.
         date:
           type: integer
           format: int64
@@ -5924,6 +5932,9 @@ components:
         update:
           type: string
           description: Any recent error messages from this source or destination.
+        errorCode:
+          type: string
+          description: Error code for the last error, present only when the last run failed.
 
     Annotation:
       description: An annotation the User has written against a measurement at a point in time.

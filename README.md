@@ -574,6 +574,7 @@ classDiagram
     +bool: deprecated
     +bool: ignoreDailyCalories
     +string: lastError
+    +string: errorCode
     +number: date
     +string: identifier
     +ProviderConfig: providerConfig
@@ -592,6 +593,7 @@ classDiagram
     +number: hour
     +number: localHour
     +string: lastError
+    +string: errorCode
     +number: date
     +bool: enabled
   }
@@ -763,6 +765,7 @@ classDiagram
     +string: info
     +number: upTo
     +string: update
+    +string: errorCode
   }
   class Subscription{
     +string: notificationKey
