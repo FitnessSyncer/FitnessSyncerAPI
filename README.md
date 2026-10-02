@@ -828,6 +828,7 @@ classDiagram
   class LeaderboardUser{
     +string: user
     +string[]: users
+    +object: teams
   }
   class LeaderboardItem{
     +Leaderboard: item;
@@ -848,6 +849,19 @@ classDiagram
     +string[]: dataField
     +number: startDate
     +number: endDate
+    +string: scoringField
+    +object: scoringWeights
+    +string[]: scoringFields
+    +number: scoringDailyLimit
+    +string: rankBy
+    +bool: lowerWins
+    +bool: hideValues
+    +bool: teams
+    +string[]: teamNames
+    +bool: participantsChooseTeam
+    +bool: teamSum
+    +string[]: display
+    +bool: publicLeaderboard
   }
   class LeaderboardUserPreferences{
     +bool: emailUpdate

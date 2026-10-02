@@ -2634,6 +2634,13 @@ paths:
           required: true
           description: |
             This is the id of the Leaderboard to accept.
+        - in: query
+          name: team
+          schema:
+            type: string
+          required: false
+          description: |
+            The team the user is joining, for a Leaderboard whose participants choose their own team. It must be one of the Leaderboard's teamNames; anything else is ignored.
       requestBody:
         description: Leaderboard Configuration
         content:
@@ -6126,6 +6133,13 @@ components:
           description: Add a set of users.
           items:
             type: string
+        teams:
+          type: object
+          additionalProperties: true
+          description: The team of each participant, keyed by e-mail address, for a Leaderboard with teams. A value that is not one of the Leaderboard's teamNames, or is empty, removes the participant from their team. This may be sent with or without new users.
+          example:
+            alice@example.com: Engineering
+            bob@example.com: Support
 
     LeaderboardItem:
       description: Result of a single Leaderboard.
@@ -6206,6 +6220,43 @@ components:
         publicLeaderboard:
           type: boolean
           description: True if this Leaderboard is publicly visible. If true, you can access it at https://www.fitnesssyncer.com/leaderboards?board={id} without logging in.
+        scoringFields:
+          type: array
+          description: The scored Data Fields in the order they are shown. With a scoringField preset these are the fields of the preset; without one, any Data Fields that add up, from one or more data types, each with its points in scoringWeights. This can only be set on creation.
+          items:
+            type: string
+        scoringDailyLimit:
+          type: number
+          format: double
+          description: The most points one participant can earn in a day on a scored Leaderboard. Omit for no limit. This can only be set on creation.
+        rankBy:
+          type: string
+          description: "What participants are ranked on. Must be one of: Total, Average, Best, Change, PercentChange, Score. Total is the only value allowed for a Data Field that adds up, such as steps; it is not allowed for a measurement, such as weight. Score is set for a scored Leaderboard. When omitted, it is derived from the Data Field and from relative. This can only be set on creation."
+        lowerWins:
+          type: boolean
+          description: True if the lowest value wins, which applies to a Leaderboard ranked on a measurement. A participant with no data is never ranked, whichever direction wins. This can only be set on creation.
+        hideValues:
+          type: boolean
+          description: True if actual values are never shown to other participants. A Leaderboard ranked on Change or PercentChange shows the change only; any other shows the ranking only. This can only be set on creation.
+        teams:
+          type: boolean
+          description: True if participants are grouped into teams that are ranked against each other.
+        teamNames:
+          type: array
+          description: The names of the teams.
+          items:
+            type: string
+        participantsChooseTeam:
+          type: boolean
+          description: True if each participant chooses a team when accepting; false if the organizer assigns them.
+        teamSum:
+          type: boolean
+          description: True if a team is counted as the sum of its members; false, the default, if it is counted as the average of its members.
+        display:
+          type: array
+          description: "The representations shown for this Leaderboard, in display order. Each must be one of: Standings, Teams, Trend, Table. When present, it takes precedence over chartLineGranularity, chartTableGranularity and chartClassicLeaderboard."
+          items:
+            type: string
 
     LeaderboardUserPreferences:
       description: This is the definition of a FitnessSyncer Leaderboard User Preferences
