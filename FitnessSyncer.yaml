@@ -5256,7 +5256,7 @@ components:
           $ref: '#/components/schemas/SourceData'
 
     MapsProviderConfig:
-      description: Configuration specific to Cloud Storage Map providers (Amazon S3, DropBox, Google Drive, OneDrive) -- the "(Maps)" suffixed providers, which read/write files rather than calling a structured API.
+      description: Configuration specific to Cloud Storage Map providers (Amazon S3, DropBox, Google Drive, OneDrive) -- the "(Files)" suffixed providers, which read/write files rather than calling a structured API.
       properties:
         fileFormat:
           type: string
