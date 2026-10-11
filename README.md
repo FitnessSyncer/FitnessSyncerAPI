@@ -664,6 +664,19 @@ classDiagram
   }
   class RefreshDestination{
   }
+  class ReportPDFDestination{
+    +string: granularity
+    +string[]: reportIds
+    +string: message
+    +string: otherEmail
+  }
+  class ListPrintableReports{
+    +PrintableReport[]: items;
+  }
+  class PrintableReport{
+    +string: id
+    +string: name
+  }
   class ListTaskType{
     +TaskType[]: items;
   }
@@ -924,6 +937,7 @@ classDiagram
     DestinationTask <|-- AlertDestination
     DestinationTask <|-- ShoeDestination
     DestinationTask <|-- RefreshDestination
+    DestinationTask <|-- ReportPDFDestination
     <<abstract>> Authentication
     Authentication <|-- AuthenticationUsernamePassword
     Authentication <|-- AuthenticationUsernamePasswordKey

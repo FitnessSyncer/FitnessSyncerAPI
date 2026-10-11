@@ -1439,6 +1439,48 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /providers/destinations/printable-reports:
+    get:
+      summary: List the reports a Report PDF destination can send
+      description: |
+        The reports this account may choose for a destination of type reportpdf: the built-in reports its plan includes,
+        and, for a Pro account, its own dashboards. Names are in the user's language.
+      operationId: listPrintableReports
+      tags: [Destinations]
+      security:
+        - OAuth2: [destination_read]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPrintableReports'
+        401:
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: A usage rate has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: The service is temporarily unavailable. Retry after a delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /providers/destinations/{id}:
     get:
       summary: Get a specific Destination Task
@@ -5421,6 +5463,7 @@ components:
           refresh: '#/components/schemas/RefreshDestination'
           shoe: '#/components/schemas/ShoeDestination'
           alert: '#/components/schemas/AlertDestination'
+          reportpdf: '#/components/schemas/ReportPDFDestination'
       properties:
         type:
           type: string
@@ -5514,6 +5557,47 @@ components:
         otherEmail:
           type: string
           description: Comma Delimited list of e-mail address if the user is a Pro.
+
+    ReportPDFDestination:
+      description: |
+        This is a destination which e-mails the user's reports as PDF files, one per report. It is free and does not count
+        toward the free plan's limit when sent to the account holder; message and otherEmail require Pro.
+      allOf:
+        - $ref: '#/components/schemas/DestinationTask'
+      required:
+        - reportIds
+      properties:
+        granularity:
+          type: string
+          description: "How often the reports are sent. Must be one of: DAY, WEEK, or MONTH"
+        reportIds:
+          type: array
+          description: The reports to send, at least one. Each must be an id from List the reports a Report PDF destination can send.
+          items:
+            type: string
+        message:
+          type: string
+          description: Message to include if the user is a Pro.
+        otherEmail:
+          type: string
+          description: Comma Delimited list of e-mail address to send the reports to if the user is a Pro. The user is copied.
+
+    PrintableReport:
+      description: A report a Report PDF destination can send.
+      properties:
+        id:
+          type: string
+          description: The report's identifier, for reportIds.
+        name:
+          type: string
+          description: The report's name in the user's language.
+
+    ListPrintableReports:
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrintableReport'
 
     AlertDestination:
       description: This is a destination which will alert the user of a condition
