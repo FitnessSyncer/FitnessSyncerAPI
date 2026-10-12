@@ -436,6 +436,7 @@ classDiagram
   class GlucosePoint{
     +number: time
     +number: value
+    +string: comment
   }
   class Medication{
     +string: medication
@@ -478,6 +479,7 @@ classDiagram
     +number: time
     +number: spo2
     +number: pulse
+    +string: comment
   }
   class Sleep{
     +number: bedTime
@@ -518,6 +520,7 @@ classDiagram
   class TemperaturePoint{
     +number: time
     +number: value
+    +string: comment
   }
   class Id{
     +string: id

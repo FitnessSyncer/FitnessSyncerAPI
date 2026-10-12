@@ -4829,6 +4829,11 @@ components:
           type: number
           format: double
           description: Glucose Read in mmol per Liter
+        comment:
+          type: string
+          description: >-
+            The note written on this one reading, if any. Readings are listed, under entries, only when the
+            item carries more than one; a note on the whole item is the item's own comment.
 
     Medication:
       description: Medication Record
@@ -4989,6 +4994,11 @@ components:
           type: number
           format: double
           description: Pulse Reading in BPM
+        comment:
+          type: string
+          description: >-
+            The note written on this one reading, if any. Readings are listed, under entries, only when the
+            item carries more than one; a note on the whole item is the item's own comment.
 
     Sleep:
       description: Sleep Record
@@ -5164,6 +5174,11 @@ components:
           type: number
           format: double
           description: Temperature Reading in Celsius
+        comment:
+          type: string
+          description: >-
+            The note written on this one reading, if any. Readings are listed, under entries, only when the
+            item carries more than one; a note on the whole item is the item's own comment.
 
     Id:
       description: Response to a query which requires an id
