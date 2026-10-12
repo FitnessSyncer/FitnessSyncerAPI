@@ -5733,9 +5733,6 @@ components:
         cloudStorageCsvProvider:
           type: boolean
           description: True if this is a Cloud Storage CSV Provider.
-        googleServices:
-          type: boolean
-          description: True if this is part of the Google Authentication Service Suite
         reauthenticateAll:
           type: boolean
           description: True if this is a candidate for Reauthenticate All.

@@ -693,7 +693,6 @@ classDiagram
     +bool: notifications
     +bool: cloudStorageMapsProvider
     +bool: cloudStorageCsvProvider
-    +bool: googleServices
     +bool: reauthenticateAll
     +bool: historicSync
     +string[]: compatibleAuthentication
