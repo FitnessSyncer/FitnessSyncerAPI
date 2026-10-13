@@ -4364,6 +4364,40 @@ components:
           type: number
           format: double
           description: Average muscle oxygen saturation percentage for this Lap.
+        avgLeftRightBalance:
+          type: number
+          format: double
+          description: >-
+            The left pedal's average share of this Lap's total power, as a percentage, as the device
+            computed it. The right share is 100 minus it.
+        avgLeftTorqueEffectiveness:
+          type: number
+          format: double
+          description: Average left leg torque effectiveness for this Lap, as a percentage.
+        avgRightTorqueEffectiveness:
+          type: number
+          format: double
+          description: Average right leg torque effectiveness for this Lap, as a percentage.
+        avgLeftPedalSmoothness:
+          type: number
+          format: double
+          description: Average left leg pedal smoothness for this Lap, as a percentage.
+        avgRightPedalSmoothness:
+          type: number
+          format: double
+          description: Average right leg pedal smoothness for this Lap, as a percentage.
+        avgCombinedPedalSmoothness:
+          type: number
+          format: double
+          description: Average pedal smoothness across both legs for this Lap, as a percentage.
+        avgLeftPco:
+          type: number
+          format: double
+          description: Average left platform center offset for this Lap, in millimeters. Negative is inboard.
+        avgRightPco:
+          type: number
+          format: double
+          description: Average right platform center offset for this Lap, in millimeters. Negative is inboard.
         points:
           type: array
           items:
@@ -4451,6 +4485,46 @@ components:
           type: number
           format: double
           description: Total haemoglobin concentration in g/dL.
+        leftRightBalance:
+          type: number
+          format: double
+          description: >-
+            The left pedal's share of total power at this point, as a percentage, so a 48/52 ride reads
+            48 here and the right share is 100 minus it. Recorded by a dual-sided power meter.
+        leftTorqueEffectiveness:
+          type: number
+          format: double
+          description: >-
+            Left leg torque effectiveness at this point, as a percentage: the share of the pedal stroke
+            that drove the bike forward.
+        rightTorqueEffectiveness:
+          type: number
+          format: double
+          description: Right leg torque effectiveness at this point, as a percentage.
+        leftPedalSmoothness:
+          type: number
+          format: double
+          description: >-
+            Left leg pedal smoothness at this point, as a percentage: how evenly power was applied
+            through the stroke.
+        rightPedalSmoothness:
+          type: number
+          format: double
+          description: Right leg pedal smoothness at this point, as a percentage.
+        combinedPedalSmoothness:
+          type: number
+          format: double
+          description: Pedal smoothness across both legs at this point, as a percentage, as the head unit reported it.
+        leftPco:
+          type: number
+          format: double
+          description: >-
+            Left platform center offset at this point, in millimeters, where the foot pressed relative to
+            the center of the pedal. Negative is inboard.
+        rightPco:
+          type: number
+          format: double
+          description: Right platform center offset at this point, in millimeters. Negative is inboard.
         steps:
           type: number
           format: double

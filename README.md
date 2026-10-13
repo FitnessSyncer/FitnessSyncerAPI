@@ -317,6 +317,14 @@ classDiagram
     +number: minCoreTemperature
     +number: maxCoreTemperature
     +number: avgSmo2
+    +number: avgLeftRightBalance
+    +number: avgLeftTorqueEffectiveness
+    +number: avgRightTorqueEffectiveness
+    +number: avgLeftPedalSmoothness
+    +number: avgRightPedalSmoothness
+    +number: avgCombinedPedalSmoothness
+    +number: avgLeftPco
+    +number: avgRightPco
     +Point[]: points;
   }
   class Point{
@@ -337,6 +345,14 @@ classDiagram
     +number: coreDataQuality
     +number: smo2
     +number: thb
+    +number: leftRightBalance
+    +number: leftTorqueEffectiveness
+    +number: rightTorqueEffectiveness
+    +number: leftPedalSmoothness
+    +number: rightPedalSmoothness
+    +number: combinedPedalSmoothness
+    +number: leftPco
+    +number: rightPco
     +number: steps
     +number: torque
     +number: locationAccuracy
