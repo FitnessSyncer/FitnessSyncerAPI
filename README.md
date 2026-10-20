@@ -242,6 +242,9 @@ classDiagram
   }
   class SyncItem{
     +string: providerType
+    +string: device
+    +string: attribution
+    +boolean: requiredAttribution
     +number: date
     +string: itemId
     +string: taskId

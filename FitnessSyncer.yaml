@@ -4065,6 +4065,24 @@ components:
         providerType:
           type: string
           description: An enumeration of the Provider Type for uploading data to this API.
+        device:
+          type: string
+          readOnly: true
+          description: >-
+            The model of the device that recorded the item, as its provider reported it, for example
+            Forerunner 965. Absent when the provider did not say.
+        attribution:
+          type: string
+          readOnly: true
+          description: >-
+            This is the attribution of where the data came from in the user's language. This should be
+            displayed when this data is used.
+        requiredAttribution:
+          type: boolean
+          readOnly: true
+          description: >-
+            True when the source of this item requires its attribution to be shown beside its data wherever it
+            is used, including anything derived from it, as Garmin's brand guidelines do.
         date:
           type: integer
           format: int64
