@@ -199,13 +199,12 @@ classDiagram
     +number: birthdate
     +number: age
     +bool: canemail
-    +bool: distanceOverSteps
     +bool: privateActivities
     +number: heightInMeters
     +bool: distanceMetric
     +bool: nutritionMetric
     +bool: weightMetric
-    +bool: glucoseMetric
+    +bool: bloodChemistryMetric
     +bool: temperatureCelsius
     +bool: waterML
     +bool: internationaltime
@@ -411,12 +410,47 @@ classDiagram
     +number: caliperSubscapular
     +number: caliperTricep
     +number: caliperLowerBack
+    +BoneDensity[]: boneDensity
+    +string: scanner
+  }
+  class BoneDensity{
+    +string: site
+    +string: name
+    +string: side
+    +number: bmd
+    +number: tScore
+    +number: zScore
+    +string: note
+    +string: source
   }
   class BloodPressure{
     +number: diastolic
     +number: systolic
     +number: pulse
     +bool: arrhythmia
+  }
+  class BloodPanel{
+    +number: ldl
+    +number: hdl
+    +number: totalCholesterol
+    +number: triglyceride
+    +number: reported
+    +string: lab
+    +LabResult[]: results
+  }
+  class LabResult{
+    +string: analyte
+    +string: name
+    +number: value
+    +string: text
+    +string: unit
+    +number: low
+    +number: high
+    +string: range
+    +string: flag
+    +bool: flagDerived
+    +bool: corrected
+    +string: source
   }
   class Cholesterol{
     +number: ldl
@@ -942,7 +976,10 @@ classDiagram
     SyncItem <|--  Activity
     SyncItem <|--  Allergy
     SyncItem <|--  BodyComposition
+    BodyComposition *--  BoneDensity
     SyncItem <|--  BloodPressure
+    SyncItem <|--  BloodPanel
+    BloodPanel *--  LabResult
     SyncItem <|--  Cholesterol
     SyncItem <|--  Condition
     SyncItem <|--  CycleTracking

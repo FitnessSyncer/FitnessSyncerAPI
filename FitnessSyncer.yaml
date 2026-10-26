@@ -284,7 +284,7 @@ paths:
           name: taskType
           schema:
             type: string
-          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
           schema:
@@ -707,7 +707,7 @@ paths:
       operationId: getNotebookCategories
       tags: [Notebook]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -763,7 +763,7 @@ paths:
         Fetch a link with the same `Authorization: Bearer` token you used for the listing. The scope it
         requires is `source_data_activity_read` for Activity items or the appropriate scope for the TaskTop.
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -852,7 +852,7 @@ paths:
       operationId: createSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_blood_panel_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -920,13 +920,20 @@ paths:
 
   /providers/sources/{sourceid}/items/upload:
     post:
-      summary: Upload a TCX, GPX, KML, KMZ, FIT, or PWX file
+      summary: Upload a TCX, GPX, KML, KMZ, FIT, PWX, or PDF file
       operationId: syncItemFileUpload
       description: |
         If you have the data already within a file, you can upload that file into the system.
         This API is just for uploading that file. To change any metadata, you will need to update that record accordingly.
         Note that a single upload may result in multiple items depending on the file format.
         While the permission scope indicates all scopes are required, only the applicable one is required.
+
+        A laboratory or body composition report that no parser recognizes, a PDF from a laboratory
+        or an imaging center for example, is stored as the item's attachment and nothing is read out
+        of it. To have its results read instead, send `labExtract=true`, which is the person's
+        explicit agreement that the document's text may be sent to our language model provider. Ask
+        for that agreement per document and never store it as a preference: see the `labExtract`
+        parameter and the `review` object in the response.
       parameters:
         - in: path
           name: sourceid
@@ -944,9 +951,31 @@ paths:
           schema:
             type: string
           description: If you are intending this to replace an existing item, you can provide the id of the item.
+        - in: query
+          name: labExtract
+          schema:
+            type: boolean
+          description: |
+            True when the person has agreed, for this document, that its text may be sent to our
+            language model provider to have the results read out of it. False, or absent, uploads the
+            file and reads nothing out of it. This is false by default.
+
+            Sending it true requires a Notebook write scope, and answers 401 without one. Uploading
+            the file needs no scope and still does not: reading it is the part that spends the
+            person's monthly allowance and sends their report, so it is the part that is checked.
+
+            Only ever send true when the person has agreed to it for the document in hand. Tell them
+            what leaves, where it goes, and that nothing is stored until they keep it, and offer
+            uploading the document without reading it as well, because a person who wants the
+            document attached but not sent must have a way to say so. Do not keep the answer as a
+            setting and apply it to the next document.
+
+            The agreement is about the sending, so it changes nothing for a file we read ourselves.
+            A FHIR, C-CDA, CSV or workout file is parsed here and never leaves, whatever this says,
+            and a report whose own text already answers the question is read here too.
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_blood_panel_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       requestBody:
         description: Multipart Form to Upload a File.
         content:
@@ -980,6 +1009,28 @@ paths:
                         url:
                           type: string
                           description: URL for more information
+                  review:
+                    type: object
+                    description: |
+                      Present when the document was taken as a laboratory or body composition report
+                      and is waiting for the person to check what was read out of it. Nothing has
+                      been stored yet, so `items` is empty: open this URL and the person confirms,
+                      corrects or discards what was read, and keeping it is what creates the item.
+
+                      It carries the answer whatever the answer is, so a document we would not read
+                      and one we could not make sense of arrive here too, each saying so in the
+                      person's own language rather than as an error you have to word yourself.
+                    properties:
+                      url:
+                        type: string
+                        description: |
+                          Where the person checks what was read, relative to the site as the item urls
+                          above are. Open it promptly and do not keep it: the reading it holds lives in
+                          a cache and expires, and it is not stored anywhere until the person keeps it.
+
+                          It is a page, so the person is signed in on the web to see it. Our own apps
+                          hand off to it with a one-time token instead, the way they do for the CSV
+                          column mapping, which is why it is a path rather than a whole URL.
         400:
           description: Bad Request
           content:
@@ -1005,7 +1056,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         429:
-          description: A usage rate has been exceeded.
+          description: |
+            A usage rate has been exceeded. With `labExtract=true` this is also how a spent monthly
+            allowance for reading documents is reported, so the upload is worth offering again
+            without it: the file is stored either way.
           content:
             application/json:
               schema:
@@ -1033,7 +1087,7 @@ paths:
       operationId: getSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: id
@@ -1098,7 +1152,7 @@ paths:
       operationId: updateSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_blood_panel_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -1177,7 +1231,7 @@ paths:
       operationId: deleteSyncItem
       tags: [Sources, Notebook]
       security:
-        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_cholesterol_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
+        - OAuth2: [notebook_activity_write, notebook_allergy_write, notebook_blood_pressure_write, notebook_blood_panel_write, notebook_condition_write, notebook_cycle_tracking_write, notebook_glucose_write, notebook_medication_write, notebook_nutrition_write, notebook_oxygen_write, notebook_sleep_write, notebook_temperature_write, notebook_weight_write, updatable_providers]
       parameters:
         - in: path
           name: id
@@ -1256,14 +1310,14 @@ paths:
         `itemId`, `date` and a `links` object of absolute FIT/PWX/TCX/KML/KMZ/CSV/GPX download URLs rather
         than the whole item. See `SyncItemLinks`.
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: type
           schema:
             type: string
           required: true
-          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: The type of TaskType to list. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: startDate
           schema:
@@ -1343,7 +1397,7 @@ paths:
           name: taskType
           schema:
             type: string
-          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: TaskType filter. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         - in: query
           name: providerType
           schema:
@@ -2035,7 +2089,7 @@ paths:
       operationId: hasSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -2081,7 +2135,7 @@ paths:
       operationId: addSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Success
@@ -2130,7 +2184,7 @@ paths:
       operationId: removeSubscription
       tags: [Subscriptions]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: notificationKey
@@ -2182,7 +2236,7 @@ paths:
       operationId: getNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       responses:
         200:
           description: Lists the current notifications available.
@@ -2232,7 +2286,7 @@ paths:
       operationId: deleteNotifications
       tags: [Notifications]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: claimId
@@ -3263,7 +3317,7 @@ paths:
       operationId: createDashboardRequest
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       requestBody:
         description: What type of data do you require for your Dashboard?
         content:
@@ -3336,7 +3390,7 @@ paths:
       operationId: getSessionData
       tags: [Dashboards]
       security:
-        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_cholesterol_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
+        - OAuth2: [source_data_activity_read, source_data_allergy_read, source_data_blood_pressure_read, source_data_blood_panel_read, source_data_condition_read, source_data_cycle_tracking_read, source_data_ecg_read, source_data_glucose_read, source_data_medication_read, source_data_nutrition_read, source_data_oxygen_read, source_data_sleep_read, source_data_temperature_read, source_data_weight_read]
       parameters:
         - in: path
           name: session
@@ -3803,11 +3857,11 @@ components:
             profile_write: Write data to the User's Profile
             source_read: View Sources in the User's Account (but not associated data)
             source_write: Add, Modify, and Delete Sources in the User's Account
-            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_cholesterol_read source_data_condition_read source_data_cycle_tracking_read source_data_ecg_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
+            source_data_read: Access the data associated with the User's Sources and FitnessSyncer Notebook Items, including associated Goals. This is an alias for source_data_activity_read source_data_allergy_read source_data_blood_pressure_read source_data_blood_panel_read source_data_condition_read source_data_cycle_tracking_read source_data_ecg_read source_data_glucose_read source_data_medication_read source_data_nutrition_read source_data_oxygen_read source_data_sleep_read source_data_temperature_read source_data_weight_read
             source_data_activity_read: Access the Activity data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_allergy_read: Access the Allergy data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_blood_pressure_read: Access the Blood Pressure data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
-            source_data_cholesterol_read: Access the Cholesterol data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
+            source_data_blood_panel_read: Access the Blood Panel data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_condition_read: Access the Condition data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_cycle_tracking_read: Access the Cycle Tracking data associated with the User’s Sources and FitnessSyncer Notebook Items, including associated Goals.
             source_data_ecg_read: Access the ECG data associated with the User’s Sources, including associated Goals. ECG has no FitnessSyncer Notebook support -- there is nothing to hand-enter.
@@ -3821,11 +3875,11 @@ components:
             annotation_read: View the annotations the User has written on their charts.
             destination_read: View Destinations in the User's Account (but not associated data)
             destination_write: Add, Modify, and Delete Destinations in the User's Account
-            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account. This is an alias for notebook_activity_write notebook_allergy_write notebook_blood_pressure_write notebook_cholesterol_write notebook_condition_write notebook_cycle_tracking_write notebook_glucose_write notebook_medication_write notebook_nutrition_write notebook_oxygen_write notebook_sleep_write notebook_temperature_write notebook_weight_write
+            notebook_write: Add, Modify, and Delete FitnessSyncer Notebook Items in the User's Account. This is an alias for notebook_activity_write notebook_allergy_write notebook_blood_pressure_write notebook_blood_panel_write notebook_condition_write notebook_cycle_tracking_write notebook_glucose_write notebook_medication_write notebook_nutrition_write notebook_oxygen_write notebook_sleep_write notebook_temperature_write notebook_weight_write
             notebook_activity_write: Add, Modify, and Delete FitnessSyncer Notebook Activity Items in the User's Account.
             notebook_allergy_write: Add, Modify, and Delete FitnessSyncer Notebook Allergy Items in the User's Account.
             notebook_blood_pressure_write: Add, Modify, and Delete FitnessSyncer Notebook Blood Pressure Items in the User's Account.
-            notebook_cholesterol_write: Add, Modify, and Delete FitnessSyncer Notebook Cholesterol Items in the User's Account.
+            notebook_blood_panel_write: Add, Modify, and Delete FitnessSyncer Notebook Blood Panel Items in the User's Account.
             notebook_condition_write: Add, Modify, and Delete FitnessSyncer Notebook Condition Items in the User's Account.
             notebook_cycle_tracking_write: Add, Modify, and Delete FitnessSyncer Notebook Cycle Tracking Items in the User's Account.
             notebook_glucose_write: Add, Modify, and Delete FitnessSyncer Notebook Glucose Items in the User's Account.
@@ -3908,9 +3962,6 @@ components:
         canemail:
           type: boolean
           description: True if FitnessSyncer can periodically send e-mails to this user.
-        distanceOverSteps:
-          type: boolean
-          description: For destination syncs, does the user prefer distance or steps to be synchronized?
         privateActivities:
           type: boolean
           description: Indicates whether the user prefers private activities for destination synchronizations?
@@ -3927,9 +3978,9 @@ components:
         weightMetric:
           type: boolean
           description: Indicates whether the user prefers metric units for weight.
-        glucoseMetric:
+        bloodChemistryMetric:
           type: boolean
-          description: Indicates whether the user prefers metric units for blood-based units.
+          description: Indicates whether the user prefers mmol/L rather than mg/dL for blood chemistry, which covers glucose, cholesterol and triglycerides alike. Named glucoseMetric before API version 2026-10-25, and a client on an earlier version both receives and sends that name instead; exactly one of the two names is ever present.
         temperatureCelsius:
           type: boolean
           description: Indicates whether the user prefers metric units for temperature.
@@ -4031,7 +4082,7 @@ components:
           type: array
           items:
             type: string
-          description: List of TaskTypes hidden from the FitnessSyncer Notebook editor's tab bar. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature.
+          description: List of TaskTypes hidden from the FitnessSyncer Notebook editor's tab bar. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature.
 
     SyncItemItem:
       description: Common data for each of the data types that FitnessSyncer processes.
@@ -4051,6 +4102,7 @@ components:
           Allergy: '#/components/schemas/Allergy'
           Weight: '#/components/schemas/BodyComposition'
           BloodPressure: '#/components/schemas/BloodPressure'
+          BloodPanel: '#/components/schemas/BloodPanel'
           Cholesterol: '#/components/schemas/Cholesterol'
           Condition: '#/components/schemas/Condition'
           CycleTracking: '#/components/schemas/CycleTracking'
@@ -4109,7 +4161,7 @@ components:
             type: string
         type:
           type: string
-          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of the Task. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         links:
           $ref: '#/components/schemas/SyncItemLinks'
 
@@ -4671,6 +4723,14 @@ components:
           type: number
           format: double
           description: Visceral Fat in the BIA scale.
+        boneDensity:
+          type: array
+          description: One entry per skeletal site a densitometry scan reported. Absent on an ordinary weigh-in, which is most items of this type. Its presence is what makes this item a scan rather than a weight.
+          items:
+            $ref: '#/components/schemas/BoneDensity'
+        scanner:
+          type: string
+          description: The machine a densitometry scan was performed on, when the report named one. Kept because densities from different manufacturers are not interchangeable, so it is what decides whether two scans can be compared at all.
         bmi:
           type: number
           format: double
@@ -4779,6 +4839,114 @@ components:
         arrhythmia:
           type: boolean
           description: True if Arrhythmia was detected in this reading.
+
+    BloodPanel:
+      description: Blood Panel Record. One blood draw, with every analyte measured at that collection. Supersedes Cholesterol, which carries the same four lipids and is what API versions before 2026-10-25 emit.
+      allOf:
+        - $ref: '#/components/schemas/SyncItem'
+      properties:
+        ldl:
+          type: number
+          format: double
+          description: LDL Cholesterol in mmol per Liter
+        hdl:
+          type: number
+          format: double
+          description: HDL Cholesterol in mmol per Liter
+        totalCholesterol:
+          type: number
+          format: double
+          description: Total Cholesterol in mmol per Liter
+        triglyceride:
+          type: number
+          format: double
+          description: Triglyceride in mmol per Liter
+        reported:
+          type: integer
+          format: int64
+          description: When the laboratory issued the report, in milliseconds since the epoch. The item's own date is when the blood was drawn.
+        lab:
+          type: string
+          description: The laboratory that performed the panel, as it named itself.
+        results:
+          type: array
+          description: One entry per analyte measured at this collection.
+          items:
+            $ref: '#/components/schemas/LabResult'
+
+    BoneDensity:
+      description: One skeletal site's reading inside a densitometry scan, within a Weight item. Numbers here are absent rather than zero when the scan did not report them, because zero is not a plausible density and a Z-score of zero is a real reading.
+      properties:
+        site:
+          type: string
+          description: 'The canonical site, or absent for a label that did not resolve, in which case name is the only thing identifying it. Must be one of: LumbarSpine, FemoralNeck, TotalHip, Forearm, WholeBody.'
+        name:
+          type: string
+          description: The label exactly as the scan printed it, for example "AP Spine L1-L3" rather than "Lumbar spine". Kept verbatim because which vertebrae were included is the difference between two scans that otherwise look comparable.
+        side:
+          type: string
+          description: Which side the scan named, "Left" or "Right". Absent where the report did not say, and never inferred.
+        bmd:
+          type: number
+          format: double
+          description: Bone mineral density in grams per square centimeter.
+        tScore:
+          type: number
+          format: double
+          description: Standard deviations from the young adult reference mean, as the scan reported it. FitnessSyncer relays this and never derives or interprets it.
+        zScore:
+          type: number
+          format: double
+          description: Standard deviations from the age matched reference mean, as the scan reported it.
+        note:
+          type: string
+          description: Whatever the report said about this site in prose, verbatim, for example an explanation of why a vertebra was excluded.
+        source:
+          type: string
+          description: The line this reading was read from, so a reader can check it against their own copy without opening the document.
+
+    LabResult:
+      description: One analyte's result inside a Blood Panel.
+      properties:
+        analyte:
+          type: string
+          description: The analyte this result is for. Absent when the analyte was not recognized, in which case name is the only thing identifying it.
+        name:
+          type: string
+          description: The name the laboratory used for this analyte.
+        value:
+          type: number
+          format: double
+          description: The result as a number. Absent when the laboratory reported something that is not one.
+        text:
+          type: string
+          description: The result exactly as the laboratory reported it, which may carry a less-than sign or a word such as NEGATIVE.
+        unit:
+          type: string
+          description: The unit the laboratory reported, as it wrote it.
+        low:
+          type: number
+          format: double
+          description: The lower bound of the reference range the laboratory sent with this result.
+        high:
+          type: number
+          format: double
+          description: The upper bound of the reference range the laboratory sent with this result.
+        range:
+          type: string
+          description: The reference range in the laboratory's own wording, where it sent one rather than a pair of numbers.
+        flag:
+          type: string
+          description: "Whether the result sits inside the reference range the laboratory sent. Must be one of: InRange, Low, High"
+        flagDerived:
+          type: boolean
+          description: Whether the flag was worked out from the reference range rather than sent by the laboratory.
+        corrected:
+          type: boolean
+          description: Whether the value was corrected by hand after being read from a document, in which case it is not the number that document shows.
+        source:
+          type: string
+          description: The line of the source document this result was read from, kept verbatim. Present only where the result came from a document rather than from a structured record.
 
     Cholesterol:
       description: Cholesterol Record
@@ -5492,7 +5660,7 @@ components:
        - providerType
       properties:
         type:
-          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: The Type of Data this item represents. See the TaskType enumeration for the values this may have. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
           type: string
         id:
           type: string
@@ -5617,7 +5785,7 @@ components:
         - providerType
       properties:
         taskType:
-          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of the Destination. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
           type: string
         providerType:
           type: string
@@ -5731,7 +5899,7 @@ components:
           description: The reducer to run on the data.
         taskType:
           type: string
-          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: Type of Data to Consider. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         field:
           type: string
           description: The Data Field to consider for this data.
@@ -5800,7 +5968,7 @@ components:
           type: array
           items:
             type: string
-          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: List of the TaskTypes. One of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
 
     ProviderList:
       description: List of Providers
@@ -6254,7 +6422,7 @@ components:
           description: Description of the item.
         taskType:
           type: string
-          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
+          description: If applicable, the TaskType for which this item is appropriate for. Must be one of Activity, Allergy, Weight, BloodPressure, BloodPanel, Cholesterol, Condition, CycleTracking, ECG, Glucose, Medication, Nutrition, Oxygen, Sleep, Temperature
         defaultReducer:
           type: string
           description: Name of the reducer that is defaulted for this data type.
@@ -6636,7 +6804,7 @@ security:
        - source_data_activity_read
        - source_data_allergy_read
        - source_data_blood_pressure_read
-       - source_data_cholesterol_read
+       - source_data_blood_panel_read
        - source_data_condition_read
        - source_data_cycle_tracking_read
        - source_data_ecg_read
@@ -6653,7 +6821,7 @@ security:
        - notebook_activity_write
        - notebook_allergy_write
        - notebook_blood_pressure_write
-       - notebook_cholesterol_write
+       - notebook_blood_panel_write
        - notebook_condition_write
        - notebook_cycle_tracking_write
        - notebook_glucose_write
