@@ -4,7 +4,7 @@
 
 This contains our [OpenAPI specification](FitnessSyncer.yaml) which allows you to quickly generate code for your applications.
 
-For complete documentation, please review [our documentation](https://www.fitnesssyncer.com/api/documentation.html) and create your personal credentials [here](https://www.fitnesssyncer.com/account/developer).
+For complete documentation, please review [our documentation](https://www.fitnesssyncer.com/developers) and create your personal credentials [here](https://www.fitnesssyncer.com/account/developer).
 
 For non-personal usage or for any assistance, please [contact us](https://www.fitnesssyncer.com/ContactUs.html).
 
@@ -14,7 +14,7 @@ We also feature an MCP Server which can also make certain integrations easier. F
 
 ### Authentication Sequence Diagram
 
-See [Authentication Sequence Diagram](https://www.fitnesssyncer.com/api/documentation.html#authenticating) for all of the parameters and details.
+See [Authentication Sequence Diagram](https://www.fitnesssyncer.com/developers/authentication#authenticating) for all of the parameters and details.
 
 For a scripted example, you can look at [fitnesssyncer_oauth_authorization_flow.py](fitnesssyncer_oauth_authorization_flow.py)
 for the authorization flow. Given a `--client-id`, `--client-secret`, and `--redirect-uri`,
@@ -29,23 +29,23 @@ sequenceDiagram
   participant User
   participant Your Application
   participant FitnessSyncer
-  %% https://www.fitnesssyncer.com/api/documentation.html#authorize
+  %% https://www.fitnesssyncer.com/developers/authentication#authorize
   Your Application->>User: Send Redirect to FitnessSyncer https://api.fitnesssyncer.com/api/oauth/authorize
   User->>FitnessSyncer: Follow Redirect, maybe login, and authorize Your Application to use the User's data.
   FitnessSyncer->>User: Send redirect URL with code and state query parameters
   User->>Your Application: Follow Redirect with code and state query parameters.
-  %% https://www.fitnesssyncer.com/api/documentation.html#accessing_token
+  %% https://www.fitnesssyncer.com/developers/authentication#accessing_token
   Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/access_token
   FitnessSyncer->>Your Application: Return access_token, refresh_token, expires_in, scope, and user_id values.
   Your Application->>Your Application: Use token until it expires
-  %% https://www.fitnesssyncer.com/api/documentation.html#refreshing_token
+  %% https://www.fitnesssyncer.com/developers/authentication#refreshing_token
   Your Application->>FitnessSyncer: POST parameters to https://api.fitnesssyncer.com/api/oauth/access_token
   FitnessSyncer->>Your Application: Return access_token, refresh_token, expires_in, scope, and user_id values.
 ```
 
 ### Source and Destination Authentication Sequence Diagram
 
-See [Create Data Source](https://www.fitnesssyncer.com/api/documentation.html#data_source_create), [Create Destination](https://www.fitnesssyncer.com/api/documentation.html#destination_task_create), and [Provider Authentication](https://www.fitnesssyncer.com/api/documentation.html#provider_authentication)
+See [Create Data Source](https://www.fitnesssyncer.com/developers/sources#data_source_create), [Create Destination](https://www.fitnesssyncer.com/developers/destinations#destination_task_create), and [Provider Authentication](https://www.fitnesssyncer.com/developers/providers#provider_authentication)
 
 This shows the Source Authentication flow; the Destination Authentication flow is similar.
 
@@ -58,10 +58,10 @@ sequenceDiagram
 
   note right of EndUser: Assumes the user is already authenticated with FitnessSyncer
   EndUser ->> YourServer: Add a Data Source such as Fitbit
-  %% https://www.fitnesssyncer.com/api/documentation.html#data_source_create
+  %% https://www.fitnesssyncer.com/developers/sources#data_source_create
   YourServer ->> FitnessSyncer: Create new Data Source via PUT to /api/providers/sources/
   FitnessSyncer ->> YourServer: Return create id
-  %% https://www.fitnesssyncer.com/api/documentation.html#provider_list
+  %% https://www.fitnesssyncer.com/developers/providers#provider_list
   note right of YourServer: If you do not know the authentication scheme for the selected service, use https://api.fitnesssyncer.com/api/providers/types/ . This example assumes OAuth.
   YourServer ->> FitnessSyncer: Set authentication via PUT to /api/providers/sources/{id}/authentication
   note right of YourServer: Ensure you set the Redirect URL on this request.
@@ -85,17 +85,17 @@ sequenceDiagram
 
   note right of YourServers: You must register for push notifications via e-mail
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_subscribe
+  %% https://www.fitnesssyncer.com/developers/notifications#notifications_subscribe
   YourServers ->> FitnessSyncer: Subscribe User for Notifications
   FitnessSyncer ->> YourServers: OK
 
   FitnessSyncer ->> FitnessSyncer: Acquire/Process Data
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#notifications
+  %% https://www.fitnesssyncer.com/developers/notifications#notifications
   FitnessSyncer ->> YourServers: POST of the changed items
   YourServers ->> FitnessSyncer: OK
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#data_source_items_get
+  %% https://www.fitnesssyncer.com/developers/items#data_source_items_get
   YourServers ->> FitnessSyncer: Get Updated Data
   FitnessSyncer ->> YourServers: Results
 ```
@@ -109,23 +109,23 @@ sequenceDiagram
 
   note right of YourServers: You must register for pull notifications via e-mail
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_subscribe
+  %% https://www.fitnesssyncer.com/developers/notifications#notifications_subscribe
   YourServers ->> FitnessSyncer: Subscribe User for Notifications
   FitnessSyncer ->> YourServers: OK
 
   FitnessSyncer ->> FitnessSyncer: Acquire/Process Data
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_claims
+  %% https://www.fitnesssyncer.com/developers/notifications#notifications_claims
   YourServers ->> FitnessSyncer: Get Notifications via POST to https://api.fitnesssyncer.com/api/notifications/
   FitnessSyncer ->> YourServers: Notification Claim
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#data_source_items_get
+  %% https://www.fitnesssyncer.com/developers/items#data_source_items_get
   YourServers ->> FitnessSyncer: Get Updated Data
   FitnessSyncer ->> YourServers: Results
 
   YourServers ->> YourServers: Handle errors, which are typically reauthentication errors. 
 
-  %% https://www.fitnesssyncer.com/api/documentation.html#notifications_delete
+  %% https://www.fitnesssyncer.com/developers/notifications#notifications_delete
   YourServers ->> FitnessSyncer: Delete Claim via DELETE to https://api.fitnesssyncer.com/api/notifications/claimId
   FitnessSyncer ->> YourServers: OK
 ```
