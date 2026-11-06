@@ -207,6 +207,7 @@ classDiagram
     +bool: bloodChemistryMetric
     +bool: temperatureCelsius
     +bool: waterML
+    +bool: alcoholGrams
     +bool: internationaltime
     +bool: weekStartsOnMonday
     +string: locale
@@ -505,6 +506,8 @@ classDiagram
     +string: mealApproximation
     +boolean: hasNutrition
     +boolean: hasWater
+    +boolean: hasCaffeine
+    +boolean: hasAlcohol
     +number: calories
     +number: carbohydrates
     +number: fat
@@ -522,6 +525,8 @@ classDiagram
     +number: calcium
     +number: glycemicLoad
     +number: water
+    +number: caffeine
+    +number: alcohol
   }
   class Oxygen{
     +number: spo2

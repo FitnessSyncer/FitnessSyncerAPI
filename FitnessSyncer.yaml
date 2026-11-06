@@ -3987,6 +3987,9 @@ components:
         waterML:
           type: boolean
           description: Indicates whether the user prefers metric units for water consumption.
+        alcoholGrams:
+          type: boolean
+          description: Indicates whether the user prefers alcohol in grams of pure alcohol rather than in standard drinks. Alcohol is always stored in grams; this decides only how it is shown.
         internationaltime:
           type: boolean
           description: Indicates whether the user prefers 24-hour time and YYYY-MM-DD dates or not.
@@ -5125,7 +5128,7 @@ components:
           description: Time in milliseconds since the Epoch in UTC of when this medication was last used. 0 implies that it is ongoing.
 
     Nutrition:
-      description: Nutrition Record. This item may record food, water, or both; when reading, use hasNutrition and hasWater to help decifer.
+      description: Nutrition Record. This item may record food, water, caffeine, alcohol, or any combination of them; when reading, use hasNutrition, hasWater, hasCaffeine and hasAlcohol to help decipher.
       allOf:
         - $ref: '#/components/schemas/SyncItem'
       properties:
@@ -5147,10 +5150,18 @@ components:
           type: boolean
           readOnly: true
           description: Indicates whether this item records water.
+        hasCaffeine:
+          type: boolean
+          readOnly: true
+          description: Indicates whether this item records caffeine.
+        hasAlcohol:
+          type: boolean
+          readOnly: true
+          description: Indicates whether this item records alcohol.
         calories:
           type: number
           format: double
-          description: Number of calories in this meal. This field is required if Water is not present.
+          description: Number of calories in this meal. An item records food, water, caffeine, alcohol, or any combination, so this may be absent on one that records only a drink.
         carbohydrates:
           type: number
           format: double
@@ -5179,6 +5190,14 @@ components:
           type: number
           format: double
           description: Saturated Fat in Grams
+        caffeine:
+          type: number
+          format: double
+          description: Caffeine in milligrams. Zero means the item records no caffeine rather than a measured zero.
+        alcohol:
+          type: number
+          format: double
+          description: Alcohol in grams of ethanol. Stored in grams whatever units the account displays, because a standard drink differs by country, being 14 g in the United States, 8 g in the United Kingdom and 10 g in Australia. Zero means the item records no alcohol rather than a measured zero.
         sodium:
           type: number
           format: double
@@ -5213,7 +5232,7 @@ components:
         water:
           type: number
           format: double
-          description: Number of Fluid Ounces of Water Consumed. This field is required if Calories is not present.
+          description: Number of Fluid Ounces of Water Consumed. An item records food, water, caffeine, alcohol, or any combination, so this may be absent on one that records only a meal.
 
     Oxygen:
       description: Oxygen Record
