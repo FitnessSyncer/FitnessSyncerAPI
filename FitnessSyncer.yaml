@@ -6467,10 +6467,10 @@ components:
           description: For Scoring Fields, this is the set of DataFields that comprise this element.
         measurementType:
           type: string
-          description: "What type of display preference takes precedence when displaying this unit. One of: DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER"
+          description: "What type of display preference takes precedence when displaying this unit. One of: DISTANCE, WEIGHT, GLUCOSE, TEMPERATURE, NUTRITION, WATER, ALCOHOL"
         group:
           type: string
-          description: "For a data field, what family of thing it is about, which is orthogonal to its taskType: the task type says which kind of record the field came from, and this says what the field is. Intended for grouping a field picker into browsable sections. Must be one of: IDENTITY, DISTANCE_AND_DURATION, ENERGY, HEART, HEART_RATE_ZONES, POWER, POWER_ZONES, STRESS, STRENGTH, BODY_WEIGHT, BODY_COMPOSITION, TAPE_MEASUREMENTS, CALIPER_MEASUREMENTS, SLEEP_TIMES, SLEEP_TOTALS, SLEEP_STAGES, SLEEP_VITALS, NUTRIENTS, HYDRATION, LOCATION, ENVIRONMENT, CLINICAL. New groups may be added, so treat an unrecognized value as ungrouped rather than as an error."
+          description: "For a data field, what family of thing it is about, which is orthogonal to its taskType: the task type says which kind of record the field came from, and this says what the field is. Intended for grouping a field picker into browsable sections. Must be one of: IDENTITY, DISTANCE_AND_DURATION, ENERGY, HEART, HEART_RATE_ZONES, POWER, POWER_ZONES, STRESS, STRENGTH, BODY_WEIGHT, BODY_COMPOSITION, TAPE_MEASUREMENTS, CALIPER_MEASUREMENTS, SLEEP_TIMES, SLEEP_TOTALS, SLEEP_STAGES, SLEEP_VITALS, NUTRIENTS, HYDRATION, CAFFEINE, ALCOHOL, LOCATION, ENVIRONMENT, CLINICAL. New groups may be added, so treat an unrecognized value as ungrouped rather than as an error."
         groupDescription:
           type: string
           description: The group's name in the language of the request, for rendering a section heading without hard-coding one per group.
